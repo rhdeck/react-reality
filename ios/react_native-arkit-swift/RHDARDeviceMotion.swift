@@ -1,7 +1,8 @@
 import Foundation
 import CoreMotion
 import SceneKit
-@objc class RHDARDeviceMotion: RCTEventEmitter {
+@objc(RHDARDeviceMotion)
+class RHDARDeviceMotion: RCTEventEmitter {
     override static func requiresMainQueueSetup() -> Bool {
         return true
     }

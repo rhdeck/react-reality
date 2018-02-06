@@ -6,6 +6,9 @@
   },
   "main": "index.js",
   "dependencies": {
+    "fast-deep-equal": "^1.0.0",
+    "lodash": "^4.17.5",
+    "prop-types": "^15.6.0",
     "react-native-xcode": "^1.0.0"
   },
   "pods": {
