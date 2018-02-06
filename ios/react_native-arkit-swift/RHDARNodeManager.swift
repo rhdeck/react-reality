@@ -1,7 +1,7 @@
 import Foundation
 import SceneKit
 import ARKit
-let focalDistance = 0.2
+let focalDistance:Float = 0.2
 class RHDARNodeManager {
     var rootNode:SCNNode = SCNNode()
     var nodes: [String:SCNNode] = [:]
@@ -77,9 +77,10 @@ class RHDARNodeManager {
     func mapHitResults(_ results:[ARHitTestResult]) -> [jsonType] {
         var out:[jsonType] = []
         results.forEach() { result in
-            let pa = vector_float4ToVector3(result.worldTransform.columns[3])
+            let pa = vector_float4ToVector3(result.worldTransform.columns.3)
             let p = self.getRelativePositionToOrigin(pa)
             let d = self.getCameraDistanceToPoint(pa)
+            let id = UUID().uuidString
             out.append(["id": id,
                         "distance": d,
                         "positionAboslute": vector3ToJson(pa),
@@ -134,9 +135,9 @@ class RHDARNodeManager {
         return d
     }
     func didUpdateFrame(session: ARSession, frame: ARFrame) {
-        let p = frame.camera.transform.columns[3]
+        let p = frame.camera.transform.columns.3
         cameraOrigin.position = vector_float4ToVector3(p)
-        let v = frame.camera.transform.columns[2]
+        let v = frame.camera.transform.columns.2
         cameraDirection = SCNVector3(-v.x, -v.y, -v.z)
         cameraOrigin.eulerAngles = SCNVector3(0, atan2f(v.x, v.z), 0)
         frontOfCamera.position = SCNVector3(p.x - focalDistance * v.x , p.y - focalDistance * v.y, p.z - focalDistance * v.z)

@@ -3,12 +3,80 @@
 import Foundation
 import ARKit
 // @rn view=RHDARView
-@objc class RHDARViewManager: RCTViewManager {
+@objc(RHDARViewManager)
+class RHDARViewManager: RCTViewManager {
     override func view() -> RHDARView {
         return RHDARView.sharedInstance()
     }
     override class func requiresMainQueueSetup() -> Bool {
         return true
+    }
+    override func constantsToExport() -> [AnyHashable : Any]! {
+        //Exporting type/enum constants
+        return [
+            "ARHitTestResultType": [
+                "featurePoint": ARHitTestResult.ResultType.featurePoint,
+                "EstimatedHorizontalPlane": ARHitTestResult.ResultType.estimatedHorizontalPlane,
+                "ExistingPlane": ARHitTestResult.ResultType.existingPlane,
+                "ExistingPlaneUsingExtent": ARHitTestResult.ResultType.existingPlaneUsingExtent
+            ],
+            "LightingModel": [
+                "Constant": SCNMaterial.LightingModel.constant,
+                "Blinn": SCNMaterial.LightingModel.blinn,
+                "Lambert": SCNMaterial.LightingModel.lambert,
+                "Phong": SCNMaterial.LightingModel.phong,
+                "PhysicallyBased": SCNMaterial.LightingModel.physicallyBased
+            ],
+            "LightType":[
+                "Ambient": SCNLight.LightType.ambient,
+                "Directional": SCNLight.LightType.directional,
+                "Omni": SCNLight.LightType.omni,
+                "Probe": SCNLight.LightType.probe,
+                "Spot": SCNLight.LightType.spot,
+                "IES": SCNLight.LightType.IES
+            ],
+            "ShadowMode":[
+                "Forward": SCNShadowMode.forward,
+                "Deferred": SCNShadowMode.deferred,
+                "ModeModulated": SCNShadowMode.modulated
+            ],
+            "ColorMask":[
+                "All": SCNColorMask.all,
+                "None": 0,
+                "Alpha": SCNColorMask.alpha,
+                "Blue": SCNColorMask.blue,
+                "Red": SCNColorMask.red,
+                "Green": SCNColorMask.green
+            ],
+            "ShaderModiferEntryPoint":[
+                "Geometry": SCNShaderModifierEntryPoint.geometry,
+                "Surface": SCNShaderModifierEntryPoint.surface,
+                "LightingModel": SCNShaderModifierEntryPoint.lightingModel,
+                "Fragment": SCNShaderModifierEntryPoint.fragment
+            ],
+            "BlendMode":[
+                "Alpha": SCNBlendMode.alpha,
+                "Add": SCNBlendMode.add,
+                "Subtract": SCNBlendMode.subtract,
+                "Multiply": SCNBlendMode.multiply,
+                "Screen": SCNBlendMode.screen,
+                "Replace": SCNBlendMode.replace
+            ],
+            "ChamferMode":[
+                "Both": SCNChamferMode.both,
+                "Back": SCNChamferMode.back,
+                "Front": SCNChamferMode.front
+            ],
+            "ARWorldAlignment":[
+                "Gravity": ARWorldTrackingConfiguration.WorldAlignment.gravity,
+                "GravityAndHeading": ARWorldTrackingConfiguration.WorldAlignment.gravityAndHeading,
+                "Camera": ARWorldTrackingConfiguration.WorldAlignment.camera
+            ],
+            "FillMode":[
+                "Fill": SCNFillMode.fill,
+                "Lines": SCNFillMode.lines
+            ]
+        ]
     }
     //Add Bridge module methods
     @objc func pause(_ resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
@@ -17,7 +85,7 @@ import ARKit
     }
     @objc func resume(_ resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
         view().resume()
-        resolve(nil)
+        resolve(nil) 
     }
     //types=NSNumber
     @objc func hitTestPlanes(_ pointDict:jsonType, types:Int, resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {

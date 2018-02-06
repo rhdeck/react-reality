@@ -5,13 +5,14 @@
 	};
 	objectVersion = 48;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		712815C32026480B00C460CB /* RHDARExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712815C22026480B00C460CB /* RHDARExtension.swift */; };
 		712815C520276B0600C460CB /* RHDARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712815C420276B0600C460CB /* RHDARView.swift */; };
 		712815C720276B1E00C460CB /* RHDARViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712815C620276B1E00C460CB /* RHDARViewManager.swift */; };
 		712815C92027AE8600C460CB /* RHDARNodeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712815C82027AE8600C460CB /* RHDARNodeManager.swift */; };
 		718888822029F07300B4773F /* RHDARDeviceMotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718888812029F07300B4773F /* RHDARDeviceMotion.swift */; };
+		71888989202A20EB00B4773F /* RHDARGeosManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71888988202A20EB00B4773F /* RHDARGeosManager.swift */; };
+		7188898B202A268F00B4773F /* RHDARTextManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7188898A202A268F00B4773F /* RHDARTextManager.swift */; };
 		AAD78BA0AC6447529D3057BE /* rn-swift-bridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E00DCA45E7447438EF2917A /* rn-swift-bridge.m */; };
 /* End PBXBuildFile section */
 
@@ -33,6 +34,8 @@
 		712815C620276B1E00C460CB /* RHDARViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RHDARViewManager.swift; sourceTree = "<group>"; };
 		712815C82027AE8600C460CB /* RHDARNodeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RHDARNodeManager.swift; sourceTree = "<group>"; };
 		718888812029F07300B4773F /* RHDARDeviceMotion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RHDARDeviceMotion.swift; sourceTree = "<group>"; };
+		71888988202A20EB00B4773F /* RHDARGeosManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RHDARGeosManager.swift; sourceTree = "<group>"; };
+		7188898A202A268F00B4773F /* RHDARTextManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RHDARTextManager.swift; sourceTree = "<group>"; };
 		71D8F37C1FB7A97B0000973C /* libreact_native-arkit-swift.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libreact_native-arkit-swift.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		71D8F3881FB7AA9D0000973C /* react_native-arkit-swift-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "react_native-arkit-swift-Bridging-Header.h"; sourceTree = "<group>"; };
 		8E00DCA45E7447438EF2917A /* rn-swift-bridge.m */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.objc; path = "rn-swift-bridge.m"; sourceTree = "<group>"; };
@@ -83,6 +86,8 @@
 				712815C620276B1E00C460CB /* RHDARViewManager.swift */,
 				712815C82027AE8600C460CB /* RHDARNodeManager.swift */,
 				718888812029F07300B4773F /* RHDARDeviceMotion.swift */,
+				71888988202A20EB00B4773F /* RHDARGeosManager.swift */,
+				7188898A202A268F00B4773F /* RHDARTextManager.swift */,
 			);
 			path = "react_native-arkit-swift";
 			sourceTree = "<group>";
@@ -147,7 +152,9 @@
 			files = (
 				712815C32026480B00C460CB /* RHDARExtension.swift in Sources */,
 				718888822029F07300B4773F /* RHDARDeviceMotion.swift in Sources */,
+				7188898B202A268F00B4773F /* RHDARTextManager.swift in Sources */,
 				712815C720276B1E00C460CB /* RHDARViewManager.swift in Sources */,
+				71888989202A20EB00B4773F /* RHDARGeosManager.swift in Sources */,
 				712815C520276B0600C460CB /* RHDARView.swift in Sources */,
 				712815C92027AE8600C460CB /* RHDARNodeManager.swift in Sources */,
 				AAD78BA0AC6447529D3057BE /* rn-swift-bridge.m in Sources */,

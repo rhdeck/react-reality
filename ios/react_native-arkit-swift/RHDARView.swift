@@ -59,7 +59,7 @@ import ARKit
     @objc var autoEnablesDefaultLighting:Bool {
         get { return arView?.automaticallyUpdatesLighting ?? false }
     }
-    //ARConfiguration.WorldAlignment=NSNumber
+    //@rn type=NSInteger
     @objc var worldAlignment:ARConfiguration.WorldAlignment {
         get { return configuration.worldAlignment}
         set(v) { configuration.worldAlignment = v ; resume() }

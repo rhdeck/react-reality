@@ -1,7 +1,7 @@
 import Foundation
 import SceneKit
 typealias jsonType = [String:Any]
-
+typealias SCNTextNode = SCNNode
 @objc extension RCTConvert {
     @objc class func SCNMaterial(_ json:jsonType) -> SCNMaterial {
         let m:SCNMaterial = SceneKit.SCNMaterial()
@@ -133,7 +133,7 @@ typealias jsonType = [String:Any]
         addMaterials(g, json:json, sides: 1)
         return g
     }
-    @objc class func SCNTextNode(_ json: jsonType) -> SCNNode {
+    @objc class func SCNTextNode(_ json: jsonType) -> SCNTextNode {
         let baseFontSize:CGFloat = 12.0;
         let font = json["font"] as? jsonType ?? [:]
         let text = json["text"] as? String ?? "(null)"
