@@ -129,7 +129,7 @@ import ARKit
             "direction": nodeManager.cameraDirection
         ]
     }
-    func readCameraPosition() {
+    func readCameraPosition() -> jsonType {
         return vector3ToJson(nodeManager.cameraOrigin.position)
     }
     func projectPoint(_ point:SCNVector3) -> SCNVector3 {
