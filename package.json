@@ -1,0 +1,14 @@
+{
+  "name": "react-native-arkit-swift",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "react-native-swift": "^0.10.0"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "react-native-xcode": "^1.0.0"
+  },
+  "pods": {
+    "PocketSVG": "*"
+  }
+}
