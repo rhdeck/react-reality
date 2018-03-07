@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
-import withAnimationFrame from '@panter/react-animation-frame';
-import { round, isFunction } from 'lodash';
-import { NativeModules } from 'react-native';
+import React, { Component } from "react";
+import withAnimationFrame from "@panter/react-animation-frame";
+import { round, isFunction } from "lodash";
+import { NativeModules } from "react-native";
 
-const ARKitManager = NativeModules.ARKitManager;
+const ARKitManager = NativeModules.RHDARViewManager;
 
 const roundPoint = ({ x, y, z }, precision) => ({
   x: round(x, precision),
   y: round(y, precision),
-  z: round(z, precision),
+  z: round(z, precision)
 });
 
 export default ({ throttleMs = 33, overwritePosition = {} } = {}) => C =>
@@ -20,7 +20,7 @@ export default ({ throttleMs = 33, overwritePosition = {} } = {}) => C =>
         super(props);
         this.state = {
           positionProjected: props.position || { x: 0, y: 0, z: 0 },
-          projectionResult: null,
+          projectionResult: null
         };
         this.handleAnimation(props);
       }
@@ -51,12 +51,12 @@ export default ({ throttleMs = 33, overwritePosition = {} } = {}) => C =>
           if (result) {
             this.setState({
               positionProjected: roundPoint(result.point, 3),
-              projectionResult: result,
+              projectionResult: result
             });
           } else {
             this.setState({
               positionProjected: null,
-              projectionResult: null,
+              projectionResult: null
             });
           }
           if (this.props.onProjectedPosition) {
@@ -71,7 +71,7 @@ export default ({ throttleMs = 33, overwritePosition = {} } = {}) => C =>
         if (plane) {
           ARKitManager.hitTestPlanes(
             { x, y },
-            ARKitManager.ARHitTestResultType.ExistingPlane,
+            ARKitManager.ARHitTestResultType.ExistingPlane
           ).then(({ results }) => {
             const result = isFunction(plane)
               ? plane(results)
@@ -93,7 +93,7 @@ export default ({ throttleMs = 33, overwritePosition = {} } = {}) => C =>
           <C
             positionProjected={{
               ...this.state.positionProjected,
-              ...overwritePosition,
+              ...overwritePosition
             }}
             projectionResult={this.state.projectionResult}
             {...this.props}
@@ -101,5 +101,5 @@ export default ({ throttleMs = 33, overwritePosition = {} } = {}) => C =>
         );
       }
     },
-    throttleMs,
+    throttleMs
   );

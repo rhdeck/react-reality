@@ -1,67 +1,34 @@
-//
-//  index.js
-//
-//  Created by HippoAR on 7/9/17.
-//  Copyright © 2017 HippoAR. All rights reserved.
-//
-
-import ARBox from './components/ARBox';
-import ARCapsule from './components/ARCapsule';
-import ARCone from './components/ARCone';
-import ARCylinder from './components/ARCylinder';
-import ARGroup from './components/ARGroup';
-import ARKit from './ARKit';
-import ARLight from './components/ARLight';
-import ARModel from './components/ARModel';
-import ARPlane from './components/ARPlane';
-import ARPyramid from './components/ARPyramid';
-import ARShape from './components/ARShape';
-import ARSphere from './components/ARSphere';
-import ARSprite from './components/ARSprite';
-import ARText from './components/ARText';
-import ARTorus from './components/ARTorus';
-import ARTube from './components/ARTube';
-import DeviceMotion from './DeviceMotion';
-import startup from './startup';
-import withProjectedPosition from './hocs/withProjectedPosition';
-
-import * as colorUtils from './lib/colorUtils';
-
-ARKit.Box = ARBox;
-ARKit.Sphere = ARSphere;
-ARKit.Cylinder = ARCylinder;
-ARKit.Cone = ARCone;
-ARKit.Pyramid = ARPyramid;
-ARKit.Tube = ARTube;
-ARKit.Torus = ARTorus;
-ARKit.Capsule = ARCapsule;
-ARKit.Plane = ARPlane;
-ARKit.Text = ARText;
-ARKit.Model = ARModel;
-ARKit.Sprite = ARSprite;
-ARKit.Group = ARGroup;
-ARKit.Shape = ARShape;
-ARKit.Light = ARLight;
-
-startup();
-
+import RHDBox from "./components/RHDBox";
+import RHDCapsule from "./components/RHDCapsule";
+import RHDCone from "./components/RHDCone";
+import RHDCylinder from "./components/RHDCylinder";
+import RHDMonoView from "./RHDMonoView";
+import RHDPlane from "./components/RHDPlane";
+import RHDPyramid from "./components/RHDPyramid";
+import RHDSphere from "./components/RHDSphere";
+import RHDText from "./components/RHDText";
+import RHDTorus from "./components/RHDTorus";
+import RHDTube from "./components/RHDTube";
+import RHDNode from "./components/RHDNode";
+import RHDMaterial from "./components/RHDMaterial";
+import RHDMaterialProperty from "./components/RHDMaterialProperty";
+import RHDMaterials from "./components/RHDMaterials";
+import RHDTouchableMonoView from "./RHDTouchableMonoView";
 export {
-  colorUtils,
-  ARKit,
-  DeviceMotion,
-  ARBox,
-  ARSphere,
-  ARSprite,
-  ARCylinder,
-  ARCone,
-  ARPyramid,
-  ARTube,
-  ARTorus,
-  ARCapsule,
-  ARPlane,
-  ARText,
-  ARModel,
-  ARLight,
-  ARGroup,
-  withProjectedPosition,
+  RHDMonoView,
+  RHDBox,
+  RHDSphere,
+  RHDCylinder,
+  RHDCone,
+  RHDPyramid,
+  RHDTube,
+  RHDTorus,
+  RHDCapsule,
+  RHDPlane,
+  RHDText,
+  RHDNode,
+  RHDMaterial,
+  RHDMaterialProperty,
+  RHDMaterials,
+  RHDTouchableMonoView
 };

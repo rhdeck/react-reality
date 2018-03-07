@@ -10,9 +10,9 @@ typealias SCNTextNode = SCNNode
     }
     @objc class func SCNVector3(_ json:jsonType) -> SCNVector3 {
         guard
-            let x = json["x"] as? Float,
-            let y = json["y"] as? Float,
-            let z = json["z"] as? Float
+            let x = json["x"] as? Double,
+            let y = json["y"] as? Double,
+            let z = json["z"] as? Double
         else {
             return SceneKit.SCNVector3()
         }
@@ -20,10 +20,10 @@ typealias SCNTextNode = SCNNode
     }
     @objc class func SCNVector4(_ json: jsonType) -> SCNVector4 {
         guard
-            let x = json["x"] as? Float,
-            let y = json["y"] as? Float,
-            let z = json["z"] as? Float,
-            let w = json["w"] as? Float
+            let x = json["x"] as? Double,
+            let y = json["y"] as? Double,
+            let z = json["z"] as? Double,
+            let w = json["w"] as? Double
         else { return SceneKit.SCNVector4() }
         return SceneKit.SCNVector4(x, y, z, w)
     }
@@ -37,125 +37,99 @@ typealias SCNTextNode = SCNNode
     }
     @objc class func SCNBox(_ json:jsonType)-> SCNBox {
         guard
-            let shape = json["shape"] as? jsonType,
-            let w = shape["width"] as? CGFloat,
-            let h = shape["height"] as? CGFloat,
-            let l = shape["length"] as? CGFloat,
-            let chamfer = shape["chamfer"] as? CGFloat
+            let w = json["width"] as? CGFloat,
+            let h = json["height"] as? CGFloat,
+            let l = json["length"] as? CGFloat,
+            let chamfer = json["chamfer"] as? CGFloat
         else { return SceneKit.SCNBox() }
         let g = SceneKit.SCNBox(width: w, height: h, length: l, chamferRadius: chamfer)
-        addMaterials(g, json:json, sides: 6)
-        return g
-    }
-    @objc class func SCNSphere(_ json:jsonType)-> SCNSphere {
-        guard
-            let shape = json["shape"] as? jsonType,
-            let r = shape["radius"] as? CGFloat
-        else { return SceneKit.SCNSphere() }
-        let g = SceneKit.SCNSphere(radius: r)
-        addMaterials(g, json:json, sides: 1)
-        return g
-    }
-    @objc class func SCNCylinder(_ json:jsonType)-> SCNCylinder {
-        guard
-            let shape = json["shape"] as? jsonType,
-            let r = shape["radius"] as? CGFloat,
-            let h = shape["height"] as? CGFloat
-        else { return SceneKit.SCNCylinder() }
-        let g = SceneKit.SCNCylinder(radius: r, height: h)
-        addMaterials(g, json:json, sides: 3)
-        return g
-    }
-    @objc class func SCNCone(_ json:jsonType)-> SCNCone {
-        guard
-            let shape = json["shape"] as? jsonType,
-            let tr = shape["topR"] as? CGFloat,
-            let br = shape["bottomR"] as? CGFloat,
-            let h = shape["height"] as? CGFloat
-            else { return SceneKit.SCNCone() }
-        let g = SceneKit.SCNCone(topRadius: tr, bottomRadius: br, height: h)
-        addMaterials(g, json:json, sides: 2) //RHD: Doesn't this have thre if tr > 0 ?
-        return g
-    }
-    @objc class func SCNPyramid(_ json: jsonType) -> SCNPyramid {
-        guard
-            let shape = json["shape"] as? jsonType,
-            let w = shape["width"] as? CGFloat,
-            let h = shape["height"] as? CGFloat,
-            let l = shape["length"] as? CGFloat
-        else { return SceneKit.SCNPyramid() }
-        let g = SceneKit.SCNPyramid(width: w, height: h, length: l)
-        addMaterials(g, json:json, sides: 5)
-        return g
-    }
-    @objc class func SCNTube(_ json: jsonType) -> SCNTube {
-        guard
-            let shape = json["shape"] as? jsonType,
-            let tr = shape["innerR"] as? CGFloat,
-            let br = shape["outerR"] as? CGFloat,
-            let h = shape["height"] as? CGFloat
-        else { return SceneKit.SCNTube() }
-        let g = SceneKit.SCNTube(innerRadius: tr, outerRadius: br, height: h)
-        addMaterials(g, json:json, sides: 1)
-        return g
-    }
-    @objc class func SCNTorus(_ json: jsonType) -> SCNTorus {
-        guard
-            let shape = json["shape"] as? jsonType,
-            let tr = shape["ringR"] as? CGFloat,
-            let br = shape["pipeR"] as? CGFloat
-            else { return SceneKit.SCNTorus() }
-        let g = SceneKit.SCNTorus(ringRadius: tr, pipeRadius: br)
-        addMaterials(g, json:json, sides: 1)
         return g
     }
     @objc class func SCNCapsule(_ json: jsonType) -> SCNCapsule {
         guard
-            let shape = json["shape"] as? jsonType,
-            let tr = shape["capR"] as? CGFloat,
-            let h = shape["height"] as? CGFloat
+            let tr = json["capR"] as? CGFloat,
+            let h = json["height"] as? CGFloat
             else { return SceneKit.SCNCapsule() }
         let g = SceneKit.SCNCapsule(capRadius: tr, height: h)
-        addMaterials(g, json:json, sides: 1)
+        return g
+    }
+    @objc class func SCNCone(_ json:jsonType)-> SCNCone {
+        guard
+            let tr = json["topR"] as? CGFloat,
+            let br = json["bottomR"] as? CGFloat,
+            let h = json["height"] as? CGFloat
+            else { return SceneKit.SCNCone() }
+        let g = SceneKit.SCNCone(topRadius: tr, bottomRadius: br, height: h)
+        return g
+    }
+    @objc class func SCNCylinder(_ json:jsonType)-> SCNCylinder {
+        guard
+            let r = json["radius"] as? CGFloat,
+            let h = json["height"] as? CGFloat
+            else { return SceneKit.SCNCylinder() }
+        let g = SceneKit.SCNCylinder(radius: r, height: h)
         return g
     }
     @objc class func SCNPlane(_ json: jsonType) -> SCNPlane {
         guard
-            let shape = json["shape"] as? jsonType,
-            let w = shape["width"] as? CGFloat,
-            let h = shape["height"] as? CGFloat
-        else { return SceneKit.SCNPlane() }
+            let w = json["width"] as? CGFloat,
+            let h = json["height"] as? CGFloat
+            else { return SceneKit.SCNPlane() }
         let g = SceneKit.SCNPlane(width: w, height: h)
-        if let cr = shape["cornerRadius"] as? CGFloat { g.cornerRadius = cr }
-        if let i = shape["cornerSegmentCount"] as? Int { g.cornerSegmentCount = i }
-        if let i = shape["widthSegmentCount"] as? Int { g.widthSegmentCount = i }
-        if let i = shape["heightSegmentCount"] as? Int { g.heightSegmentCount = i }
-        addMaterials(g, json:json, sides: 1)
+        if let cr = json["cornerRadius"] as? CGFloat { g.cornerRadius = cr }
+        if let i = json["cornerSegmentCount"] as? Int { g.cornerSegmentCount = i }
+        if let i = json["widthSegmentCount"] as? Int { g.widthSegmentCount = i }
+        if let i = json["heightSegmentCount"] as? Int { g.heightSegmentCount = i }
         return g
     }
-    @objc class func SCNTextNode(_ json: jsonType) -> SCNTextNode {
+    @objc class func SCNPyramid(_ json: jsonType) -> SCNPyramid {
+        guard
+            let w = json["width"] as? CGFloat,
+            let h = json["height"] as? CGFloat,
+            let l = json["length"] as? CGFloat
+        else { return SceneKit.SCNPyramid() }
+        let g = SceneKit.SCNPyramid(width: w, height: h, length: l)
+        return g
+    }
+    @objc class func SCNSphere(_ json:jsonType)-> SCNSphere {
+        guard
+            let r = json["radius"] as? CGFloat
+            else { return SceneKit.SCNSphere() }
+        let g = SceneKit.SCNSphere(radius: r)
+        return g
+    }
+    @objc class func SCNTorus(_ json: jsonType) -> SCNTorus {
+        guard
+            let tr = json["ringR"] as? CGFloat,
+            let br = json["pipeR"] as? CGFloat
+            else { return SceneKit.SCNTorus() }
+        let g = SceneKit.SCNTorus(ringRadius: tr, pipeRadius: br)
+        return g
+    }
+    @objc class func SCNTube(_ json: jsonType) -> SCNTube {
+        guard
+            let tr = json["innerR"] as? CGFloat,
+            let br = json["outerR"] as? CGFloat,
+            let h = json["height"] as? CGFloat
+        else { return SceneKit.SCNTube() }
+        let g = SceneKit.SCNTube(innerRadius: tr, outerRadius: br, height: h)
+        return g
+    }
+    @objc class func SCNText(_ json: jsonType) -> SCNText {
         let baseFontSize:CGFloat = 12.0;
-        let font = json["font"] as? jsonType ?? [:]
         let text = json["text"] as? String ?? "(null)"
-        let depth = font["depth"] as? CGFloat ?? 0.0
-        var size:CGFloat = 1;
-        let st = SCNText(string: text, extrusionDepth: depth / size)
+        let depth = json["depth"] as? CGFloat ?? 0.0
+        let fontSize = json["size"] as? CGFloat ?? baseFontSize
+        let size:CGFloat = fontSize / baseFontSize;
+        let st = SceneKit.SCNText(string: text, extrusionDepth: (depth / size))
+        st.flatness = 0.1
         var f = UIFont.systemFont(ofSize: baseFontSize)
-        if let s = font["size"] as? CGFloat { size = s }
-        if let fontName = font["name"] as? String {
+        if let fontName = json["name"] as? String {
             if let tf = UIFont(name: fontName, size: baseFontSize) { f = tf }
         }
-        if let cf = font["chamfer"] as? CGFloat { st.chamferRadius = cf / size }
+        if let cf = json["chamfer"] as? CGFloat { st.chamferRadius = cf / size }
         st.font = f
-        addMaterials(st, json:json, sides: 5)
-        let stn = SceneKit.SCNNode(geometry: st)
-        if let n = json["id"] as? String { stn.name = n }
-        stn.scale = SceneKit.SCNVector3(size, size, size)
-        let bbmin = stn.boundingBox.min
-        let bbmax = stn.boundingBox.max
-        let sf = Float(size)
-        stn.position = SceneKit.SCNVector3(-(bbmin.x+bbmax.x) / 2 * sf, -(bbmin.y + bbmax.y) / 2 * sf, -(bbmin.z + bbmax.z) / 2 * sf)
-        return stn
+        return st
     }
     @objc class func SCNLight(_ json: jsonType) -> SCNLight {
         let l = SceneKit.SCNLight()
@@ -173,8 +147,7 @@ typealias SCNTextNode = SCNNode
         let g = SceneKit.SCNShape(path: path, extrusionDepth: extrusion)
         if let e = shape["chamferMode"] as? SCNChamferMode { g.chamferMode = e }
         if let f = shape["chamferRadius"] as? CGFloat { g.chamferRadius = f }
-        if let s = shape["chamferProfilePathSvg"] as? String { setChamferProfilePathSvg(g, properties: shape) }
-        addMaterials(g, json: json, sides:1)
+        if let _ = shape["chamferProfilePathSvg"] as? String { setChamferProfilePathSvg(g, properties: shape) }
         return g
     }
 }
@@ -191,13 +164,15 @@ func setMaterialProperties(_ material:SCNMaterial, properties: jsonType) {
     material.isDoubleSided = properties["doubleSided"] as? Bool ?? true
     if let i = properties["blendMode"] as? SCNBlendMode { material.blendMode = i }
     if let lm = properties["lightingModel"] as? SCNMaterial.LightingModel { material.lightingModel  = lm }
+    /*
     if let j = properties["diffuse"] as? jsonType { setMaterialPropertyContents(j, material: material.diffuse) }
     if let j = properties["normal"] as? jsonType { setMaterialPropertyContents(j, material: material.normal) }
     if let j = properties["displacement"] as? jsonType { setMaterialPropertyContents(j, material: material.displacement)}
     if let j = properties["specular"] as? jsonType { setMaterialPropertyContents(j, material: material.specular)}
+ */
     if let f = properties["transparency"] as? CGFloat { material.transparency = f}
-    if let f = properties["metalness"] as? Float { material.lightingModel = .physicallyBased; material.metalness.contents = f}
-    if let f = properties["roughness"] as? Float {  material.lightingModel = .physicallyBased; material.roughness.contents = f}
+    if let f = properties["metalness"] as? Double { material.lightingModel = .physicallyBased; material.metalness.contents = f}
+    if let f = properties["roughness"] as? Double {  material.lightingModel = .physicallyBased; material.roughness.contents = f}
     if let x = properties["shaders"] as? [SCNShaderModifierEntryPoint: String] { material.shaderModifiers = x}
     if let b = properties["writesToDepthBuffer"] as? Bool { material.writesToDepthBuffer = b }
     if let i = properties["colorBufferWriteMask"] as? SCNColorMask { material.colorBufferWriteMask = i}
@@ -206,13 +181,15 @@ func setMaterialProperties(_ material:SCNMaterial, properties: jsonType) {
     if let b = properties["litPerPixel"] as? Bool { material.isLitPerPixel = b}
 }
 func setNodeProperties(_ node:SCNNode, properties: jsonType) {
+    print("Setting node properties")
+    print(properties)
     if let i = properties["categoryBitMask"] as? Int { node.categoryBitMask = i }
     if let i = properties["renderingOrder"] as? Int { node.renderingOrder = i }
     if let b = properties["castsShadow"] as? Bool { node.castsShadow = b }
     if let d = properties["transition"] as? jsonType, let f = d["duration"] as? Double { SCNTransaction.animationDuration = f }
     else { SCNTransaction.animationDuration = 0 }
     if let d = properties["position"] as? jsonType { node.position = RCTConvert.SCNVector3(d) }
-    if let f = properties["scale"] as? Float { node.scale = SCNVector3(f, f, f) }
+    if let f = properties["scale"] as? Double { node.scale = SCNVector3(f, f, f) }
     if let d = properties["eulerAngles"] as? jsonType { node.eulerAngles = RCTConvert.SCNVector3(d) }
     if let d = properties["orientation"] as? jsonType { node.orientation = RCTConvert.SCNVector4(d) }
     if let d = properties["rotation"] as? jsonType { node.rotation = RCTConvert.SCNVector4(d) }
@@ -243,9 +220,11 @@ func setShapeProperties(_ g:SCNGeometry, properties: jsonType) {
 func svgStringToBezier(_ path:String) -> SVGBezierPath {
     guard let paths:[SVGBezierPath] = SVGBezierPath.paths(fromSVGString: path) as? [SVGBezierPath] else { return SVGBezierPath() }
     let fullPath = paths[0];
-    for x in 2...paths.count {
-        let p = paths[x-1]
-        fullPath.append(p)
+    if(paths.count > 1) {
+        for x in 2...paths.count {
+            let p = paths[x-1]
+            fullPath.append(p)
+        }
     }
     return fullPath
 }

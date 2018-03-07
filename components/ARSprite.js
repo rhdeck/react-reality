@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import withAnimationFrame from '@panter/react-animation-frame';
+import React, { Component } from "react";
+import withAnimationFrame from "@panter/react-animation-frame";
 
-import { NativeModules, Animated } from 'react-native';
+import { NativeModules, Animated } from "react-native";
 
-import { position } from './lib/propTypes';
+import { position } from "./lib/propTypes";
 
-const ARKitManager = NativeModules.ARKitManager;
+const ARKitManager = NativeModules.RHDARViewManager;
 
 const ARSprite = withAnimationFrame(
   class extends Component {
@@ -32,7 +32,7 @@ const ARSprite = withAnimationFrame(
       return (
         <Animated.View
           style={{
-            position: 'absolute',
+            position: "absolute",
             transform: this.state.pos2D.getTranslateTransform(),
             ...this.props.style
           }}

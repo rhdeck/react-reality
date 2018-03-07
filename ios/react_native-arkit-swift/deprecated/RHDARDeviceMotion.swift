@@ -28,12 +28,14 @@ class RHDARDeviceMotion: RCTEventEmitter {
         listeners = listeners + 1
         startUpdates()
     }
-    override func removeListeners(_ count: Double) {
+    /*
+ @objc func removeListeners(_ count: Double) {
         listeners = listeners - count
         if(listeners < 1) {
             stopUpdates()
         }
     }
+ */
     internal var updating:Bool = false
     func startUpdates()  {
         guard !updating else { return }

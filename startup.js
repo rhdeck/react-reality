@@ -1,6 +1,6 @@
-import { NativeModules } from 'react-native';
+import { NativeModules } from "react-native";
 
-const ARKitManager = NativeModules.ARKitManager;
+const ARKitManager = NativeModules.RHDARViewManager;
 
 export default () => {
   // when reloading the app, the scene should be cleared.

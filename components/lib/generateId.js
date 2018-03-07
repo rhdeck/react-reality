@@ -1,13 +1,13 @@
 // Unique id generator
 
-const digits = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const digits = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 function toSex(num, base) {
   /* eslint no-param-reassign:0 */
   if (base) {
     num = parseInt(num, base);
   }
-  let [integer, decimal] = num.toString().split('.');
+  let [integer, decimal] = num.toString().split(".");
 
   integer = parseInt(integer, 10);
   const sex = [];
@@ -16,7 +16,7 @@ function toSex(num, base) {
     integer = Math.floor(integer / 60);
   } while (integer > 0);
 
-  let result = sex.reverse().join('');
+  let result = sex.reverse().join("");
 
   if (decimal) {
     decimal = parseFloat(`.${decimal}`);
@@ -30,7 +30,7 @@ function toSex(num, base) {
       precision--;
     } while (precision);
 
-    result += `.${rem.join('')}`;
+    result += `.${rem.join("")}`;
   }
 
   return result;
@@ -53,19 +53,12 @@ function toDigits(str, n) {
 }
 
 let random = Math.floor(Math.random() * 60 * 60 * 60 * 60);
-
-// export default function() {
-//   const firstEightDigits = Math.random().toString(36).substr(2, 8);
-//   const secondEightDigits = Math.random().toString(36).substr(2, 8);
-//   return `${firstEightDigits}${secondEightDigits}`;
-// }
-
-export default function(idfv) {
+export default function(defaultValue) {
   random++;
   const time = toSex(Math.floor(Date.now() / 1000));
-  const device = idfv ? toSex(idfv.split('-')[4], 16) : '';
+  const device = idfv ? toSex(idfv.split("-")[4], 16) : "";
   return `${toDigits(time, 6)}${device && toDigits(device, 10)}${toDigits(
     toSex(random),
-    4,
+    4
   )}`;
 }

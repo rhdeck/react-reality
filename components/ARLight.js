@@ -1,9 +1,10 @@
-import PropTypes from 'prop-types';
+// @TODO
+import PropTypes from "prop-types";
 
-import { categoryBitMask, color, lightType, shadowMode } from './lib/propTypes';
-import createArComponent from './lib/createArComponent';
+import { categoryBitMask, color, lightType, shadowMode } from "./lib/propTypes";
+import createArComponent from "./lib/createArComponent";
 
-const ARLight = createArComponent('addLight', {
+const ARLight = createArComponent("addLight", {
   type: lightType,
   color,
   temperature: PropTypes.number,
@@ -22,7 +23,7 @@ const ARLight = createArComponent('addLight', {
   orthographicScale: PropTypes.number,
   zFar: PropTypes.number,
   zNear: PropTypes.number,
-  lightCategoryBitMask: categoryBitMask,
+  lightCategoryBitMask: categoryBitMask
 });
 
 export default ARLight;

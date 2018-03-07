@@ -20,6 +20,16 @@ import ARKit
     @objc var onTapOnPlaneNoExtent: RCTBubblingEventBlock?
     @objc var onEvent: RCTBubblingEventBlock?
     @objc var onARKitError: RCTBubblingEventBlock?
+    var _cachedPreview: Any?
+    var _preview = true
+    @objc var preview:Bool {
+        get { return _preview }
+        set(v) {
+            if _cachedPreview == nil { _cachedPreview = arView?.scene.background.contents}
+            arView?.scene.background.contents  = v ? _cachedPreview : UIColor.black
+            _preview = v
+        }
+    }
     var _configuration:ARWorldTrackingConfiguration?
     var session:ARSession? {
         get { return arView?.session }
@@ -56,7 +66,7 @@ import ARKit
         get { return configuration.isLightEstimationEnabled}
         set(v) { configuration.isLightEstimationEnabled = v ; resume() }
     }
-    @objc var autoEnablesDefaultLighting:Bool {
+    @objc var autoenablesDefaultLighting:Bool {
         get { return arView?.automaticallyUpdatesLighting ?? false }
     }
     //@rn type=NSInteger
@@ -66,19 +76,18 @@ import ARKit
     }
     // MARK: - Statics
 
-    static var _sharedInstance:RHDARView = RHDARView()
-    class func sharedInstance() -> RHDARView {
-        //Check for initialization then let her rip
-        if(!_sharedInstance.isInitialized && !_sharedInstance.isInitializing) {
-            _sharedInstance.isInitializing = true
-            DispatchQueue.main.async() {
-                let arv = ARSCNView()
-                _sharedInstance.initAR(arv)
-                _sharedInstance.isInitialized = true
-                _sharedInstance.isInitializing = false;
-            }
+    static var _sharedInstance:RHDARView?
+    class func sharedInstance() -> RHDARView? {
+        //This is solely called by the viewmanager function, so I know it is from the UI thread.
+        if let s = _sharedInstance { return s }
+        if(Thread.isMainThread) {
+            _sharedInstance = RHDARView();
+            let s = _sharedInstance!
+            let arv = ARSCNView()
+            s.initAR(arv)
+            return s
         }
-        return _sharedInstance
+        return nil
     }
     // MARK: - Instance Methods
     func initAR(_ arv:ARSCNView) {

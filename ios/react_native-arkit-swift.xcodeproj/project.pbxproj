@@ -10,9 +10,15 @@
 		712815C520276B0600C460CB /* RHDARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712815C420276B0600C460CB /* RHDARView.swift */; };
 		712815C720276B1E00C460CB /* RHDARViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712815C620276B1E00C460CB /* RHDARViewManager.swift */; };
 		712815C92027AE8600C460CB /* RHDARNodeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712815C82027AE8600C460CB /* RHDARNodeManager.swift */; };
+		714545D92034E50D00E44E8D /* RHDSceneManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714545D82034E50D00E44E8D /* RHDSceneManager.swift */; };
+		714545DB2034EA9000E44E8D /* RHDMonoview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714545DA2034EA9000E44E8D /* RHDMonoview.swift */; };
+		714545DD2034EC9600E44E8D /* RHDMonoviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714545DC2034EC9600E44E8D /* RHDMonoviewManager.swift */; };
+		714545DF2034FEFD00E44E8D /* RHDSpriteScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714545DE2034FEFD00E44E8D /* RHDSpriteScene.swift */; };
 		718888822029F07300B4773F /* RHDARDeviceMotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718888812029F07300B4773F /* RHDARDeviceMotion.swift */; };
 		71888989202A20EB00B4773F /* RHDARGeosManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71888988202A20EB00B4773F /* RHDARGeosManager.swift */; };
 		7188898B202A268F00B4773F /* RHDARTextManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7188898A202A268F00B4773F /* RHDARTextManager.swift */; };
+		719D02A3204DCC020096F3C1 /* RHDSecondaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 719D02A2204DCC020096F3C1 /* RHDSecondaryView.swift */; };
+		719D02A5204DD2E90096F3C1 /* RHDPrimaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 719D02A4204DD2E90096F3C1 /* RHDPrimaryView.swift */; };
 		AAD78BA0AC6447529D3057BE /* rn-swift-bridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E00DCA45E7447438EF2917A /* rn-swift-bridge.m */; };
 /* End PBXBuildFile section */
 
@@ -33,9 +39,15 @@
 		712815C420276B0600C460CB /* RHDARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RHDARView.swift; sourceTree = "<group>"; };
 		712815C620276B1E00C460CB /* RHDARViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RHDARViewManager.swift; sourceTree = "<group>"; };
 		712815C82027AE8600C460CB /* RHDARNodeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RHDARNodeManager.swift; sourceTree = "<group>"; };
+		714545D82034E50D00E44E8D /* RHDSceneManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RHDSceneManager.swift; sourceTree = "<group>"; };
+		714545DA2034EA9000E44E8D /* RHDMonoview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RHDMonoview.swift; sourceTree = "<group>"; };
+		714545DC2034EC9600E44E8D /* RHDMonoviewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RHDMonoviewManager.swift; sourceTree = "<group>"; };
+		714545DE2034FEFD00E44E8D /* RHDSpriteScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RHDSpriteScene.swift; sourceTree = "<group>"; };
 		718888812029F07300B4773F /* RHDARDeviceMotion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RHDARDeviceMotion.swift; sourceTree = "<group>"; };
 		71888988202A20EB00B4773F /* RHDARGeosManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RHDARGeosManager.swift; sourceTree = "<group>"; };
 		7188898A202A268F00B4773F /* RHDARTextManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RHDARTextManager.swift; sourceTree = "<group>"; };
+		719D02A2204DCC020096F3C1 /* RHDSecondaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RHDSecondaryView.swift; sourceTree = "<group>"; };
+		719D02A4204DD2E90096F3C1 /* RHDPrimaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RHDPrimaryView.swift; sourceTree = "<group>"; };
 		71D8F37C1FB7A97B0000973C /* libreact_native-arkit-swift.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libreact_native-arkit-swift.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		71D8F3881FB7AA9D0000973C /* react_native-arkit-swift-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "react_native-arkit-swift-Bridging-Header.h"; sourceTree = "<group>"; };
 		8E00DCA45E7447438EF2917A /* rn-swift-bridge.m */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.objc; path = "rn-swift-bridge.m"; sourceTree = "<group>"; };
@@ -57,6 +69,19 @@
 			children = (
 			);
 			name = "Recovered References";
+			sourceTree = "<group>";
+		};
+		719D02A1204C91EF0096F3C1 /* deprecated */ = {
+			isa = PBXGroup;
+			children = (
+				718888812029F07300B4773F /* RHDARDeviceMotion.swift */,
+				712815C420276B0600C460CB /* RHDARView.swift */,
+				712815C82027AE8600C460CB /* RHDARNodeManager.swift */,
+				71888988202A20EB00B4773F /* RHDARGeosManager.swift */,
+				7188898A202A268F00B4773F /* RHDARTextManager.swift */,
+				712815C620276B1E00C460CB /* RHDARViewManager.swift */,
+			);
+			path = deprecated;
 			sourceTree = "<group>";
 		};
 		71D8F3731FB7A97B0000973C = {
@@ -81,13 +106,14 @@
 		71D8F37E1FB7A97B0000973C /* react_native-arkit-swift */ = {
 			isa = PBXGroup;
 			children = (
+				719D02A1204C91EF0096F3C1 /* deprecated */,
 				712815C22026480B00C460CB /* RHDARExtension.swift */,
-				712815C420276B0600C460CB /* RHDARView.swift */,
-				712815C620276B1E00C460CB /* RHDARViewManager.swift */,
-				712815C82027AE8600C460CB /* RHDARNodeManager.swift */,
-				718888812029F07300B4773F /* RHDARDeviceMotion.swift */,
-				71888988202A20EB00B4773F /* RHDARGeosManager.swift */,
-				7188898A202A268F00B4773F /* RHDARTextManager.swift */,
+				714545D82034E50D00E44E8D /* RHDSceneManager.swift */,
+				714545DA2034EA9000E44E8D /* RHDMonoview.swift */,
+				719D02A2204DCC020096F3C1 /* RHDSecondaryView.swift */,
+				714545DC2034EC9600E44E8D /* RHDMonoviewManager.swift */,
+				714545DE2034FEFD00E44E8D /* RHDSpriteScene.swift */,
+				719D02A4204DD2E90096F3C1 /* RHDPrimaryView.swift */,
 			);
 			path = "react_native-arkit-swift";
 			sourceTree = "<group>";
@@ -118,7 +144,7 @@
 		71D8F3741FB7A97B0000973C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 920;
+				LastUpgradeCheck = 930;
 				ORGANIZATIONNAME = "Ray Deck";
 				TargetAttributes = {
 					71D8F37B1FB7A97B0000973C = {
@@ -152,12 +178,18 @@
 			files = (
 				712815C32026480B00C460CB /* RHDARExtension.swift in Sources */,
 				718888822029F07300B4773F /* RHDARDeviceMotion.swift in Sources */,
+				719D02A5204DD2E90096F3C1 /* RHDPrimaryView.swift in Sources */,
 				7188898B202A268F00B4773F /* RHDARTextManager.swift in Sources */,
+				719D02A3204DCC020096F3C1 /* RHDSecondaryView.swift in Sources */,
 				712815C720276B1E00C460CB /* RHDARViewManager.swift in Sources */,
+				714545DB2034EA9000E44E8D /* RHDMonoview.swift in Sources */,
 				71888989202A20EB00B4773F /* RHDARGeosManager.swift in Sources */,
+				714545D92034E50D00E44E8D /* RHDSceneManager.swift in Sources */,
 				712815C520276B0600C460CB /* RHDARView.swift in Sources */,
 				712815C92027AE8600C460CB /* RHDARNodeManager.swift in Sources */,
 				AAD78BA0AC6447529D3057BE /* rn-swift-bridge.m in Sources */,
+				714545DF2034FEFD00E44E8D /* RHDSpriteScene.swift in Sources */,
+				714545DD2034EC9600E44E8D /* RHDMonoviewManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -178,6 +210,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -185,6 +218,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -212,6 +246,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -233,6 +268,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -240,6 +276,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -261,9 +298,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -274,10 +313,13 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 3UK2WGC8YX;
+				FRAMEWORK_SEARCH_PATHS = "/Users/ray/Documents/artest3/ios/Pods/**";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../../../ios/Pods/**",
-					"$(SRCROOT)/../../arkitapp/ios/Pods/**",
+					"$(SRCROOT)/../../artest2/ios/Pods/**",
+					"/Users/ray/Documents/arkitapp/ios/Pods/**",
+					"/Users/ray/Documents/artest3/ios/Pods/**",
 				);
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
@@ -296,10 +338,13 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 3UK2WGC8YX;
+				FRAMEWORK_SEARCH_PATHS = "/Users/ray/Documents/artest3/ios/Pods/**";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../../../ios/Pods/**",
-					"$(SRCROOT)/../../arkitapp/ios/Pods/**",
+					"$(SRCROOT)/../../artest2/ios/Pods/**",
+					"/Users/ray/Documents/arkitapp/ios/Pods/**",
+					"/Users/ray/Documents/artest3/ios/Pods/**",
 				);
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";

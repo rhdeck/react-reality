@@ -19,12 +19,13 @@ class RHDARNodeManager {
         rootNode.addChildNode(cameraOrigin)
         rootNode.addChildNode(localOrigin)
         rootNode.addChildNode(frontOfCamera)
+        
     }
     func addNodeToScene(_ node:SCNNode, inReferenceFrame:String?) {
         let r =  inReferenceFrame ?? "Local"
         registerNode(node)
         switch r {
-        case "Local":
+        case "Local", "":
             localOrigin.addChildNode(node)
         case "Camera":
             cameraOrigin.addChildNode(node)
@@ -32,7 +33,7 @@ class RHDARNodeManager {
             frontOfCamera.addChildNode(node)
         default:
             //Do nothing
-            print("Invalid value passed: " + r)
+            print("Invalid value passed: '" + r + "'")
         }
     }
     func clear() {

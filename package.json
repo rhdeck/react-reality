@@ -2,16 +2,26 @@
   "name": "react-native-arkit-swift",
   "version": "0.0.1",
   "peerDependencies": {
+    "react-native-pod": "^1.6.0",
     "react-native-swift": "^0.10.0"
   },
   "main": "index.js",
+  "scripts": {
+    "bridge": "react-native-swift-bridge",
+    "watch": "react-native-swift-bridge --watch"
+  },
   "dependencies": {
+    "@panter/react-animation-frame": "^0.3.7",
     "fast-deep-equal": "^1.0.0",
     "lodash": "^4.17.5",
     "prop-types": "^15.6.0",
-    "react-native-xcode": "^1.0.0"
+    "react-native-xcode": "^1.0.0",
+    "uuid": "^3.2.1"
   },
   "pods": {
     "PocketSVG": "*"
+  },
+  "devDependencies": {
+    "react": "^16.2.0"
   }
 }

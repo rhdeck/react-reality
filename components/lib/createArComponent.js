@@ -1,53 +1,16 @@
-import { Component } from 'react';
-import { NativeModules, processColor } from 'react-native';
-import PropTypes from 'prop-types';
-import filter from 'lodash/filter';
-import isDeepEqual from 'fast-deep-equal';
-import isEmpty from 'lodash/isEmpty';
-import keys from 'lodash/keys';
-import pick from 'lodash/pick';
-import some from 'lodash/some';
+import { Component } from "react";
+import { NativeModules, processColor } from "react-native";
+import PropTypes from "prop-types";
+import filter from "lodash/filter";
+import isDeepEqual from "fast-deep-equal";
+import isEmpty from "lodash/isEmpty";
+import keys from "lodash/keys";
+import pick from "lodash/pick";
+import some from "lodash/some";
 
-import {
-  castsShadow,
-  categoryBitMask,
-  eulerAngles,
-  opacity,
-  orientation,
-  position,
-  renderingOrder,
-  rotation,
-  scale,
-  transition,
-} from './propTypes';
-import processMaterial from './processMaterial';
-import generateId from './generateId';
+import processMaterial from "./processMaterial";
 
-const { ARGeosManager } = NativeModules;
-
-const PROP_TYPES_IMMUTABLE = {
-  id: PropTypes.string,
-  frame: PropTypes.string,
-};
-const MOUNT_UNMOUNT_ANIMATION_PROPS = {
-  propsOnMount: PropTypes.any,
-  propsOnUnMount: PropTypes.any,
-};
-const PROP_TYPES_NODE = {
-  position,
-  transition,
-  orientation,
-  eulerAngles,
-  rotation,
-  scale,
-  categoryBitMask,
-  castsShadow,
-  renderingOrder,
-  opacity,
-};
-
-const NODE_PROPS = keys(PROP_TYPES_NODE);
-const IMMUTABLE_PROPS = keys(PROP_TYPES_IMMUTABLE);
+const { RHDARGeosManager } = NativeModules;
 const DEBUG = false;
 const TIMERS = {};
 
@@ -64,7 +27,7 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
     ...MOUNT_UNMOUNT_ANIMATION_PROPS,
     ...PROP_TYPES_IMMUTABLE,
     ...PROP_TYPES_NODE,
-    ...propTypes,
+    ...propTypes
   };
   // any custom props (material, shape, ...)
   const nonNodePropKeys = keys(propTypes);
@@ -74,50 +37,51 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
     ...(props.shadowColor
       ? { shadowColor: processColor(props.shadowColor) }
       : {}),
-    ...(props.material ? { material: processMaterial(props.material) } : {}),
+    ...(props.material ? { material: processMaterial(props.material) } : {})
   });
 
   const getNonNodeProps = props => ({
     ...pick(props, nonNodePropKeys),
-    ...parseMaterials(props),
+    ...parseMaterials(props)
   });
 
   const mountFunc =
-    typeof mountConfig === 'string'
-      ? ARGeosManager[mountConfig]
+    typeof mountConfig === "string"
+      ? RHDARGeosManager[mountConfig]
       : mountConfig.mount;
 
-  const mount = (id, props) => {
+  const mount = async (id, props) => {
     if (DEBUG) console.log(`[${id}] [${new Date().getTime()}] mount`, props);
-    mountFunc(
-      getNonNodeProps(props),
+    const nodeName = await RHDARGeosManager.addNode(
       {
         id,
-        ...pick(props, NODE_PROPS),
+        ...pick(props, NODE_PROPS)
       },
-      props.frame,
+      props.frame
     );
+    return await mountFunc(getNonNodeProps(props), nodeName);
   };
 
   const update = (id, props) => {
     if (DEBUG) console.log(`[${id}] [${new Date().getTime()}] update`, props);
-    ARGeosManager.updateNode(id, props);
+    RHDARGeosManager.updateNode(id, props);
   };
 
   const unmount = id => {
     if (DEBUG) console.log(`[${id}] [${new Date().getTime()}] unmount`);
-    ARGeosManager.unmount(id);
+    RHDARGeosManager.removeNode(id);
   };
 
   const ARComponent = class extends Component {
     identifier = null;
     componentDidMount() {
       this.identifier = this.props.id || generateId();
-      const { propsOnMount, ...props } = this.props;
+      const { propsOnMount, children, ...props } = this.props;
+      if (children) console.log("I have some kids!!!", children);
       if (propsOnMount) {
         const fullPropsOnMount = { ...props, ...propsOnMount };
         const {
-          transition: transitionOnMount = { duration: 0 },
+          transition: transitionOnMount = { duration: 0 }
         } = fullPropsOnMount;
 
         this.doPendingTimers();
@@ -135,7 +99,7 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
     componentWillUpdate(props) {
       const changedKeys = filter(
         keys(this.props),
-        key => !isDeepEqual(props[key], this.props[key]),
+        key => !isDeepEqual(props[key], this.props[key])
       );
 
       if (isEmpty(changedKeys)) {
@@ -144,14 +108,13 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
 
       if (__DEV__) {
         const nonAllowedUpdates = filter(changedKeys, k =>
-          IMMUTABLE_PROPS.includes(k),
+          IMMUTABLE_PROPS.includes(k)
         );
         if (nonAllowedUpdates.length > 0) {
           throw new Error(
-            `[${this
-              .identifier}] prop can't be updated: '${nonAllowedUpdates.join(
-              ', ',
-            )}'`,
+            `[${
+              this.identifier
+            }] prop can't be updated: '${nonAllowedUpdates.join(", ")}'`
           );
         }
       }
@@ -160,7 +123,7 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
         if (DEBUG)
           console.log(
             `[${this.identifier}] need to remount node because of `,
-            changedKeys,
+            changedKeys
           );
         mount(this.identifier, { ...this.props, ...props });
       } else {
@@ -171,9 +134,9 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
           // always inclue transition
           transition: {
             ...this.props.transition,
-            ...props.transition,
+            ...props.transition
           },
-          ...parseMaterials(pick(props, changedKeys)),
+          ...parseMaterials(pick(props, changedKeys))
         };
 
         update(this.identifier, propsToupdate);
@@ -205,7 +168,7 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
           callback.call(this);
           delete TIMERS[this.identifier];
         }, duration),
-        callback,
+        callback
       };
     }
 
