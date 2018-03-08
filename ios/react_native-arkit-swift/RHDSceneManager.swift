@@ -2,7 +2,7 @@ import Foundation
 import SceneKit
 import ARKit
 @objc(RHDSceneManager)
-class RHDSceneManager:RCTEventEmitter, ARSessionDelegate, ARSCNViewDelegate {
+class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
     static var sharedInstance:RHDSceneManager?
     override init() {
         super.init()
