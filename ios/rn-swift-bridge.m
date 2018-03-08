@@ -3,6 +3,7 @@
 #import <React/RCTBridgeModule.h>
 @interface RCT_EXTERN_MODULE(RHDMonoViewManager, RCTViewManager)
 RCT_EXTERN_METHOD(doTap:(double)x y:(double)y resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
+RCT_EXPORT_VIEW_PROPERTY(preview, BOOL);
 @end
 @interface RCT_EXTERN_MODULE(RHDSceneManager, RCTEventEmitter)
 RCT_EXTERN_METHOD(addNode:(SCNNode *)node parentID:(NSString *)parentID resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
@@ -32,25 +33,6 @@ RCT_EXTERN_METHOD(setUpdateInterval:(double)interval);
 RCT_EXTERN_METHOD(getUpdateInterval:(RCTResponseSenderBlock)cb);
 RCT_EXTERN_METHOD(getData:(RCTResponseSenderBlock)cb);
 RCT_EXTERN_METHOD(removeListeners:(double)count);
-@end
-@interface RCT_EXTERN_MODULE(RHDARGeosManager, NSObject)
-RCT_EXTERN_METHOD(addNode:(SCNNode *)node parent:(NSString *)parent resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
-RCT_EXTERN_METHOD(addBox:(SCNBox *)geometry nodeid:(NSString *)nodeid resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
-RCT_EXTERN_METHOD(addSphere:(SCNSphere *)geometry nodeid:(NSString *)nodeid resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
-RCT_EXTERN_METHOD(addCylinder:(SCNCylinder *)geometry nodeid:(NSString *)nodeid resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
-RCT_EXTERN_METHOD(addCone:(SCNCone *)geometry nodeid:(NSString *)nodeid resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
-RCT_EXTERN_METHOD(addTorus:(SCNTorus *)geometry nodeid:(NSString *)nodeid resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
-RCT_EXTERN_METHOD(addPyramid:(SCNPyramid *)geometry nodeid:(NSString *)nodeid resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
-RCT_EXTERN_METHOD(addTube:(SCNTube *)geometry nodeid:(NSString *)nodeid resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
-RCT_EXTERN_METHOD(addPlane:(SCNPlane *)geometry nodeid:(NSString *)nodeid resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
-RCT_EXTERN_METHOD(addShape:(SCNShape *)geometry nodeid:(NSString *)nodeid resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
-RCT_EXTERN_METHOD(addLight:(SCNLight *)light nodeid:(NSString *)nodeid resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
-RCT_EXTERN_METHOD(removeNode:(NSString *)nodeid resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
-RCT_EXTERN_METHOD(updateNode:(NSString *)nodeid properties:(NSDictionary *)properties resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
-RCT_EXTERN_METHOD(addSpriteText:(NSString *)text nodeid:(NSString *)nodeid resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
-@end
-@interface RCT_EXTERN_MODULE(RHDARTextManager, NSObject)
-RCT_EXTERN_METHOD(mount:(SCNTextNode *)textNode node:(SCNNode *)node frame:(NSString *)frame);
 @end
 @interface RCT_EXTERN_MODULE(RHDARViewManager, RCTViewManager)
 RCT_EXTERN_METHOD(pause:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
