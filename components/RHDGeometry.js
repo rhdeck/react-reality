@@ -24,20 +24,8 @@ export default (type, geomProps, numSides) => {
         );
       } catch (e) {}
     }
-    async componentWillMount() {
-      console.log("Running CWM");
-      await this.nativeUpdate();
-    }
-    async componentWillUpdate(nextProps) {
-      console.log("And now I will update", type);
-      this.nativeUpdate();
-    }
-    componentWillReceiveProps(nextProps) {
-      console.log("Here come the geom props", type, nextProps);
-    }
     shouldComponentUpdate(nextProps) {
-      console.log("I am told I should update", type);
-      return type == "Text";
+      return true;
     }
     async componentWillUnmount() {
       if (!this.props.parentNode)
@@ -47,6 +35,7 @@ export default (type, geomProps, numSides) => {
       } catch (e) {}
     }
     render() {
+      this.nativeUpdate();
       if (!this.props.children) return null;
       const c = Children.map(this.props.children, child => {
         return React.cloneElement(child, {
