@@ -5,6 +5,9 @@
 RCT_EXTERN_METHOD(doTap:(double)x y:(double)y resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXPORT_VIEW_PROPERTY(preview, BOOL);
 @end
+@interface RCT_EXTERN_MODULE(RHDPrimaryViewManager, RCTViewManager)
+RCT_EXPORT_VIEW_PROPERTY(interPupilaryDistance, float);
+@end
 @interface RCT_EXTERN_MODULE(RHDSceneManager, RCTEventEmitter)
 RCT_EXTERN_METHOD(addNode:(SCNNode *)node parentID:(NSString *)parentID resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(removeNode:(NSString *)id resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
@@ -27,6 +30,8 @@ RCT_EXTERN_METHOD(removeMaterial:(NSString *)forNode atPosition:(NSInteger)atPos
 RCT_EXTERN_METHOD(clear:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(resume:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(pause:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
+@end
+@interface RCT_EXTERN_MODULE(RHDSecondaryViewManager, RCTViewManager)
 @end
 @interface RCT_EXTERN_MODULE(RHDARDeviceMotion, RCTEventEmitter)
 RCT_EXTERN_METHOD(setUpdateInterval:(double)interval);
