@@ -39,7 +39,6 @@ class RHDMonoview: UIView, ARSCNViewDelegate {
                 sm.doResume()
             }
         }
-        
         return self
     }
     override func layoutSubviews() {
@@ -48,9 +47,7 @@ class RHDMonoview: UIView, ARSCNViewDelegate {
     }
     func handleTap(point: CGPoint, resolve:RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         guard let v = arview else { reject("no_view", "No AR View", nil); return }
-        print(point)
         let r = v.hitTest(point, options: nil)
-        //let r = v.hitTest(point, types: .existingPlaneUsingExtent)
         let m = r.map() { h in
             return h.node.name
         }
