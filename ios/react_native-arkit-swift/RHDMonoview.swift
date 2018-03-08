@@ -4,6 +4,25 @@ import ARKit
 class RHDMonoview: UIView, ARSCNViewDelegate {
     var rscene: RHDSceneManager? = RHDSceneManager.sharedInstance
     var arview: ARSCNView?
+    var _preview:Bool = true
+    var cachedPreview: Any?
+    @objc var preview:Bool {
+        get {
+            return _preview
+        }
+        set(newVal) {
+            if cachedPreview == nil {
+                cachedPreview = arview?.scene.background.contents
+            }
+            _preview = newVal
+            if(_preview) {
+                arview?.scene.background.contents = cachedPreview
+                
+            } else {
+                arview?.scene.background.contents = UIColor.black
+            }
+        }
+    }
     func start() -> RHDMonoview {
         if Thread.isMainThread {
             let a = ARSCNView()
@@ -13,6 +32,7 @@ class RHDMonoview: UIView, ARSCNViewDelegate {
                 a.session.delegate = sm
                 sm.scene = a.scene
                 sm.session = a.session
+                sm.primeCameraNode = a.pointOfView
                 a.automaticallyUpdatesLighting = true
                 a.autoenablesDefaultLighting = true
                 addSubview(a)
