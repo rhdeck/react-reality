@@ -20,7 +20,7 @@ class RHDSecondaryView: UIView {
             isStarted = true
         } else {
             DispatchQueue.main.async() {
-                self.start()
+                let _ = self.start()
             }
         }
         return self
