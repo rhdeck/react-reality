@@ -38,7 +38,8 @@ RHDPrimaryView.propTypes = {
   onTapOnPlaneUsingExtent: PropTypes.func,
   onTapOnPlaneNoExtent: PropTypes.func,
   onEvent: PropTypes.func,
-  onStart: PropTypes.func
+  onStart: PropTypes.func,
+  interPupilaryDistance: PropTypes.number
 };
 const NativeV = requireNativeComponent("RHDPrimaryView", RHDPrimaryView);
 

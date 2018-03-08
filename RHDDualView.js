@@ -38,8 +38,7 @@ class RHDDualView extends Component {
   }
 }
 RHDDualView.propTypes = {
-  ...RHDPrimaryView.propTypes,
-  interPupillaryDistance: PropTypes.number
+  ...RHDPrimaryView.propTypes
 };
 export default RHDDualView;
 /*
