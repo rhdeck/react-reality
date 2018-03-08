@@ -113,7 +113,7 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
     @objc func setPyramid(_ g: SCNPyramid, forNode: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         setGeometry(g, forNode: forNode, resolve: resolve, reject: reject);
     }
-    @objc func setSphere(_ g: SCNBox, forNode: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+    @objc func setSphere(_ g: SCNSphere, forNode: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         setGeometry(g, forNode: forNode, resolve: resolve, reject: reject);
     }
     @objc func setText(_ g: SCNText, forNode: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
