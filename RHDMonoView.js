@@ -1,10 +1,4 @@
-import {
-  StyleSheet,
-  View,
-  Text,
-  NativeModules,
-  requireNativeComponent
-} from "react-native";
+import { NativeModules, requireNativeComponent } from "react-native";
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { position, transition } from "./components/lib/propTypes";
