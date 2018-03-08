@@ -46,7 +46,6 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         }
     }
     var isFixingOrphans = false
-
     func fixOrphans() {
         guard !isFixingOrphans else { return }
         isFixingOrphans = true
@@ -145,9 +144,10 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
             g.materials.append(material)
         }
     }
-    @objc func setMaterialProperty(_ materialProperty: jsonType, propertyName: String, forMaterialAtPosition: Int, forNode: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+    @objc func setMaterialProperty(_ json: jsonType, propertyName: String, forMaterialAtPosition: Int, forNode: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         guard let n = nodes[forNode] else { reject("no_node", "No Node with name " + forNode, nil); return }
         guard let g = n.geometry else { reject("no_geometry", "No Geometry at node with name " + forNode, nil); return }
+        guard forMaterialAtPosition < g.materials.count else { reject("no_matieral", "No Material set at position " + String(forMaterialAtPosition) + "for node with name " + forNode, nil); return }
         let m = g.materials[forMaterialAtPosition]
         var mp:SCNMaterialProperty = SCNMaterialProperty()
         switch(propertyName) {
@@ -161,7 +161,7 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
             reject("invalid_property", "Not a valid material property: " + propertyName, nil)
             return
         }
-        setMaterialPropertyContents(materialProperty, material: mp)
+        setMaterialPropertyContents(json, materialProperty: mp)
         resolve(true) 
     }
     @objc func removeGeometry(_ forNode: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
@@ -174,6 +174,24 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         guard let g = n.geometry else { reject("no_geometry", "No Geometry at node with name " + forNode, nil); return }
         g.removeMaterial(at: atPosition)
         resolve(true)
+    }
+    @objc func addScene(_ scene:SKScene, forNode: String, atPosition: Int, withType: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        guard let n = nodes[forNode] else { reject("no_node", "No Node with name " + forNode, nil); return }
+        guard let g = n.geometry else { reject("no_geometry", "No Geometry at node with name " + forNode, nil); return }
+        let m = g.materials[atPosition]
+        var mp:SCNMaterialProperty
+        switch(withType) {
+        case "diffuse":
+            mp = m.diffuse
+        case "normal":
+            mp = m.normal
+        case "specular":
+            mp = m.specular
+        default:
+            reject("invalid_materialproperty", "Invalid Matieral Property Type: " + withType, nil)
+            return
+        }
+        mp.contents = scene
     }
     //MARK:Session Management
     @objc func clear(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
@@ -293,11 +311,9 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         } else {
             listenedEvents[eventName] = 1
         }
-        
     }
     override func removeListeners(_ count: Int) {
         // Kill off all my listeners please
         listenedEvents = [:]
     }
 }
-
