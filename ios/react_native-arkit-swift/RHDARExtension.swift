@@ -1,5 +1,6 @@
 import Foundation
 import SceneKit
+import SpriteKit
 typealias jsonType = [String:Any]
 typealias SCNTextNode = SCNNode
 @objc extension RCTConvert {
@@ -150,6 +151,17 @@ typealias SCNTextNode = SCNNode
         if let _ = shape["chamferProfilePathSvg"] as? String { setChamferProfilePathSvg(g, properties: shape) }
         return g
     }
+    @objc class func SKLabelNode(_ json: jsonType) -> SKLabelNode {
+        let skln = SpriteKit.SKLabelNode()
+        if let s = json["text"] as? String { skln.text = s }
+        if let s = json["fontName"] as? String { skln.fontName = s }
+        if let d = json["fontSize"] as? Double { skln.fontSize = CGFloat(d) }
+        if let c = json["fontColor"] as? UIColor { skln.fontColor = c }
+        skln.verticalAlignmentMode = .center
+        skln.horizontalAlignmentMode = .center
+        if let d = json["width"] as? Double { skln.preferredMaxLayoutWidth = CGFloat(d) }
+        return skln
+    }
 }
 func addMaterials(_ g:SCNGeometry, json: jsonType, sides:Int) {
     guard let mj = json["material"] as? jsonType else { return }
@@ -164,12 +176,6 @@ func setMaterialProperties(_ material:SCNMaterial, properties: jsonType) {
     material.isDoubleSided = properties["doubleSided"] as? Bool ?? true
     if let i = properties["blendMode"] as? SCNBlendMode { material.blendMode = i }
     if let lm = properties["lightingModel"] as? SCNMaterial.LightingModel { material.lightingModel  = lm }
-    /*
-    if let j = properties["diffuse"] as? jsonType { setMaterialPropertyContents(j, material: material.diffuse) }
-    if let j = properties["normal"] as? jsonType { setMaterialPropertyContents(j, material: material.normal) }
-    if let j = properties["displacement"] as? jsonType { setMaterialPropertyContents(j, material: material.displacement)}
-    if let j = properties["specular"] as? jsonType { setMaterialPropertyContents(j, material: material.specular)}
- */
     if let f = properties["transparency"] as? CGFloat { material.transparency = f}
     if let f = properties["metalness"] as? Double { material.lightingModel = .physicallyBased; material.metalness.contents = f}
     if let f = properties["roughness"] as? Double {  material.lightingModel = .physicallyBased; material.roughness.contents = f}
@@ -195,10 +201,10 @@ func setNodeProperties(_ node:SCNNode, properties: jsonType) {
     if let d = properties["rotation"] as? jsonType { node.rotation = RCTConvert.SCNVector4(d) }
     if let f = properties["opacity"] as? CGFloat { node.opacity = f }
 }
-func setMaterialPropertyContents(_ properties: jsonType, material: SCNMaterialProperty) {
-    if let path = properties["path"] { material.contents = path }
-    else if let color = properties["color"] { material.contents = RCTConvert.uiColor(color) }
-    if let intensity = properties["intensity"] as? CGFloat { material.intensity = intensity }
+func setMaterialPropertyContents(_ properties: jsonType, materialProperty: SCNMaterialProperty) {
+    if let path = properties["path"] { materialProperty.contents = path }
+    else if let color = properties["color"] { materialProperty.contents = RCTConvert.uiColor(color) }
+    if let intensity = properties["intensity"] as? CGFloat { materialProperty.intensity = intensity }
 }
 func setShapeProperties(_ g:SCNGeometry, properties: jsonType) {
     properties.forEach() {k, v in
