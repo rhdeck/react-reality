@@ -7,7 +7,7 @@ const { RHDSceneManager } = NativeModules;
 
 export default (type, geomProps, numSides) => {
   const Geom = class extends Component {
-    async componentWillMount() {
+    async nativeUpdate() {
       if (!this.props.parentNode)
         throw new Error("Cannot mount a Geometry without a parent Node");
       const mountFunc = RHDSceneManager["set" + type];
@@ -24,7 +24,21 @@ export default (type, geomProps, numSides) => {
         );
       } catch (e) {}
     }
-    componentWillUpdate(nextProps) {}
+    async componentWillMount() {
+      console.log("Running CWM");
+      await this.nativeUpdate();
+    }
+    async componentWillUpdate(nextProps) {
+      console.log("And now I will update", type);
+      this.nativeUpdate();
+    }
+    componentWillReceiveProps(nextProps) {
+      console.log("Here come the geom props", type, nextProps);
+    }
+    shouldComponentUpdate(nextProps) {
+      console.log("I am told I should update", type);
+      return type == "Text";
+    }
     async componentWillUnmount() {
       if (!this.props.parentNode)
         throw new Error("Cannot mount a Geometry without a parent Node");

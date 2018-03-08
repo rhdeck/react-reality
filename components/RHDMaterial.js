@@ -11,7 +11,7 @@ import {
 import pickBy from "lodash/pickBy";
 const { RHDSceneManager } = NativeModules;
 class RHDMaterial extends Component {
-  componentWillMount() {
+  nativeUpdate() {
     const filteredProps = pickBy(
       this.props,
       (v, k) => materialPropKeys.indexOf(k) > -1
@@ -19,7 +19,12 @@ class RHDMaterial extends Component {
     const index = this.props.index ? this.props.index : 0;
     RHDSceneManager.setMaterial(filteredProps, this.props.parentNode, index);
   }
-  componentWillUpdate(nextProps) {}
+  componentWillMount() {
+    this.nativeUpdate();
+  }
+  componentWillUpdate(nextProps) {
+    this.nativeUpdate();
+  }
   async updateMaterial(id, property) {
     try {
       await RHDSceneManager.setMaterialProperty(
