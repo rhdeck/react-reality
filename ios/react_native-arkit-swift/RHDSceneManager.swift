@@ -11,6 +11,7 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate, ARSCNViewDelegate {
         }
         RHDSceneManager.sharedInstance = self
     }
+    var primeCameraNode:SCNNode?
     var scene:SCNScene?
     var session:ARSession?
     var configuration:ARWorldTrackingConfiguration = ARWorldTrackingConfiguration()
