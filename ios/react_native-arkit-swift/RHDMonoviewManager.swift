@@ -1,5 +1,5 @@
 import Foundation
-//@rn view=RHDMonoview
+//@rn view=RHDMonoView
 @objc(RHDMonoViewManager)
 class RHDMonoviewManager:RCTViewManager {
     var v: RHDMonoview?
@@ -7,8 +7,8 @@ class RHDMonoviewManager:RCTViewManager {
         v = (RHDMonoview()).start()
         return v!
     }
-    func requiresMainQueueSetup() -> Bool {
-        return true
+    override class func requiresMainQueueSetup() -> Bool {
+        return false
     }
     @objc func doTap(_ x: Double, y: Double, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         print("doTap x: " + String(x) + " y: " + String(y))
