@@ -14,6 +14,8 @@ class RHDPrimaryView: UIView, ARSCNViewDelegate {
             guard let sm = RHDSceneManager.sharedInstance else { return self }
             a.session.delegate = sm
             sm.scene = a.scene
+            a.scene.background.contents = UIColor.black
+            sm.primeCameraNode = a.pointOfView
             addSubview(a)
             sm.doResume()
         }
