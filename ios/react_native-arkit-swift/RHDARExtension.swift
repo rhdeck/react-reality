@@ -159,8 +159,21 @@ typealias SCNTextNode = SCNNode
         if let c = json["fontColor"] as? UIColor { skln.fontColor = c }
         skln.verticalAlignmentMode = .center
         skln.horizontalAlignmentMode = .center
+        if let s = json["id"] as? String { s.name = x }
+
         if let d = json["width"] as? Double { skln.preferredMaxLayoutWidth = CGFloat(d) }
         return skln
+    }
+    @objc class func SKScene(_ json: jsonType) -> SKScene {
+        let s = SpriteKit.SKScene()
+        if
+            let w = json["height"] as? Double,
+            let h = json["width"] as? Double {
+            s.size = CGSize(width: CGFloat(w), height: CGFloat(h))
+        }
+        if let x = json["id"] as? String { s.name = x }
+        if let c = json["color"] as? UIColor { s.backgroundColor = c }
+        return s
     }
 }
 func addMaterials(_ g:SCNGeometry, json: jsonType, sides:Int) {
