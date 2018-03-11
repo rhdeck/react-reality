@@ -175,9 +175,19 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         g.removeMaterial(at: atPosition)
         resolve(true)
     }
+    //MARK:SKNode Functions
     var SKNodes:[String:SKNode] = [:]
     var SKOrphans:[String:[SKNode]] = [:]
-    @objc func addScene(_ scene:SKScene, forNode: String, atPosition: Int, withType: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+    var SKScenes:[String:Int] = [:]
+    @objc func addSKSceneReference(_ scene: SKScene, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        addSKNode(scene, toParent: "")
+        resolve(true)
+    }
+    @objc func addSKSceneByReference(_ sceneName: String, forNode: String, atPosition: Int, withType: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        guard let scene = SKNodes[sceneName] as? SKScene else { reject("no_scene", "No Scene with Name: " + sceneName, nil); return}
+        addSKScene(scene, forNode: forNode, atPosition: atPosition, withType: withType, resolve: resolve, reject: reject)
+    }
+    @objc func addSKScene(_ scene:SKScene, forNode: String, atPosition: Int, withType: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         guard let n = nodes[forNode] else { reject("no_node", "No Node with name " + forNode, nil); return }
         guard let g = n.geometry else { reject("no_geometry", "No Geometry at node with name " + forNode, nil); return }
         let m = g.materials[atPosition]
@@ -193,16 +203,41 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
             reject("invalid_materialproperty", "Invalid Matieral Property Type: " + withType, nil)
             return
         }
-        mp.contents = scene
-        
+        if let sksname = scene.name {
+            if let count = SKScenes[sksname] {
+                SKScenes[sksname] = count + 1
+                if let s = SKNodes[sksname] {
+                    mp.contents = s
+                    addSKNode(s, toParent: "")
+                } else {
+                    mp.contents = scene
+                    addSKNode(scene, toParent: "")
+                }
+            } else {
+                SKScenes[sksname] = 1
+                addSKNode(scene, toParent: "")
+                mp.contents = scene
+            }
+        } else {
+            addSKNode(scene, toParent: "")
+        }
     }
-    @objc func addSKNode(_ node: SKNode, toParent: String) {
+    @objc func addSKLabelNode(_ node: SKLabelNode, toParent: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        addSKNode(node, toParent: toParent, resolve: resolve, reject: reject)
+    }
+    @objc func addSKNode(_ node: SKNode, toParent: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        addSKNode(node, toParent: toParent)
+        resolve(true)
+    }
+    func addSKNode(_ node: SKNode, toParent: String) {
         if let n = node.name {
             SKNodes[n] = node
         }
-        if let p = SKNodes[toParent] {
+        if toParent == "" {
+            fixSKOrphans()
+        } else if let p = SKNodes[toParent] {
             p.addChild(node)
-            fixSKOrphans
+            fixSKOrphans()
             
         } else {
             if let _ = SKOrphans[toParent] {
@@ -212,7 +247,7 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
             }
         }
     }
-    @objc func removeScene(_ forNode: String, atPosition: Int, withType: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+    @objc func removeSKScene(_ forNode: String, atPosition: Int, withType: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         guard let n = nodes[forNode] else { reject("no_node", "No Node with name " + forNode, nil); return }
         guard let g = n.geometry else { reject("no_geometry", "No Geometry at node with name " + forNode, nil); return }
         let m = g.materials[atPosition]
@@ -228,8 +263,14 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
             reject("invalid_materialproperty", "Invalid Matieral Property Type: " + withType, nil)
             return
         }
-        guard let _ = mp.contents as? SKScene else { reject("no_scene", "No scene present", nil); return }
+        guard let sks = mp.contents as? SKScene else { reject("no_scene", "No scene present", nil); return }
         mp.contents = nil
+        if let sksname = sks.name, let _ = SKScenes[sksname] {
+            SKScenes[sksname] -= 1
+            if SKScenes[sksname] == 0 {
+                SKNodes[sksname] = nil
+            }
+        }
     }
     var isFixingSKOrphans = false
     func fixSKOrphans() {
@@ -242,7 +283,7 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
                 }
                 SKOrphans[parentID] = nil
             }
-        )
+        }
         isFixingSKOrphans = false
     }
     //MARK:Session Management
