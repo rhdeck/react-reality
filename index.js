@@ -15,6 +15,8 @@ import RHDMaterialProperty from "./components/RHDMaterialProperty";
 import RHDMaterials from "./components/RHDMaterials";
 import RHDTouchableMonoView from "./RHDTouchableMonoView";
 import RHDDualView from "./RHDDualView";
+import RHDSKScene from "./components/RHDSKScene";
+import RHDSKLabel from "./components/RHDSKLabel";
 export {
   RHDMonoView,
   RHDBox,
@@ -32,5 +34,7 @@ export {
   RHDMaterialProperty,
   RHDMaterials,
   RHDTouchableMonoView,
-  RHDDualView
+  RHDDualView,
+  RHDSKScene,
+  RHDSKLabel
 };
