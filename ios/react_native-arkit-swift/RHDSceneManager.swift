@@ -265,8 +265,8 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         }
         guard let sks = mp.contents as? SKScene else { reject("no_scene", "No scene present", nil); return }
         mp.contents = nil
-        if let sksname = sks.name, let _ = SKScenes[sksname] {
-            SKScenes[sksname] -= 1
+        if let sksname = sks.name, let base = SKScenes[sksname] {
+            SKScenes[sksname] = base - 1
             if SKScenes[sksname] == 0 {
                 SKNodes[sksname] = nil
             }
