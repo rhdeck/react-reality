@@ -159,8 +159,7 @@ typealias SCNTextNode = SCNNode
         if let c = json["fontColor"] as? UIColor { skln.fontColor = c }
         skln.verticalAlignmentMode = .center
         skln.horizontalAlignmentMode = .center
-        if let s = json["id"] as? String { s.name = x }
-
+        if let s = json["id"] as? String { skln.name = s }
         if let d = json["width"] as? Double { skln.preferredMaxLayoutWidth = CGFloat(d) }
         return skln
     }
