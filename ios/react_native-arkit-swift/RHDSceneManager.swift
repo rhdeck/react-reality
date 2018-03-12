@@ -220,6 +220,7 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
             }
         } else {
             addSKNode(scene, toParent: "")
+            mp.contents = scene
         }
     }
     @objc func addSKLabelNode(_ node: SKLabelNode, toParent: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
