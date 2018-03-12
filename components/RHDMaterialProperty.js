@@ -17,7 +17,16 @@ class RHDMaterialProperty extends Component {
       (v, k) => !includes(["updateMaterial", "id"], k)
     );
     this.props.updateMaterial(this.props.id, filteredProps);
-    return null;
+    if (!this.props.children) return null;
+    const c = Children.map(this.props.children, child => {
+      return React.cloneElement(child, {
+        parentNode: this.props.parentNode,
+        index: this.props.index,
+        materialProperty: this.props.id
+      });
+    });
+
+    return c;
   }
 }
 RHDMaterialProperty.propTypes = {
