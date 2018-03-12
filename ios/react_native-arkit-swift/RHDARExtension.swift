@@ -156,11 +156,39 @@ typealias SCNTextNode = SCNNode
         if let s = json["text"] as? String { skln.text = s }
         if let s = json["fontName"] as? String { skln.fontName = s }
         if let d = json["fontSize"] as? Double { skln.fontSize = CGFloat(d) }
-        if let c = json["fontColor"] as? UIColor { skln.fontColor = c }
-        skln.verticalAlignmentMode = .center
-        skln.horizontalAlignmentMode = .center
-        if let s = json["id"] as? String { skln.name = s }
+        if let c = json["fontColor"] { skln.fontColor = RCTConvert.uiColor(c) }
+        skln.verticalAlignmentMode = .top
+        if let s = json["verticalAlignment"] as? String {
+            switch s {
+            case "top":
+                skln.verticalAlignmentMode = .top
+            case "baseline":
+                skln.verticalAlignmentMode = .baseline
+            case "bottom":
+                skln.verticalAlignmentMode = .bottom
+            case "center":
+                skln.verticalAlignmentMode = .center
+            default:
+                print("Invalid verticalalignmentmode passed: " + s)
+            }
+        }
+        skln.horizontalAlignmentMode = .left
+        if let s = json["horizontalAlignment"] as? String {
+            switch s {
+            case "left":
+                skln.horizontalAlignmentMode = .left
+            case "center":
+                skln.horizontalAlignmentMode = .center
+            case "right":
+                skln.horizontalAlignmentMode = .right
+            default:
+                print("Invalid horizontalalignmentmode passed " + s)
+            }
+        }
+        if let s = json["name"] as? String { skln.name = s }
+        if let j = json["position"] as? jsonType, let x = j["x"] as? Double, let y = j["y"] as? Double { skln.position = CGPoint(x: x, y: y) }
         if let d = json["width"] as? Double { skln.preferredMaxLayoutWidth = CGFloat(d) }
+        skln.yScale = -1
         return skln
     }
     @objc class func SKScene(_ json: jsonType) -> SKScene {
@@ -170,8 +198,8 @@ typealias SCNTextNode = SCNNode
             let h = json["width"] as? Double {
             s.size = CGSize(width: CGFloat(w), height: CGFloat(h))
         }
-        if let x = json["id"] as? String { s.name = x }
-        if let c = json["color"] as? UIColor { s.backgroundColor = c }
+        if let x = json["name"] as? String { s.name = x }
+        if let i = json["color"] { s.backgroundColor = RCTConvert.uiColor(i) }
         return s
     }
 }
@@ -199,8 +227,6 @@ func setMaterialProperties(_ material:SCNMaterial, properties: jsonType) {
     if let b = properties["litPerPixel"] as? Bool { material.isLitPerPixel = b}
 }
 func setNodeProperties(_ node:SCNNode, properties: jsonType) {
-    print("Setting node properties")
-    print(properties)
     if let i = properties["categoryBitMask"] as? Int { node.categoryBitMask = i }
     if let i = properties["renderingOrder"] as? Int { node.renderingOrder = i }
     if let b = properties["castsShadow"] as? Bool { node.castsShadow = b }

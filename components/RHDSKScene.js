@@ -2,13 +2,18 @@ import React, { Component, Children } from "react";
 import { NativeModules } from "react-native";
 import PropTypes from "prop-types";
 import pickBy from "lodash/pickBy";
+import UUID from "uuid/v4";
 const { RHDSceneManager } = NativeModules;
 
 class RHDSKScene extends Component {
+  identifier = UUID();
   async nativeUpdate() {
-    const scene = pickBy(this.props, (v, k) => {
-      return sceneKeys.indexOf(k) > -1;
-    });
+    const scene = {
+      ...pickBy(this.props, (v, k) => {
+        return sceneKeys.indexOf(k) > -1;
+      }),
+      name: this.identifier
+    };
     const result = await RHDSceneManager.addSKScene(
       scene,
       this.props.parentNode,
@@ -18,14 +23,18 @@ class RHDSKScene extends Component {
     return result;
   }
   async componentWillMount() {
-    await nativeUpdate();
+    if (this.props.id) {
+      this.identifier = this.props.id;
+    }
+    await this.nativeUpdate();
   }
   componentWillUpdate() {}
   render() {
+    this.nativeUpdate();
     if (!this.props.children) return null;
     const c = Children.map(this.props.children, child => {
       return React.cloneElement(child, {
-        parentSKNode: this.props.id
+        parentSKNode: this.identifier
       });
     });
     return c;
