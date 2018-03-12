@@ -14,7 +14,9 @@ class RHDMaterialProperty extends Component {
   render() {
     const filteredProps = pickBy(
       this.props,
-      (v, k) => !includes(["updateMaterial", "id"], k)
+      (v, k) =>
+        materialPropertyPropTypeKeys.indexOf(k) > -1 &&
+        !includes(["updateMaterial", "id"], k)
     );
     this.props.updateMaterial(this.props.id, filteredProps);
     if (!this.props.children) return null;
