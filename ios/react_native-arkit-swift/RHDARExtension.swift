@@ -153,41 +153,7 @@ typealias SCNTextNode = SCNNode
     }
     @objc class func SKLabelNode(_ json: jsonType) -> SKLabelNode {
         let skln = SpriteKit.SKLabelNode()
-        if let s = json["text"] as? String { skln.text = s }
-        if let s = json["fontName"] as? String { skln.fontName = s }
-        if let d = json["fontSize"] as? Double { skln.fontSize = CGFloat(d) }
-        if let c = json["fontColor"] { skln.fontColor = RCTConvert.uiColor(c) }
-        skln.verticalAlignmentMode = .top
-        if let s = json["verticalAlignment"] as? String {
-            switch s {
-            case "top":
-                skln.verticalAlignmentMode = .top
-            case "baseline":
-                skln.verticalAlignmentMode = .baseline
-            case "bottom":
-                skln.verticalAlignmentMode = .bottom
-            case "center":
-                skln.verticalAlignmentMode = .center
-            default:
-                print("Invalid verticalalignmentmode passed: " + s)
-            }
-        }
-        skln.horizontalAlignmentMode = .left
-        if let s = json["horizontalAlignment"] as? String {
-            switch s {
-            case "left":
-                skln.horizontalAlignmentMode = .left
-            case "center":
-                skln.horizontalAlignmentMode = .center
-            case "right":
-                skln.horizontalAlignmentMode = .right
-            default:
-                print("Invalid horizontalalignmentmode passed " + s)
-            }
-        }
-        if let s = json["name"] as? String { skln.name = s }
-        if let j = json["position"] as? jsonType, let x = j["x"] as? Double, let y = j["y"] as? Double { skln.position = CGPoint(x: x, y: y) }
-        if let d = json["width"] as? Double { skln.preferredMaxLayoutWidth = CGFloat(d) }
+        doUpdateSKLabelNode(skln, json: json);
         skln.yScale = -1
         return skln
     }
@@ -202,6 +168,45 @@ typealias SCNTextNode = SCNNode
         if let i = json["color"] { s.backgroundColor = RCTConvert.uiColor(i) }
         return s
     }
+}
+func doUpdateSKLabelNode(_ skln:SKLabelNode, json: jsonType) {
+    if let s = json["text"] as? String { skln.text = s }
+    skln.numberOfLines = 3
+    skln.lineBreakMode = .byWordWrapping
+    if let s = json["fontName"] as? String { skln.fontName = s }
+    if let d = json["fontSize"] as? Double { skln.fontSize = CGFloat(d) }
+    if let c = json["fontColor"] { skln.fontColor = RCTConvert.uiColor(c) }
+    skln.verticalAlignmentMode = .top
+    if let s = json["verticalAlignment"] as? String {
+        switch s {
+        case "top":
+            skln.verticalAlignmentMode = .top
+        case "baseline":
+            skln.verticalAlignmentMode = .baseline
+        case "bottom":
+            skln.verticalAlignmentMode = .bottom
+        case "center":
+            skln.verticalAlignmentMode = .center
+        default:
+            print("Invalid verticalalignmentmode passed: " + s)
+        }
+    }
+    skln.horizontalAlignmentMode = .left
+    if let s = json["horizontalAlignment"] as? String {
+        switch s {
+        case "left":
+            skln.horizontalAlignmentMode = .left
+        case "center":
+            skln.horizontalAlignmentMode = .center
+        case "right":
+            skln.horizontalAlignmentMode = .right
+        default:
+            print("Invalid horizontalalignmentmode passed " + s)
+        }
+    }
+    if let s = json["name"] as? String { skln.name = s }
+    if let j = json["position"] as? jsonType, let x = j["x"] as? Double, let y = j["y"] as? Double { skln.position = CGPoint(x: x, y: y) }
+    if let d = json["width"] as? Double { skln.preferredMaxLayoutWidth = CGFloat(d) }
 }
 func addMaterials(_ g:SCNGeometry, json: jsonType, sides:Int) {
     guard let mj = json["material"] as? jsonType else { return }
