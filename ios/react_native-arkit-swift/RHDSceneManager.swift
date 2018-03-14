@@ -223,11 +223,20 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
             mp.contents = scene
         }
     }
-    @objc func addSKLabelNode(_ node: SKLabelNode, toParent: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        addSKNode(node, toParent: toParent, resolve: resolve, reject: reject)
+    @objc func setSKLabelNode(_ node: SKLabelNode, toParent: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        setSKNode(node, toParent: toParent, resolve: resolve, reject: reject)
     }
-    @objc func addSKNode(_ node: SKNode, toParent: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        addSKNode(node, toParent: toParent)
+    @objc func updateSKLabelNode(_ json: jsonType, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        guard  let s = json["name"] as? String, let n = SKNodes[s] as? SKLabelNode else { reject("no_node", "No node with this name", nil); return }
+        doUpdateSKLabelNode(n, json: json)
+        resolve(true)
+        
+    }
+    @objc func setSKNode(_ node: SKNode, toParent: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        if let s = node.name, let o = SKNodes[s], let os = o.name {
+            removeSKNode(os)
+        }
+        addSKNode(node, toParent: toParent);
         resolve(true)
     }
     func addSKNode(_ node: SKNode, toParent: String) {
@@ -245,6 +254,23 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
                 SKOrphans[toParent]?.append(node)
             } else {
                 SKOrphans[toParent] = [node]
+            }
+        }
+    }
+    @objc func removeSKNode(_ name: String, resolve:RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        removeSKNode(name)
+        
+    }
+    func removeSKNode(_ name:String) {
+        if let n = SKNodes[name] {
+            if let _ = n.parent {
+                n.removeFromParent()
+            }
+            SKNodes.removeValue(forKey: name)
+            for c:SKNode in n.children {
+                if let s = c.name {
+                    removeSKNode(s)
+                }
             }
         }
     }
@@ -269,7 +295,7 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         if let sksname = sks.name, let base = SKScenes[sksname] {
             SKScenes[sksname] = base - 1
             if SKScenes[sksname] == 0 {
-                SKNodes[sksname] = nil
+                removeSKNode(sksname)
             }
         }
     }
@@ -286,6 +312,15 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
             }
         }
         isFixingSKOrphans = false
+    }
+    //MARK:Deprecated SKNode Functions
+    @objc func addSKLabelNode(_ node: SKLabelNode, toParent: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        addSKNode(node, toParent: toParent, resolve: resolve, reject: reject)
+    }
+    
+    @objc func addSKNode(_ node: SKNode, toParent: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        addSKNode(node, toParent: toParent)
+        resolve(true)
     }
     //MARK:Session Management
     @objc func clear(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
