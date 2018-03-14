@@ -12,7 +12,7 @@ class RHDSKLabel extends Component {
       ...pickBy(this.props, (v, k) => SKLabelKeys.indexOf(k) > -1),
       name: this.identifier
     };
-    const result = await RHDSceneManager.addSKLabelNode(
+    const result = await RHDSceneManager.setSKLabelNode(
       label,
       this.props.parentSKNode
     );
@@ -35,7 +35,7 @@ class RHDSKLabel extends Component {
     return c;
   }
   async componentWillUnmount() {
-    const result = await RHDSceneManager.removeNode();
+    const result = await RHDSceneManager.removeSKNode(this.identifier);
     return result;
   }
 }
