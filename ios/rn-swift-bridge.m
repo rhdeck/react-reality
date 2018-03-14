@@ -30,9 +30,13 @@ RCT_EXTERN_METHOD(removeMaterial:(NSString *)forNode atPosition:(NSInteger)atPos
 RCT_EXTERN_METHOD(addSKSceneReference:(SKScene *)scene resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(addSKSceneByReference:(NSString *)sceneName forNode:(NSString *)forNode atPosition:(NSInteger)atPosition withType:(NSString *)withType resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(addSKScene:(SKScene *)scene forNode:(NSString *)forNode atPosition:(NSInteger)atPosition withType:(NSString *)withType resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
+RCT_EXTERN_METHOD(setSKLabelNode:(SKLabelNode *)node toParent:(NSString *)toParent resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
+RCT_EXTERN_METHOD(updateSKLabelNode:(NSDictionary *)json resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
+RCT_EXTERN_METHOD(setSKNode:(SKNode *)node toParent:(NSString *)toParent resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
+RCT_EXTERN_METHOD(removeSKNode:(NSString *)name resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
+RCT_EXTERN_METHOD(removeSKScene:(NSString *)forNode atPosition:(NSInteger)atPosition withType:(NSString *)withType resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(addSKLabelNode:(SKLabelNode *)node toParent:(NSString *)toParent resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(addSKNode:(SKNode *)node toParent:(NSString *)toParent resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
-RCT_EXTERN_METHOD(removeSKScene:(NSString *)forNode atPosition:(NSInteger)atPosition withType:(NSString *)withType resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(clear:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(resume:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(pause:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
