@@ -16,7 +16,6 @@ class RHDPrimaryView: UIView, ARSCNViewDelegate {
             sm.scene = a.scene
             sm.session = a.session
             a.scene.background.contents = UIColor.black
-            sm.primeCameraNode = a.pointOfView
             a.autoenablesDefaultLighting = true
             addSubview(a)
             sm.doResume()
@@ -54,4 +53,14 @@ class RHDPrimaryView: UIView, ARSCNViewDelegate {
             sv.pointOfView = pointOfView
         }
     }
+    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
+        guard let scene = RHDSceneManager.sharedInstance else { return }
+        scene.updateAnchor(anchor, withNode: node)
+    }
+    func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+        guard let scene = RHDSceneManager.sharedInstance else { return }
+        scene.addAnchor(anchor, withNode: node)
+
+    }
+    
 }

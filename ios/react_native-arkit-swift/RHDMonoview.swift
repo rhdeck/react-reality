@@ -2,7 +2,6 @@ import Foundation
 import ARKit
 @objc(RHDMonoView)
 class RHDMonoview: UIView, ARSCNViewDelegate {
-    var rscene: RHDSceneManager? = RHDSceneManager.sharedInstance
     var arview: ARSCNView?
     var _preview:Bool = true
     var cachedPreview: Any?
@@ -32,7 +31,6 @@ class RHDMonoview: UIView, ARSCNViewDelegate {
                 a.session.delegate = sm
                 sm.scene = a.scene
                 sm.session = a.session
-                sm.primeCameraNode = a.pointOfView
                 a.automaticallyUpdatesLighting = true
                 a.autoenablesDefaultLighting = true
                 addSubview(a)
@@ -52,6 +50,15 @@ class RHDMonoview: UIView, ARSCNViewDelegate {
             return h.node.name
         }
         resolve(["nodes": m]);
+    }
+    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
+        guard let scene = RHDSceneManager.sharedInstance else { return }
+        scene.updateAnchor(anchor, withNode: node)
+    }
+    func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+        guard let scene = RHDSceneManager.sharedInstance else { return }
+        scene.addAnchor(anchor, withNode: node)
+        
     }
     
     

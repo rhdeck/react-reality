@@ -10,8 +10,8 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
             s.listenedEvents = [:]
         }
         RHDSceneManager.sharedInstance = self
+        configuration.planeDetection = .horizontal
     }
-    var primeCameraNode:SCNNode?
     var secondaryView:SCNView?
     var scene:SCNScene?
     var session:ARSession?
@@ -25,13 +25,23 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         nodes[name] = node
         if parent == "" {
             if let s = scene {
-            s.rootNode.addChildNode(node)
-            fixOrphans()
+                s.rootNode.addChildNode(node)
+                fixOrphans()
             } else {
                 if let _ = orphans[""] {
                     orphans[""]!.append(node)
                 } else {
                     orphans[""] = [node]
+                }
+            }
+        } else if parent == "primebasenode" {
+            if let pbn = primeBaseNode {
+                pbn.addChildNode(node)
+            } else {
+                if let _ = orphans[parent] {
+                    orphans[parent]!.append(node)
+                } else {
+                    orphans[parent] = [node]
                 }
             }
         } else if let n = nodes[parent] {
@@ -53,10 +63,17 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
             if parentid == "" {
                 guard let _ = scene else { return }
                 let nns = ns
-                print(ns.count)
                 orphans.removeValue(forKey: parentid)
                 nns.forEach() { node in
                     addNode(node: node, parent: parentid)
+                }
+            } else if parentid == "primebasenode" {
+                if let _ = primeBaseNode {
+                    let nns = ns
+                    orphans.removeValue(forKey: parentid)
+                    nns.forEach() { node in
+                        addNode(node: node, parent: parentid)
+                    }
                 }
             }
             else if let _ = nodes[parentid] {
@@ -441,8 +458,61 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
             listenedEvents[eventName] = 1
         }
     }
-    override func removeListeners(_ count: Int) {
+    override func removeListeners(_ count: Double) {
         // Kill off all my listeners please
         listenedEvents = [:]
+    }
+    //MARK:ARAnchor delegate methods
+    func addAnchor(_ anchor: ARAnchor, withNode: SCNNode) {
+        guard let pa = anchor as? ARPlaneAnchor else { return }
+        let width = CGFloat(pa.extent.x)
+        let height = CGFloat(pa.extent.z)
+        let plane = SCNPlane(width: width, height: height)
+        plane.materials.first?.diffuse.contents = UIColor(displayP3Red: 0.9, green: 0.9, blue: 1, alpha: 0.5)
+        let planeNode = SCNNode(geometry: plane)
+        let planeParent = SCNNode()
+        let x = CGFloat(pa.center.x)
+        let y = CGFloat(pa.center.y)
+        let z = CGFloat(pa.center.z)
+        print("Plane node centroid")
+        print(pa.center)
+        print("node position")
+        print(withNode.position)
+        planeParent.position = SCNVector3(x,y,z)
+        planeNode.eulerAngles.x = -.pi / 2
+        planeParent.addChildNode(planeNode)
+        withNode.addChildNode(planeParent)
+        baseNodes[pa.identifier.uuidString] = planeNode
+        updateBaseNode(pa.identifier.uuidString, withNode:planeParent)
+    }
+    func updateAnchor(_ anchor:ARAnchor, withNode: SCNNode) {
+        guard
+            let pa = anchor as? ARPlaneAnchor,
+            let n = withNode.childNodes.first,
+            let pn = n.childNodes.first,
+            let g = pn.geometry as? SCNPlane
+        else { return }
+        let id = pa.identifier.uuidString
+        let width = CGFloat(pa.extent.x)
+        let height = CGFloat(pa.extent.z)
+        g.width = width
+        g.height = height
+        let x = CGFloat(pa.center.x)
+        let y = CGFloat(pa.center.y)
+        let z = CGFloat(pa.center.z)
+        n.position = SCNVector3(x, y, z)
+        updateBaseNode(id, withNode: n);
+    }
+    var primeBaseNode:SCNNode?
+    var primeBaseID:String = ""
+    var baseNodes:[String:SCNNode] = [:]
+    func updateBaseNode(_ id:String, withNode:SCNNode) {
+
+        baseNodes[id] = withNode
+        if primeBaseNode == nil {
+            primeBaseNode = withNode
+            primeBaseID = id
+        }
+        fixOrphans()
     }
 }
