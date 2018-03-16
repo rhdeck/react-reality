@@ -73,6 +73,9 @@ RHDNode.triggerProp = (nodeID, propName) => {
     node.props[propName]();
   }
 };
+RHDNode.registerNode = (id, node) => {
+  registeredNodes[id] = node;
+};
 const nodeProps = Object.keys(corePropTypes);
 RHDNode.propTypes = {
   ...corePropTypes,
