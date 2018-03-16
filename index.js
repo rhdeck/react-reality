@@ -17,6 +17,7 @@ import RHDTouchableMonoView from "./RHDTouchableMonoView";
 import RHDDualView from "./RHDDualView";
 import RHDSKScene from "./components/RHDSKScene";
 import RHDSKLabel from "./components/RHDSKLabel";
+import RHDPrimeBaseNode from "./components/RHDPrimeBaseNode";
 export {
   RHDMonoView,
   RHDBox,
@@ -36,5 +37,6 @@ export {
   RHDTouchableMonoView,
   RHDDualView,
   RHDSKScene,
-  RHDSKLabel
+  RHDSKLabel,
+  RHDPrimeBaseNode
 };
