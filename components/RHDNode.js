@@ -69,7 +69,12 @@ corePropTypes = {
 var registeredNodes = {};
 RHDNode.triggerProp = (nodeID, propName) => {
   const node = registeredNodes[nodeID];
-  if (node.props[propName] && typeof node.props[propName] == "function") {
+  if (
+    node &&
+    node.props &&
+    node.props[propName] &&
+    typeof node.props[propName] == "function"
+  ) {
     node.props[propName]();
   }
 };
