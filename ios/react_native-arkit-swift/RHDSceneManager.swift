@@ -515,4 +515,26 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         }
         fixOrphans()
     }
+    @available(iOS 11.3, *)
+    @objc func addRecognizerImage(_ url:String, name: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        guard let i = UIImage(contentsOfFile: url) else { reject("no_image", "could not get image from " + url, nil); return }
+        guard let ci = i.cgImage else { reject("no_image", "Could not get CGImage instance from url " + url, nil); return }
+        let x = ARReferenceImage(ci, orientation: CGImagePropertyOrientation.up, physicalWidth: 0.2)
+        x.name = name
+        if configuration.detectionImages == nil { configuration.detectionImages = [x] }
+        else { configuration.detectionImages!.insert(x) }
+    }
+    @available(iOS 11.3, *)
+    @objc func removeRecognizerImage(_ name: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        guard var d = configuration.detectionImages else { reject("no_images", "No recognized images registered", nil); return }
+        let ims = d.filter() { im in
+            return im.name == name
+        }
+        guard ims.count > 0 else { reject("no_matches", "No recognized images matching " + name, nil); return }
+        ims.forEach() { im in
+            d.remove(im)
+        }
+        configuration.detectionImages = d
+        resolve(true)
+    }
 }
