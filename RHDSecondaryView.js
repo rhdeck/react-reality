@@ -1,4 +1,4 @@
-import { NativeModules, requireNativeComponent } from "react-native";
+import { requireNativeComponent } from "react-native";
 import React, { Component } from "react";
 class RHDSecondaryView extends Component {
   render() {

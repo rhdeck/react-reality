@@ -1,11 +1,9 @@
 import React, { Component, Children } from "react";
-import { NativeModules } from "react-native";
 import PropTypes from "prop-types";
 import pickBy from "lodash/pickBy";
 import { opacity } from "./lib/propTypes";
 import UUID from "uuid/v4";
 import RHDNode from "./RHDNode";
-const { RHDSceneManager } = NativeModules;
 
 class RHDPrimeBaseNode extends Component {
   identifier = "primebasenode";

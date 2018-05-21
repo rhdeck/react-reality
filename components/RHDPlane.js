@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import RHDGeometry from "./RHDGeometry";
-export default RHDGeometry("Plane", {
+import { setPlane } from "../RHDSceneManager";
+export default RHDGeometry(setPlane, {
   width: PropTypes.number,
   height: PropTypes.number,
   cornerRadius: PropTypes.number,

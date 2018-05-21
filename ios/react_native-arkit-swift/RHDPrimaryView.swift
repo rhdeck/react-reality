@@ -31,7 +31,6 @@ class RHDPrimaryView: UIView, ARSCNViewDelegate {
         arview?.frame = self.bounds
         
     }
-    
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
         DispatchQueue.main.async() {
             guard
@@ -61,6 +60,10 @@ class RHDPrimaryView: UIView, ARSCNViewDelegate {
         guard let scene = RHDSceneManager.sharedInstance else { return }
         scene.addAnchor(anchor, withNode: node)
 
+    }
+    func renderer(_ renderer: SCNSceneRenderer, didRemove node: SCNNode, for anchor: ARAnchor) {
+        guard let scene = RHDSceneManager.sharedInstance else { return }
+        scene.removeAnchor(anchor, withNode: node)
     }
     
 }

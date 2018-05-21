@@ -1,5 +1,9 @@
 import React, { Component, Children } from "react";
-import { NativeModules } from "react-native";
+import {
+  setMaterial,
+  setMaterialProperty,
+  removeMaterial
+} from "../RHDSceneManager";
 import PropTypes from "prop-types";
 import {
   blendMode,
@@ -9,7 +13,6 @@ import {
   fillMode
 } from "./lib/propTypes";
 import pickBy from "lodash/pickBy";
-const { RHDSceneManager } = NativeModules;
 class RHDMaterial extends Component {
   nativeUpdate() {
     const filteredProps = pickBy(
@@ -17,7 +20,7 @@ class RHDMaterial extends Component {
       (v, k) => materialPropKeys.indexOf(k) > -1
     );
     const index = this.props.index ? this.props.index : 0;
-    RHDSceneManager.setMaterial(filteredProps, this.props.parentNode, index);
+    setMaterial(filteredProps, this.props.parentNode, index);
   }
   componentWillMount() {
     this.nativeUpdate();
@@ -27,7 +30,7 @@ class RHDMaterial extends Component {
   }
   async updateMaterial(id, property) {
     try {
-      await RHDSceneManager.setMaterialProperty(
+      await setMaterialProperty(
         property,
         id,
         this.props.index,
@@ -47,10 +50,8 @@ class RHDMaterial extends Component {
 
     return c;
   }
-  async componentWillUnmount() {
-    try {
-      await RHDSceneManager.removeMaterial(parentNode, index);
-    } catch (e) {}
+  componentWillUnmount() {
+    removeMaterial(parentNode, index);
   }
 }
 RHDMaterial.propTypes = {

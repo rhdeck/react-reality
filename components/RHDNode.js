@@ -1,5 +1,4 @@
 import React, { Component, Children } from "react";
-import { NativeModules } from "react-native";
 import PropTypes from "prop-types";
 import pickBy from "lodash/pickBy";
 import {
@@ -12,7 +11,7 @@ import {
   renderingOrder
 } from "./lib/propTypes";
 import UUID from "uuid/v4";
-const { RHDSceneManager } = NativeModules;
+import { addNode, removeNode, updateNode } from "../RHDSceneManager";
 
 class RHDNode extends Component {
   identifier = UUID();
@@ -26,10 +25,7 @@ class RHDNode extends Component {
       (v, k) => nodeProps.indexOf(k) > -1
     );
     const parentNode = this.props.parentNode ? this.props.parentNode : "";
-    await RHDSceneManager.addNode(
-      { ...filteredProps, id: this.identifier },
-      parentNode
-    );
+    await addNode({ ...filteredProps, id: this.identifier }, parentNode);
   }
   render() {
     if (!this.props.children) return null;
@@ -45,13 +41,13 @@ class RHDNode extends Component {
       (v, k) => nodeProps.indexOf(k) > -1
     );
     try {
-      await RHDSceneMananager.updateNode(this.identifer, filteredProps);
+      await updateNode(this.identifer, filteredProps);
     } catch (e) {}
   }
   async componentWillUnmount() {
     try {
       delete registeredNodes[this.identifier];
-      await RHDSceneManager.removeNode(this.identifier);
+      await removeNode(this.identifier);
     } catch (e) {}
   }
 }

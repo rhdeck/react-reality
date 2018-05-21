@@ -1,9 +1,8 @@
 import React, { Component, Children } from "react";
-import { NativeModules } from "react-native";
+import { removeSKNode, setSKLabelNode } from "../RHDSceneManager";
 import PropTypes from "prop-types";
 import pickBy from "lodash/pickBy";
 import UUID from "uuid/v4";
-const { RHDSceneManager } = NativeModules;
 
 class RHDSKLabel extends Component {
   identifier = UUID();
@@ -12,10 +11,7 @@ class RHDSKLabel extends Component {
       ...pickBy(this.props, (v, k) => SKLabelKeys.indexOf(k) > -1),
       name: this.identifier
     };
-    const result = await RHDSceneManager.setSKLabelNode(
-      label,
-      this.props.parentSKNode
-    );
+    const result = await setSKLabelNode(label, this.props.parentSKNode);
     return result;
   }
   componentWillMount() {
@@ -35,7 +31,7 @@ class RHDSKLabel extends Component {
     return c;
   }
   async componentWillUnmount() {
-    const result = await RHDSceneManager.removeSKNode(this.identifier);
+    const result = await removeSKNode(this.identifier);
     return result;
   }
 }

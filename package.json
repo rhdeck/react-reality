@@ -15,6 +15,7 @@
     "fast-deep-equal": "^1.0.0",
     "lodash": "^4.17.5",
     "prop-types": "^15.6.0",
+    "react-native-swift-bridge": "^2.2.0",
     "uuid": "^3.2.1"
   },
   "pods": {

@@ -8,13 +8,7 @@ Demo code from new API (Subject to rapid change)
 
 ```jsx
 import React, { Component, Children } from "react";
-import {
-  AppRegistry,
-  View,
-  Text,
-  processColor,
-  NativeModules
-} from "react-native";
+import { AppRegistry, View, Text, processColor } from "react-native";
 import {
   RHDTouchableMonoView,
   RHDPlane,
@@ -24,7 +18,7 @@ import {
   RHDMaterials,
   RHDMaterialProperty,
   RHDText
-} from "react-native-arkit-swift";
+} from "react-reality";
 export default class ARTest extends Component {
   state = {
     showPreview: true,

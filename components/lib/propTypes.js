@@ -2,7 +2,7 @@ import { NativeModules } from "react-native";
 import { values } from "lodash";
 import PropTypes from "prop-types";
 
-const NativeSceneManager = NativeModules.RHDSceneManager;
+const { RHDSceneManager } = NativeModules;
 
 export const position = PropTypes.shape({
   x: PropTypes.number,
@@ -35,31 +35,27 @@ export const orientation = PropTypes.shape({
   w: PropTypes.number
 });
 export const shaders = PropTypes.shape({
-  [NativeSceneManager.ShaderModifierEntryPoint.Geometry]: PropTypes.string,
-  [NativeSceneManager.ShaderModifierEntryPoint.Surface]: PropTypes.string,
-  [NativeSceneManager.ShaderModifierEntryPoint.LightingModel]: PropTypes.string,
-  [NativeSceneManager.ShaderModifierEntryPoint.Fragment]: PropTypes.string
+  [RHDSceneManager.ShaderModifierEntryPoint.Geometry]: PropTypes.string,
+  [RHDSceneManager.ShaderModifierEntryPoint.Surface]: PropTypes.string,
+  [RHDSceneManager.ShaderModifierEntryPoint.LightingModel]: PropTypes.string,
+  [RHDSceneManager.ShaderModifierEntryPoint.Fragment]: PropTypes.string
 });
 
 export const lightingModel = PropTypes.oneOf(
-  values(NativeSceneManager.LightingModel)
+  values(RHDSceneManager.LightingModel)
 );
 
 export const castsShadow = PropTypes.bool;
 export const renderingOrder = PropTypes.number;
-export const blendMode = PropTypes.oneOf(values(NativeSceneManager.BlendMode));
-export const chamferMode = PropTypes.oneOf(
-  values(NativeSceneManager.ChamferMode)
-);
+export const blendMode = PropTypes.oneOf(values(RHDSceneManager.BlendMode));
+export const chamferMode = PropTypes.oneOf(values(RHDSceneManager.ChamferMode));
 export const color = PropTypes.string;
-export const fillMode = PropTypes.oneOf(values(NativeSceneManager.FillMode));
+export const fillMode = PropTypes.oneOf(values(RHDSceneManager.FillMode));
 
-export const lightType = PropTypes.oneOf(values(NativeSceneManager.LightType));
-export const shadowMode = PropTypes.oneOf(
-  values(NativeSceneManager.ShadowMode)
-);
+export const lightType = PropTypes.oneOf(values(RHDSceneManager.LightType));
+export const shadowMode = PropTypes.oneOf(values(RHDSceneManager.ShadowMode));
 export const colorBufferWriteMask = PropTypes.oneOf(
-  values(NativeSceneManager.ColorMask)
+  values(RHDSceneManager.ColorMask)
 );
 
 export const opacity = PropTypes.number;

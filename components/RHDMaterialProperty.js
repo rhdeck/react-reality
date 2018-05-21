@@ -1,16 +1,8 @@
 import React, { Component, Children } from "react";
-import { NativeModules, processColor } from "react-native";
 import PropTypes from "prop-types";
 import pickBy from "lodash/pickBy";
 import includes from "lodash/includes";
-const { RHDSceneManager } = NativeModules;
-
 class RHDMaterialProperty extends Component {
-  componentWillUpdate(nextProps) {}
-  //   shouldComponentUpdate() {
-  //     return false;
-  //   }
-  componentWillUnmount() {}
   render() {
     const filteredProps = pickBy(
       this.props,

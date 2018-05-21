@@ -1,10 +1,8 @@
 import React, { Component, Children } from "react";
-import { NativeModules } from "react-native";
+import { addSKScene } from "../RHDSceneManager";
 import PropTypes from "prop-types";
 import pickBy from "lodash/pickBy";
 import UUID from "uuid/v4";
-const { RHDSceneManager } = NativeModules;
-
 class RHDSKScene extends Component {
   identifier = UUID();
   async nativeUpdate() {
@@ -14,7 +12,7 @@ class RHDSKScene extends Component {
       }),
       name: this.identifier
     };
-    const result = await RHDSceneManager.addSKScene(
+    const result = await addSKScene(
       scene,
       this.props.parentNode,
       this.props.index,

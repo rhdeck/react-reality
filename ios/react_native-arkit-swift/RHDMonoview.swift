@@ -27,15 +27,14 @@ class RHDMonoview: UIView, ARSCNViewDelegate {
             let a = ARSCNView()
             arview = a
             a.delegate = self
-            if let sm = RHDSceneManager.sharedInstance {
-                a.session.delegate = sm
-                sm.scene = a.scene
-                sm.session = a.session
-                a.automaticallyUpdatesLighting = true
-                a.autoenablesDefaultLighting = true
-                addSubview(a)
-                sm.doResume()
-            }
+            guard let sm = RHDSceneManager.sharedInstance else { return self }
+            a.session.delegate = sm
+            sm.scene = a.scene
+            sm.session = a.session
+            a.automaticallyUpdatesLighting = true
+            a.autoenablesDefaultLighting = true
+            addSubview(a)
+            sm.doResume()
         }
         return self
     }

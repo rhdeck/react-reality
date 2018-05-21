@@ -19,9 +19,13 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
     //MARK:Node Management
     var nodes:[String:SCNNode] = [:]
     var orphans:[String:[SCNNode]] = [:]
+    var pv:ARSCNView?
     func addNode(node: SCNNode, parent: String) {
         //Must have names or else we ditch
-        guard let name = node.name else { return }
+        guard
+            let name = node.name,
+            let _ = baseNodes[name]
+        else { return }
         nodes[name] = node
         if parent == "" {
             if let s = scene {
@@ -34,16 +38,8 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
                     orphans[""] = [node]
                 }
             }
-        } else if parent == "primebasenode" {
-            if let pbn = primeBaseNode {
-                pbn.addChildNode(node)
-            } else {
-                if let _ = orphans[parent] {
-                    orphans[parent]!.append(node)
-                } else {
-                    orphans[parent] = [node]
-                }
-            }
+        } else if let baseNode = baseNodes[parent] {
+            baseNode.addChildNode(node)
         } else if let n = nodes[parent] {
             n.addChildNode(node)
             fixOrphans()
@@ -67,16 +63,13 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
                 nns.forEach() { node in
                     addNode(node: node, parent: parentid)
                 }
-            } else if parentid == "primebasenode" {
-                if let _ = primeBaseNode {
-                    let nns = ns
-                    orphans.removeValue(forKey: parentid)
-                    nns.forEach() { node in
-                        addNode(node: node, parent: parentid)
-                    }
+            } else if let _  = baseNodes[parentid] {
+                let nns = ns
+                orphans.removeValue(forKey: parentid)
+                nns.forEach() { node in
+                    addNode(node: node, parent: parentid)
                 }
-            }
-            else if let _ = nodes[parentid] {
+            } else if let _ = nodes[parentid] {
                 let nns = ns
                 orphans.removeValue(forKey: parentid)
                 nns.forEach() { node in
@@ -87,7 +80,7 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         isFixingOrphans = false
     }
     func removeNode(id: String) {
-        guard let n = nodes[id] else { return }
+        guard let n = nodes[id], baseNodes[id] == nil else { return }
         removeNode(node: n)
     }
     func removeNode(node: SCNNode) {
@@ -443,7 +436,8 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
     //MARK:RCTEventEmitter Methods
     override func supportedEvents() -> [String]! {
         return [
-        "ARSessionError"
+        "ARSessionError",
+        "RHDAR"
         ]
     }
     func doSendEvent(_ key: String, message:Any?) {
@@ -463,59 +457,70 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         listenedEvents = [:]
     }
     //MARK:ARAnchor delegate methods
+    var baseNodes:[String:SCNNode] = [:]
+    var anchors:[String:jsonType] = [:] 
+
     func addAnchor(_ anchor: ARAnchor, withNode: SCNNode) {
-        guard let pa = anchor as? ARPlaneAnchor else { return }
-        let width = CGFloat(pa.extent.x)
-        let height = CGFloat(pa.extent.z)
-        let plane = SCNPlane(width: width, height: height)
-        plane.materials.first?.diffuse.contents = UIColor(displayP3Red: 0.9, green: 0.9, blue: 1, alpha: 0.5)
-        let planeNode = SCNNode(geometry: plane)
-        let planeParent = SCNNode()
-        let x = CGFloat(pa.center.x)
-        let y = CGFloat(pa.center.y)
-        let z = CGFloat(pa.center.z)
-        print("Plane node centroid")
-        print(pa.center)
-        print("node position")
-        print(withNode.position)
-        planeParent.position = SCNVector3(x,y,z)
-        planeNode.eulerAngles.x = -.pi / 2
-        planeParent.addChildNode(planeNode)
-        withNode.addChildNode(planeParent)
-        baseNodes[pa.identifier.uuidString] = planeNode
-        updateBaseNode(pa.identifier.uuidString, withNode:planeParent)
+        if let pa = anchor as? ARImageAnchor { addImageAnchor(pa, withNode: withNode) }
+        if let pa = anchor as? ARPlaneAnchor { addPlaneAnchor(pa, withNode: withNode) }
     }
     func updateAnchor(_ anchor:ARAnchor, withNode: SCNNode) {
-        guard
-            let pa = anchor as? ARPlaneAnchor,
-            let n = withNode.childNodes.first,
-            let pn = n.childNodes.first,
-            let g = pn.geometry as? SCNPlane
-        else { return }
-        let id = pa.identifier.uuidString
-        let width = CGFloat(pa.extent.x)
-        let height = CGFloat(pa.extent.z)
-        g.width = width
-        g.height = height
-        let x = CGFloat(pa.center.x)
-        let y = CGFloat(pa.center.y)
-        let z = CGFloat(pa.center.z)
-        n.position = SCNVector3(x, y, z)
-        updateBaseNode(id, withNode: n);
+        if let pa = anchor as? ARImageAnchor { updateImageAnchor(pa, withNode: withNode)}
+        if let pa = anchor as? ARPlaneAnchor { updatePlaneAnchor(pa, withNode: withNode)}
     }
-    var primeBaseNode:SCNNode?
-    var primeBaseID:String = ""
-    var baseNodes:[String:SCNNode] = [:]
-    func updateBaseNode(_ id:String, withNode:SCNNode) {
-
-        baseNodes[id] = withNode
-        if primeBaseNode == nil {
-            primeBaseNode = withNode
-            primeBaseID = id
-        }
+    func removeAnchor(_ anchor: ARAnchor, withNode: SCNNode) {
+        if let pa = anchor as? ARImageAnchor { removeImageAnchor(pa, withNode: withNode)}
+        if let pa = anchor as? ARPlaneAnchor { removePlaneAnchor(pa, withNode: withNode)}
+    }
+    func addPlaneAnchor(_ anchor: ARPlaneAnchor, withNode: SCNNode) {
+        guard
+            let n = withNode.childNodes.first
+            else { return }
+        let id = anchor.identifier.uuidString
+        let width = CGFloat(anchor.extent.x)
+        let height = CGFloat(anchor.extent.z)
+        let x = CGFloat(anchor.center.x)
+        let y = CGFloat(anchor.center.y)
+        let z = CGFloat(anchor.center.z)
+        n.position = SCNVector3(x, y, z)
+        baseNodes[id] = withNode // <- This shuld already be here
+        anchors[id] = ["type": "plane", "plane": ["width": width, "height":height ]];
+        sendEvent(withName: "RHDAR", body: ["key": "planeAnchorChanged", "data": ["id": id, "action":"add", "plane": ["width": width, "height":height]]])
         fixOrphans()
     }
-    @available(iOS 11.3, *)
+
+    func updatePlaneAnchor(_ anchor:ARPlaneAnchor, withNode: SCNNode) {
+        guard
+            let n = withNode.childNodes.first
+        else { return }
+        let id = anchor.identifier.uuidString
+        let width = CGFloat(anchor.extent.x)
+        let height = CGFloat(anchor.extent.z)
+        let x = CGFloat(anchor.center.x)
+        let y = CGFloat(anchor.center.y)
+        let z = CGFloat(anchor.center.z)
+        n.position = SCNVector3(x, y, z)
+        //baseNodes[id] = withNode // <- This shuld already be here
+        anchors[id] = ["type": "plane", "plane": ["width": width, "height":height ]];
+        sendEvent(withName: "RHDAR", body: ["key": "planeAnchorChanged", "data": ["id": id, "action": "update", "plane": ["width": width, "height":height]]])
+        fixOrphans()
+    }
+    
+    func removePlaneAnchor(_ anchor:ARPlaneAnchor, withNode: SCNNode) {
+        let id = anchor.identifier.uuidString
+        anchors.removeValue(forKey: id)
+        baseNodes.removeValue(forKey: id)
+        
+    }
+    @objc func getAnchors(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseResolveBlock) {
+        resolve(anchors)
+    }
+    func addImageAnchor(_ anchor: ARImageAnchor, withNode: SCNNode) {
+        
+    }
+    func updateImageAnchor(_ anchor: ARImageAnchor, withNode: SCNNode) {}
+    func removeImageAnchor(_ anchor: ARImageAnchor, withNode: SCNNode) {}
+    //MARK: Image Recognizer methods
     @objc func addRecognizerImage(_ url:String, name: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         guard let i = UIImage(contentsOfFile: url) else { reject("no_image", "could not get image from " + url, nil); return }
         guard let ci = i.cgImage else { reject("no_image", "Could not get CGImage instance from url " + url, nil); return }
@@ -524,7 +529,6 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         if configuration.detectionImages == nil { configuration.detectionImages = [x] }
         else { configuration.detectionImages!.insert(x) }
     }
-    @available(iOS 11.3, *)
     @objc func removeRecognizerImage(_ name: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         guard var d = configuration.detectionImages else { reject("no_images", "No recognized images registered", nil); return }
         let ims = d.filter() { im in
