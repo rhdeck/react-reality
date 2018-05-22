@@ -40,9 +40,11 @@ RCT_EXTERN_METHOD(addSKNode:(SKNode *)node toParent:(NSString *)toParent resolve
 RCT_EXTERN_METHOD(clear:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(resume:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(pause:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
+RCT_EXTERN_METHOD(setPlaneDetection:(BOOL)detectPlanes resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(getAnchors:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseResolveBlock)reject);
 RCT_EXTERN_METHOD(addRecognizerImage:(NSString *)url name:(NSString *)name resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(removeRecognizerImage:(NSString *)name resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
+RCT_EXTERN_METHOD(setImageDetection:(BOOL)doDetect resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 @end
 @interface RCT_EXTERN_MODULE(RHDSecondaryViewManager, RCTViewManager)
 @end

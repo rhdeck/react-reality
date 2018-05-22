@@ -129,6 +129,9 @@ const resume = async () => {
 const pause = async () => {
   return await NativeRHDSceneManager.pause();
 };
+const setPlaneDetection = async detectPlanes => {
+  return await NativeRHDSceneManager.setPlaneDetection(detectPlanes);
+};
 const getAnchors = async () => {
   return await NativeRHDSceneManager.getAnchors();
 };
@@ -137,6 +140,9 @@ const addRecognizerImage = async (url, name) => {
 };
 const removeRecognizerImage = async name => {
   return await NativeRHDSceneManager.removeRecognizerImage(name);
+};
+const setImageDetection = async doDetect => {
+  return await NativeRHDSceneManager.setImageDetection(doDetect);
 };
 //#endregion
 //#region Exports
@@ -173,8 +179,10 @@ export {
   clear,
   resume,
   pause,
+  setPlaneDetection,
   getAnchors,
   addRecognizerImage,
-  removeRecognizerImage
+  removeRecognizerImage,
+  setImageDetection
 };
 //#endregion
