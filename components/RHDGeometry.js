@@ -2,26 +2,31 @@ import React, { Component, Children } from "react";
 import PropTypes from "prop-types";
 import filter from "lodash/filter";
 import pickBy from "lodash/pickBy";
-import * as RHDSceneManager from "../RHDSceneManager"; //@TODO Make this line unnecessary
-export default (type, geomProps, numSides) => {
-  const Geom = class extends Component {
+import { removeGeometry } from "../RHDSceneManager";
+export default (mountFunc, geomProps, numSides) => {
+  const RHDGeometry = class extends Component {
+    state = { isMounted: false };
     async nativeUpdate() {
+      console.log("Starting nativeUpdte for", this.props.parentNode);
       if (!this.props.parentNode)
         throw new Error("Cannot mount a Geometry without a parent Node");
-      const mountFunc =
-        typeof type == "function" ? type : RHDSceneManager["set" + type]; //@TODO Make this trinary unnecessary
       const filteredProps = pickBy(this.props, (v, k) => {
         return geomPropKeys.indexOf(k) > -1;
       });
 
       try {
+        console.log("Hi there this is ray running");
         await mountFunc(
           {
             ...filteredProps
           },
           this.props.parentNode
         );
-      } catch (e) {}
+        console.log("Hi there this is ray and I ran");
+        this.setState({ isMounted: true });
+      } catch (e) {
+        console.log("I got an error", e);
+      }
     }
     shouldComponentUpdate(nextProps) {
       return true;
@@ -36,6 +41,8 @@ export default (type, geomProps, numSides) => {
     render() {
       this.nativeUpdate();
       if (!this.props.children) return null;
+      if (!this.state.isMounted) return null;
+      console.log("Adding geometry!!!");
       const c = Children.map(this.props.children, child => {
         return React.cloneElement(child, {
           parentNode: this.props.parentNode,
@@ -45,10 +52,10 @@ export default (type, geomProps, numSides) => {
       return c;
     }
   };
-  Geom.propTypes = {
+  RHDGeometry.propTypes = {
     ...geomProps,
     parentNode: PropTypes.string
   };
-  const geomPropKeys = Object.keys(Geom.propTypes);
-  return Geom;
+  const geomPropKeys = Object.keys(RHDGeometry.propTypes);
+  return RHDGeometry;
 };

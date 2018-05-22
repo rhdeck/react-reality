@@ -1,7 +1,8 @@
 import PropTypes from "prop-types";
 import RHDGeometry from "./RHDGeometry";
+import { setBox } from "../RNSwiftBridge";
 export default RHDGeometry(
-  "Box",
+  setBox,
   {
     width: PropTypes.number,
     height: PropTypes.number,

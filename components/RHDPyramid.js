@@ -1,6 +1,8 @@
 import PropTypes from "prop-types";
 import RHDGeometry from "./RHDGeometry";
-export default RHDGeometry("Pyramid", {
+
+import { setPyramid } from "../RNSwiftBridge";
+export default RHDGeometry(setPyramid, {
   width: PropTypes.number,
   length: PropTypes.number,
   height: PropTypes.number

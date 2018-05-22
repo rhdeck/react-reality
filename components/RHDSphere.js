@@ -1,7 +1,9 @@
 import PropTypes from "prop-types";
 import RHDGeometry from "./RHDGeometry";
+
+import { setSphere } from "../RNSwiftBridge";
 export default RHDGeometry(
-  "Sphere",
+  setSphere,
   {
     radius: PropTypes.number
   },

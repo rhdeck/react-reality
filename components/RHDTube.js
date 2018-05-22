@@ -1,6 +1,8 @@
 import PropTypes from "prop-types";
 import RHDGeometry from "./RHDGeometry";
-export default RHDGeometry("Tube", {
+
+import { setTube } from "../RNSwiftBridge";
+export default RHDGeometry(setTube, {
   innerR: PropTypes.number,
   outerR: PropTypes.number,
   height: PropTypes.number

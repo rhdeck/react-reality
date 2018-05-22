@@ -1,7 +1,9 @@
 import PropTypes from "prop-types";
 import RHDGeometry from "./RHDGeometry";
+
+import { setText } from "../RNSwiftBridge";
 export default RHDGeometry(
-  "Text",
+  setText,
   {
     text: PropTypes.string,
     name: PropTypes.string,

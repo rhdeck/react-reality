@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import RHDGeometry from "./RHDGeometry";
-import { setPlane } from "../RHDSceneManager";
+import { setPlane } from "../RNSwiftBridge";
 export default RHDGeometry(setPlane, {
   width: PropTypes.number,
   height: PropTypes.number,
