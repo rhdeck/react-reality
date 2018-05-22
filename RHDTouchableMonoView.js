@@ -3,30 +3,33 @@ import React, { Component } from "react";
 import RHDMonoView from "./RHDMonoView";
 import RHDNode from "./components/RHDNode";
 import { doTap } from "./RHDSceneManager";
+import { RHDARConsumer } from "./RHDARWrapper";
 const RHDTouchableMonoView = props => {
   return (
-    <TouchableWithoutFeedback
-      onPress={async ({ nativeEvent: { locationX, locationY } }) => {
-        const out = await doTap(locationX, locationY);
-        if (out.nodes && out.nodes.length) {
-          RHDNode.triggerProp(out.nodes[0], "onPress");
-        }
+    <RHDARConsumer>
+      {value => {
+        return (
+          <TouchableWithoutFeedback
+            onPress={async ({ nativeEvent: { locationX, locationY } }) => {
+              value.triggerAtLocation("onPress", locationX, locationY);
+            }}
+            onPressIn={async ({ nativeEvent: { locationX, locationY } }) => {
+              console.log(
+                "Running triggeratlocation from onpressin",
+                locationX,
+                locationY
+              );
+              value.triggerAtLocation("onPressIn", locationX, locationY);
+            }}
+            onPressOut={async ({ nativeEvent: { locationX, locationY } }) => {
+              value.triggerAtLocation("onPressOut", locationX, locationY);
+            }}
+          >
+            <RHDMonoView {...props} />
+          </TouchableWithoutFeedback>
+        );
       }}
-      onPressIn={async ({ nativeEvent: { locationX, locationY } }) => {
-        const out = await doTap(locationX, locationY);
-        if (out.nodes && out.nodes.length) {
-          RHDNode.triggerProp(out.nodes[0], "onPressIn");
-        }
-      }}
-      onPressOut={async ({ nativeEvent: { locationX, locationY } }) => {
-        const out = await doTap(locationX, locationY);
-        if (out.nodes && out.nodes.length) {
-          RHDNode.triggerProp(out.nodes[0], "onPressOut");
-        }
-      }}
-    >
-      <RHDMonoView {...props} />
-    </TouchableWithoutFeedback>
+    </RHDARConsumer>
   );
 };
 RHDTouchableMonoView.propTypes = RHDMonoView.propTypes;

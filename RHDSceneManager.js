@@ -33,7 +33,9 @@ import {
   resume,
   pause,
   addRecognizerImage,
-  removeRecognizerImage
+  removeRecognizerImage,
+  setPlaneDetection,
+  setImageDetection
 } from "./RNSwiftBridge";
 const { RHDSceneManager } = NativeModules;
 //#region Event Management
@@ -60,7 +62,7 @@ const masterHandler = body => {
   else console.log("No handler for key", key);
 };
 const removeListener = key => {
-  cachedHandlers[key] = cb;
+  delete cachedHandlers[key];
 };
 const stopListening = () => {
   if (cachedListener) {
@@ -71,14 +73,23 @@ const stopListening = () => {
 //#endregion
 //#region Plane Detection
 const addPlaneDetection = async cb => {
-  setPlaneDetection(true);
+  await setPlaneDetection(true);
   addListener("planeDetected", cb);
 };
-const removePlaneDetection = () => {
-  setPlaneDetection(false);
+const removePlaneDetection = async () => {
+  await setPlaneDetection(false);
   removeListener("planeDetected");
 };
 //#endregion
+//#region Image Detection
+const addImageDetection = async cb => {
+  addListener("imageDetected", cb);
+  return await setImageDetection(true);
+};
+const removeImageDetection = async () => {
+  removeListener("imageDetected");
+  return await setImageDetection(false);
+};
 
 export {
   clear,
@@ -89,5 +100,19 @@ export {
   doTap,
   setMaterial,
   setMaterialProperty,
-  removeMaterial
+  removeMaterial,
+  addNode,
+  removeNode,
+  updateNode,
+  addSKLabelNode,
+  addSKNode,
+  addSKScene,
+  addSKSceneByReference,
+  addSKSceneReference,
+  setSKLabelNode,
+  setSKNode,
+  addImageDetection,
+  removeImageDetection,
+  addRecognizerImage,
+  removeRecognizerImage
 };

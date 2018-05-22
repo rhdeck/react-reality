@@ -1,4 +1,4 @@
-import { View, processColor, Text } from "react-native";
+import { View, processColor, Text, SafeAreaView } from "react-native";
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import RHDPrimaryView from "./RHDPrimaryView";
@@ -6,34 +6,36 @@ import RHDSecondaryView from "./RHDSecondaryView";
 class RHDDualView extends Component {
   render() {
     return (
-      <View
-        style={{
-          ...this.props.style,
-          height: "100%",
-          width: "100%",
-          backgroundColor: "black"
-        }}
-      >
+      <SafeAreaView>
         <View
           style={{
             ...this.props.style,
-            flexDirection: "row",
-            paddingHorizontal: 100
+            height: "100%",
+            width: "100%",
+            backgroundColor: "black"
           }}
         >
-          <RHDPrimaryView
-            {...this.props}
+          <View
             style={{
-              flex: 1
+              ...this.props.style,
+              flexDirection: "row",
+              paddingHorizontal: 100
             }}
-          />
-          <RHDSecondaryView
-            style={{
-              flex: 1
-            }}
-          />
+          >
+            <RHDPrimaryView
+              {...this.props}
+              style={{
+                flex: 1
+              }}
+            />
+            <RHDSecondaryView
+              style={{
+                flex: 1
+              }}
+            />
+          </View>
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 }

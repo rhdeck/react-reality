@@ -10,7 +10,6 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
             s.listenedEvents = [:]
         }
         RHDSceneManager.sharedInstance = self
-        configuration.planeDetection = .horizontal
     }
     var secondaryView:SCNView?
     var scene:SCNScene?
@@ -23,10 +22,11 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
     func addNode(node: SCNNode, parent: String) {
         //Must have names or else we ditch
         guard
-            let name = node.name,
-            let _ = baseNodes[name]
+            let name = node.name
+        
         else { return }
         nodes[name] = node
+        NSLog("Added node with name: " + name)
         if parent == "" {
             if let s = scene {
                 s.rootNode.addChildNode(node)
@@ -101,7 +101,7 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         resolve(true)
     }
     @objc func updateNode(_ forNode: String, newProps: jsonType, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        guard let n = nodes[forNode] else { reject("no_node", "No Node with name " + forNode, nil); return }
+        guard let n = nodes[forNode] else { reject("no_node", "updateNode: No Node with name " + forNode, nil); return }
         setNodeProperties(n, properties: newProps)
     }
     @objc func setBox(_ g: SCNBox, forNode: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
@@ -135,13 +135,13 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         setGeometry(g, forNode: forNode, resolve: resolve, reject: reject);
     }
     @objc func setGeometry(_ geometry: SCNGeometry, forNode: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        guard let n = nodes[forNode] else { reject("no_node", "No Node with name " + forNode, nil); return }
+        guard let n = nodes[forNode] else { reject("no_node", "setGeometry:No Node with name " + forNode, nil); return }
         n.geometry = geometry;
         resolve(true)
     }
     @objc func setMaterial(_ material:SCNMaterial, forNode: String, atPosition: Int, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         print("At position " + String(atPosition))
-        guard let n = nodes[forNode] else { reject("no_node", "No Node with name " + forNode, nil); return }
+        guard let n = nodes[forNode] else { reject("no_node", "setMaterial:No Node with name " + forNode, nil); return }
         guard let g = n.geometry else { reject("no_geometry", "No Geometry at node with name " + forNode, nil); return }
         if g.materials.count > atPosition {
             g.replaceMaterial(at: atPosition, with: material)
@@ -155,7 +155,7 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         }
     }
     @objc func setMaterialProperty(_ json: jsonType, propertyName: String, forMaterialAtPosition: Int, forNode: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        guard let n = nodes[forNode] else { reject("no_node", "No Node with name " + forNode, nil); return }
+        guard let n = nodes[forNode] else { reject("no_node", "setMaterialProperty:No Node with name " + forNode, nil); return }
         guard let g = n.geometry else { reject("no_geometry", "No Geometry at node with name " + forNode, nil); return }
         guard forMaterialAtPosition < g.materials.count else { reject("no_matieral", "No Material set at position " + String(forMaterialAtPosition) + "for node with name " + forNode, nil); return }
         let m = g.materials[forMaterialAtPosition]
@@ -175,12 +175,12 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         resolve(true) 
     }
     @objc func removeGeometry(_ forNode: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        guard let n = nodes[forNode] else { reject("no_node", "No Node with name " + forNode, nil); return }
+        guard let n = nodes[forNode] else { reject("no_node", "removeGeometry:No Node with name " + forNode, nil); return }
         n.geometry = nil
         resolve(true)
     }
     @objc func removeMaterial(_ forNode: String, atPosition: Int, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        guard let n = nodes[forNode] else { reject("no_node", "No Node with name " + forNode, nil); return }
+        guard let n = nodes[forNode] else { reject("no_node", "removeMaterial:No Node with name " + forNode, nil); return }
         guard let g = n.geometry else { reject("no_geometry", "No Geometry at node with name " + forNode, nil); return }
         g.removeMaterial(at: atPosition)
         resolve(true)
@@ -198,7 +198,7 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         addSKScene(scene, forNode: forNode, atPosition: atPosition, withType: withType, resolve: resolve, reject: reject)
     }
     @objc func addSKScene(_ scene:SKScene, forNode: String, atPosition: Int, withType: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        guard let n = nodes[forNode] else { reject("no_node", "No Node with name " + forNode, nil); return }
+        guard let n = nodes[forNode] else { reject("no_node", "addSKScene: No Node with name " + forNode, nil); return }
         guard let g = n.geometry else { reject("no_geometry", "No Geometry at node with name " + forNode, nil); return }
         let m = g.materials[atPosition]
         var mp:SCNMaterialProperty
@@ -285,7 +285,7 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         }
     }
     @objc func removeSKScene(_ forNode: String, atPosition: Int, withType: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        guard let n = nodes[forNode] else { reject("no_node", "No Node with name " + forNode, nil); return }
+        guard let n = nodes[forNode] else { reject("no_node", "removeSKScene: No Node with name " + forNode, nil); return }
         guard let g = n.geometry else { reject("no_geometry", "No Geometry at node with name " + forNode, nil); return }
         let m = g.materials[atPosition]
         var mp:SCNMaterialProperty
@@ -458,7 +458,7 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
     }
     //MARK:ARAnchor delegate methods
     var baseNodes:[String:SCNNode] = [:]
-    var anchors:[String:jsonType] = [:] 
+    var anchors:[String:jsonType] = [:]
 
     func addAnchor(_ anchor: ARAnchor, withNode: SCNNode) {
         if let pa = anchor as? ARImageAnchor { addImageAnchor(pa, withNode: withNode) }
@@ -512,33 +512,69 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         baseNodes.removeValue(forKey: id)
         
     }
+    var doDetectPlanes:Bool = false
+    @objc func setPlaneDetection(_ detectPlanes: Bool, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        doDetectPlanes = detectPlanes
+        setPlaneDetection()
+        resolve(true)
+    }
+    func setPlaneDetection() {
+        guard let s = session else { return }
+        if(doDetectPlanes) {
+            configuration.planeDetection = .vertical
+        } else {
+            configuration.planeDetection = ARWorldTrackingConfiguration.PlaneDetection(rawValue: 0)
+        }
+        print("This is horizontal: " + String(ARWorldTrackingConfiguration.PlaneDetection.horizontal.rawValue) + " and this is vertical " + String(ARWorldTrackingConfiguration.PlaneDetection.vertical.rawValue))
+        doResume()
+    }
     @objc func getAnchors(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseResolveBlock) {
         resolve(anchors)
     }
     func addImageAnchor(_ anchor: ARImageAnchor, withNode: SCNNode) {
-        
+        guard let name = anchor.referenceImage.name else { return }
+        let id = anchor.identifier.uuidString
+        anchors[id] = ["type": "image", "image": name]
+        baseNodes[id] = withNode.childNodes.first
+        sendEvent(withName: "RHDAR", body: ["key": "imageAnchorChanged", "data":["id":id, "action": "add", "name": name]])
     }
-    func updateImageAnchor(_ anchor: ARImageAnchor, withNode: SCNNode) {}
-    func removeImageAnchor(_ anchor: ARImageAnchor, withNode: SCNNode) {}
+    
+    func updateImageAnchor(_ anchor: ARImageAnchor, withNode: SCNNode) {
+        let id = anchor.identifier.uuidString
+        guard let name =  anchors[id]?["image"] else { return }
+        sendEvent(withName: "RHDAR", body: ["key": "imageAnchorChanged", "data":["id":id, "action": "update", "name":name]])
+    }
+    func removeImageAnchor(_ anchor: ARImageAnchor, withNode: SCNNode) {
+        let id = anchor.identifier.uuidString
+        anchors.removeValue(forKey: id)
+        baseNodes.removeValue(forKey: id)
+    }
     //MARK: Image Recognizer methods
     @objc func addRecognizerImage(_ url:String, name: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         guard let i = UIImage(contentsOfFile: url) else { reject("no_image", "could not get image from " + url, nil); return }
         guard let ci = i.cgImage else { reject("no_image", "Could not get CGImage instance from url " + url, nil); return }
         let x = ARReferenceImage(ci, orientation: CGImagePropertyOrientation.up, physicalWidth: 0.2)
         x.name = name
-        if configuration.detectionImages == nil { configuration.detectionImages = [x] }
-        else { configuration.detectionImages!.insert(x) }
+        detectionImages[name] = x
+        setDetectionImages()
+        resolve(name)
     }
     @objc func removeRecognizerImage(_ name: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        guard var d = configuration.detectionImages else { reject("no_images", "No recognized images registered", nil); return }
-        let ims = d.filter() { im in
-            return im.name == name
-        }
-        guard ims.count > 0 else { reject("no_matches", "No recognized images matching " + name, nil); return }
-        ims.forEach() { im in
-            d.remove(im)
-        }
-        configuration.detectionImages = d
+        detectionImages.removeValue(forKey: name)
+        setDetectionImages()
+        resolve(true)
+    }
+    var detectionImages:[String: ARReferenceImage] = [:]
+    var doDetectImages: Bool = false
+    func setDetectionImages() {
+        if(doDetectImages) {
+            configuration.detectionImages = Set(detectionImages.values.map{$0})
+        } else { configuration.detectionImages = nil}
+        doResume()
+    }
+    @objc func setImageDetection(_ doDetect:Bool, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        doDetectImages = doDetect
+        setDetectionImages()
         resolve(true)
     }
 }
