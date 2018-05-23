@@ -103,6 +103,7 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
     @objc func updateNode(_ forNode: String, newProps: jsonType, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         guard let n = nodes[forNode] else { reject("no_node", "updateNode: No Node with name " + forNode, nil); return }
         setNodeProperties(n, properties: newProps)
+        resolve(true)
     }
     @objc func setBox(_ g: SCNBox, forNode: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         setGeometry(g, forNode: forNode, resolve: resolve, reject: reject);
@@ -137,6 +138,15 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
     @objc func setGeometry(_ geometry: SCNGeometry, forNode: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         guard let n = nodes[forNode] else { reject("no_node", "setGeometry:No Node with name " + forNode, nil); return }
         n.geometry = geometry;
+//        if let g = n.geometry {
+//            if type(of: g) == type(of: geometry) {
+//
+//            } else {
+//                n.geometry = geometry // New Mount
+//            }
+//        } else {
+//            n.geometry = geometry;
+//        }
         resolve(true)
     }
     @objc func setMaterial(_ material:SCNMaterial, forNode: String, atPosition: Int, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
