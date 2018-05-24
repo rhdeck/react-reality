@@ -18,6 +18,7 @@ import RHDDualView from "./RHDDualView";
 import RHDSKScene from "./components/RHDSKScene";
 import RHDSKLabel from "./components/RHDSKLabel";
 import RHDPrimeBaseNode from "./components/RHDPrimeBaseNode";
+import RHDAnimated from "./components/RHDAnimated";
 import { RHDARWrapper, RHDARConsumer } from "./RHDARWrapper";
 export {
   RHDMonoView,
@@ -41,5 +42,6 @@ export {
   RHDSKLabel,
   RHDPrimeBaseNode,
   RHDARWrapper,
-  RHDARConsumer
+  RHDARConsumer,
+  RHDAnimated
 };

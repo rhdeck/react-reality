@@ -10,10 +10,10 @@ const RHDTouchableMonoView = props => {
       {value => {
         return (
           <TouchableWithoutFeedback
-            onPress={async ({ nativeEvent: { locationX, locationY } }) => {
+            onPress={({ nativeEvent: { locationX, locationY } }) => {
               value.triggerAtLocation("onPress", locationX, locationY);
             }}
-            onPressIn={async ({ nativeEvent: { locationX, locationY } }) => {
+            onPressIn={({ nativeEvent: { locationX, locationY } }) => {
               console.log(
                 "Running triggeratlocation from onpressin",
                 locationX,
@@ -21,7 +21,7 @@ const RHDTouchableMonoView = props => {
               );
               value.triggerAtLocation("onPressIn", locationX, locationY);
             }}
-            onPressOut={async ({ nativeEvent: { locationX, locationY } }) => {
+            onPressOut={({ nativeEvent: { locationX, locationY } }) => {
               value.triggerAtLocation("onPressOut", locationX, locationY);
             }}
           >

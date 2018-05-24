@@ -235,8 +235,6 @@ func setNodeProperties(_ node:SCNNode, properties: jsonType) {
     if let i = properties["categoryBitMask"] as? Int { node.categoryBitMask = i }
     if let i = properties["renderingOrder"] as? Int { node.renderingOrder = i }
     if let b = properties["castsShadow"] as? Bool { node.castsShadow = b }
-    if let d = properties["transition"] as? jsonType, let f = d["duration"] as? Double { SCNTransaction.animationDuration = f }
-    else { SCNTransaction.animationDuration = 0 }
     if let d = properties["position"] as? jsonType { node.position = RCTConvert.SCNVector3(d) }
     if let f = properties["scale"] as? Double { node.scale = SCNVector3(f, f, f) }
     if let d = properties["eulerAngles"] as? jsonType { node.eulerAngles = RCTConvert.SCNVector3(d) }

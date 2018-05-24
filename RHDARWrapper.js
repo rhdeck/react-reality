@@ -9,13 +9,17 @@ import {
   getAnchors,
   setImageDetection,
   removeImageDetection,
-  doTap
+  doTap,
+  setAnimationDuration,
+  setAnimationType,
+  removeAnimation
 } from "./RHDSceneManager";
 const { Provider, Consumer: RHDARConsumer } = createContext();
 class RHDARWrapper extends Component {
   state = {
     planeDetection: false,
     imageDetection: false,
+    transition: 0,
     anchors: {},
     providerValue: this.setProviderValue(true)
   };
@@ -40,6 +44,7 @@ class RHDARWrapper extends Component {
     pause();
   }
   setProviderValue(skipState) {
+    console.log("Updating providervalue");
     const providerValue = {
       isStarted: this.state && this.state.isStarted,
       anchors: this.state ? this.state.anchors : {},
@@ -74,6 +79,14 @@ class RHDARWrapper extends Component {
       ret.todos["setImageDetection"] = nextProps.imageDetection;
       ret.imageDetection = nextProps.imageDetection;
     }
+    if (nextProps.animationDuration !== prevState.animationDuration) {
+      ret.todos["setAnimationDuration"] = nextProps.animationDuration;
+      ret.animationDuration = nextProps.animationDuration;
+    }
+    if (nextProps.animationEasing !== prevState.animationDuration) {
+      ret.todos["setAnimationEasing"] = nextProps.animationEasing;
+      ret.animationEasing = nextProps.animationEasing;
+    }
     if (!ret.todos || Object.keys(ret.todos) == 0) {
       delete ret.todos;
     }
@@ -99,6 +112,15 @@ class RHDARWrapper extends Component {
     if (newValue) addImageDetection(this.updateImages);
     else removeImageDetection();
   }
+  setAnimationDuration(newValue) {
+    console.log("Sending duration directive of ", newValue);
+    if (!newValue) removeAnimation();
+    else setAnimationDuration(newValue);
+  }
+  setAnimationEasing(newValue) {
+    console.log("sending animatino type of ", newValue);
+    setAnimationType(newValue);
+  }
   async updatePlanes(data) {
     const anchors = await getAnchors(data);
     this.setState({ anchors: anchors }, () => {
@@ -114,12 +136,10 @@ class RHDARWrapper extends Component {
   //#region: Node Registration and Triggering
   registeredNodes = {};
   async getNodesFromLocation(x, y) {
-    console.log("Running dotap", x, y);
     const out = await doTap(x, y);
     return out;
   }
   async triggerAtLocation(prop, x, y) {
-    console.log("Running triggerAdLocation", prop, x, y);
     const out = await this.getNodesFromLocation(x, y);
     if (out.nodes && out.nodes.length) {
       this.triggerProp(out.nodes[0], prop);
@@ -146,7 +166,9 @@ class RHDARWrapper extends Component {
 }
 RHDARWrapper.propTypes = {
   planeDetection: PropTypes.bool,
-  imageDetection: PropTypes.bool
+  imageDetection: PropTypes.bool,
+  animationDuration: PropTypes.number,
+  animationEasing: PropTypes.string
 };
 export { RHDARWrapper, RHDARConsumer };
 export default RHDARWrapper;

@@ -9,26 +9,24 @@ import {
 } from "./lib/propTypes";
 import pickBy from "lodash/pickBy";
 import RHDMaterial from "./RHDMaterial";
-class RHDMaterials extends Component {
-  render() {
-    var out = [];
-    if (this.props.numSides) {
-      for (var side = 0; side < this.props.numSides; side++) {
+import { RHDGeometryConsumer } from "./RHDGeometry";
+const RHDMaterials = props => {
+  if (props.children == null) return null;
+  return;
+  <RHDGeometryConsumer>
+    {({ numSides }) => {
+      var out = [];
+      for (var s = 0; s < numSides; s++) {
         var c = null;
-        if (this.props.children)
-          c = Children.map(this.props.children, child => {
-            return React.cloneElement(child);
-          });
-        var key = this.props.parentNode + "-" + side.toString();
-        const m = (
-          <RHDMaterial {...this.props} index={side} children={c} key={key} />
-        );
-        out.push(m);
+        c = Children.map(this.props.children, child => {
+          return React.cloneElement(child);
+        });
+        out.push(<RHDMaterial {...this.props} index={s} children={c} />);
       }
-    }
-    return out;
-  }
-}
+      return out;
+    }}
+  </RHDGeometryConsumer>;
+};
 RHDMaterials.propTypes = pickBy(
   RHDMaterial.propTypes,
   (v, k) => ["index"].indexOf(k) === -1

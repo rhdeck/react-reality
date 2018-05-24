@@ -102,6 +102,7 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
     }
     @objc func updateNode(_ forNode: String, newProps: jsonType, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         guard let n = nodes[forNode] else { reject("no_node", "updateNode: No Node with name " + forNode, nil); return }
+        updateAnimation()
         setNodeProperties(n, properties: newProps)
         resolve(true)
     }
@@ -365,6 +366,36 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         guard let s = session else { reject("no_session", "No session is loaded", nil); return }
         s.pause()
         resolve(true)
+    }//MARK: Animation Methods
+    var animationDuration:CFTimeInterval = 0
+    @objc func setAnimation(_ seconds: Double, type: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        animationDuration = seconds
+        animationType = type
+        updateAnimation()
+        resolve(true)
+    }
+    @objc func setAnimationDuration(_ seconds: Double, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        animationDuration = seconds
+        updateAnimation()
+        resolve(true)
+    }
+    var animationType = "both"
+    @objc func setAnimationType(_ type: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        animationType = type
+        resolve(true)
+    }
+    func updateAnimation() {
+        SCNTransaction.animationDuration = animationDuration
+        var timingFunc:String = kCAMediaTimingFunctionEaseInEaseOut
+        switch(animationType) {
+        case "none": timingFunc = kCAMediaTimingFunctionLinear
+        case "out": timingFunc = kCAMediaTimingFunctionEaseOut
+        case "in": timingFunc = kCAMediaTimingFunctionEaseIn
+        case "both": timingFunc = kCAMediaTimingFunctionEaseInEaseOut
+        default: timingFunc = kCAMediaTimingFunctionEaseInEaseOut
+        }
+        SCNTransaction.animationTimingFunction = CAMediaTimingFunction(name: timingFunc)
+
     }
     //MARK:RCTBridgeModule methods
     override func constantsToExport() -> [AnyHashable : Any]! {

@@ -129,6 +129,15 @@ const resume = async () => {
 const pause = async () => {
   return await NativeRHDSceneManager.pause();
 };
+const setAnimation = async (seconds, type) => {
+  return await NativeRHDSceneManager.setAnimation(seconds, type);
+};
+const setAnimationDuration = async seconds => {
+  return await NativeRHDSceneManager.setAnimationDuration(seconds);
+};
+const setAnimationType = async type => {
+  return await NativeRHDSceneManager.setAnimationType(type);
+};
 const setPlaneDetection = async detectPlanes => {
   return await NativeRHDSceneManager.setPlaneDetection(detectPlanes);
 };
@@ -179,6 +188,9 @@ export {
   clear,
   resume,
   pause,
+  setAnimation,
+  setAnimationDuration,
+  setAnimationType,
   setPlaneDetection,
   getAnchors,
   addRecognizerImage,

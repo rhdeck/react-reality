@@ -35,7 +35,10 @@ import {
   addRecognizerImage,
   removeRecognizerImage,
   setPlaneDetection,
-  setImageDetection
+  setImageDetection,
+  setAnimationDuration,
+  setAnimationType,
+  setAnimation
 } from "./RNSwiftBridge";
 const { RHDSceneManager } = NativeModules;
 //#region Event Management
@@ -91,6 +94,9 @@ const removeImageDetection = async () => {
   return await setImageDetection(false);
 };
 
+const removeAnimation = async () => {
+  return await setAnimationDuration(0);
+};
 export {
   clear,
   resume,
@@ -114,5 +120,9 @@ export {
   addImageDetection,
   removeImageDetection,
   addRecognizerImage,
-  removeRecognizerImage
+  removeRecognizerImage,
+  setAnimationType,
+  removeAnimation,
+  setAnimationDuration,
+  setAnimation
 };
