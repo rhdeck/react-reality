@@ -44,7 +44,6 @@ class RHDARWrapper extends Component {
     pause();
   }
   setProviderValue(skipState) {
-    console.log("Updating providervalue");
     const providerValue = {
       isStarted: this.state && this.state.isStarted,
       anchors: this.state ? this.state.anchors : {},
