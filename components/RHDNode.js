@@ -1,4 +1,4 @@
-import React, { Component, Children, createContext } from "react";
+import React, { Component, createContext } from "react";
 import PropTypes from "prop-types";
 import pickBy from "lodash/pickBy";
 import { RHDARConsumer } from "../RHDARWrapper";
@@ -129,28 +129,29 @@ RHDBaseNode.propTypes = {
 const RHDNode = props => {
   return (
     <RHDARConsumer>
-      {({ registerNode, removeNode }) => {
-        if (!value.isStarted) {
+      {({ registerNode, removeNode, isStarted }) => {
+        if (!isStarted) {
           return null;
         } else {
           return (
             <RHDNodeConsumer>
               {({ nodeID }) => {
-                return;
-                <RHDAnimatedConsumer>
-                  {({ willNativeUpdate, didNativeUpdate }) => {
-                    return (
-                      <RHDBaseNode
-                        {...props}
-                        parentNode={nodeId}
-                        registerNode={registerNode}
-                        removeNode={removeNode}
-                        willNativeUpdate={willNativeUpdate}
-                        didNativeUpdate={didNativeUpdate}
-                      />
-                    );
-                  }}
-                </RHDAnimatedConsumer>;
+                return (
+                  <RHDAnimatedConsumer>
+                    {({ willNativeUpdate, didNativeUpdate }) => {
+                      return (
+                        <RHDBaseNode
+                          parentNode={nodeID ? nodeID : ""}
+                          {...props}
+                          registerNode={registerNode}
+                          removeNode={removeNode}
+                          willNativeUpdate={willNativeUpdate}
+                          didNativeUpdate={didNativeUpdate}
+                        />
+                      );
+                    }}
+                  </RHDAnimatedConsumer>
+                );
               }}
             </RHDNodeConsumer>
           );
