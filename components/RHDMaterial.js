@@ -1,4 +1,4 @@
-import React, { Component, Children, createContext } from "react";
+import React, { Component, createContext } from "react";
 import {
   setMaterial,
   setMaterialProperty,
@@ -16,25 +16,34 @@ import pickBy from "lodash/pickBy";
 import { RHDNodeConsumer } from "./RHDNode";
 const { Provider, Consumer: RHDMaterialConsumer } = createContext({});
 class RHDBaseMaterial extends Component {
-  state = {};
+  state = {
+    updateState: "doMount" // States: doMount, Mounting, (doNext, doing,) done
+  };
   constructor(props) {
     super(props);
-    this.state.materialPropertyProps = this.setMaterialPropertyProps(true);
+    this.state.materialPropertyProps = {
+      updateMaterial: this.updateMaterial.bind(this),
+      parentNode: this.props.parentNode,
+      index: this.props.index
+    };
   }
-
-  nativeUpdate() {
-    const filteredProps = pickBy(
-      this.props,
-      (v, k) => materialPropKeys.indexOf(k) > -1
-    );
-    const index = this.props.index ? this.props.index : 0;
-    setMaterial(filteredProps, this.props.parentNode, index);
+  async nativeUpdate() {
+    if (this.state.updateState == "doMount") {
+      const filteredProps = pickBy(
+        this.props,
+        (v, k) => materialPropKeys.indexOf(k) > -1
+      );
+      const index = this.props.index ? this.props.index : 0;
+      this.setState({ updateState: "Mounting" });
+      setMaterial(filteredProps, this.props.parentNode, index);
+      this.setState({ updateState: "done" });
+    }
   }
   componentDidMount() {
-    this.manageTodos();
+    this.nativeUpdate();
   }
   componentDidUpdate() {
-    this.manageTodos();
+    this.nativeUpdate();
   }
   async updateMaterial(id, property) {
     try {
@@ -44,55 +53,19 @@ class RHDBaseMaterial extends Component {
         this.props.index,
         this.props.parentNode
       );
-    } catch (e) {}
+    } catch (e) {
+      console.log("Uh oh , mp error", e);
+    }
   }
   render() {
+    if (["doMount", "Mounting"].indexOf(this.state.updateState) > -1)
+      return null;
     if (!this.props.children) return null;
     return (
       <Provider value={this.state.materialPropertyProps}>
         {this.props.children}
       </Provider>
     );
-  }
-
-  setMaterialPropertyProps(skipState) {
-    const materialPropertyProps = {
-      updateMaterial: this.updateMaterial.bind(this),
-      parentNode: this.props.parentNode,
-      index: this.props.index
-    };
-    if (!skipState)
-      this.setState(
-        {
-          materialPropertyProps
-        },
-        () => {
-          this.nativeUpdate();
-        }
-      );
-    return materialPropertyProps;
-  }
-  static getDerivedStateFromProps(nextProps, prevState) {
-    var ret = prevState;
-    if (!ret.todo) ret.todo = {};
-    if (nextProps.index != prevState.index) {
-      {
-        ret.index = nextProps.index;
-        ret.todo.setMaterialPropertyProps = true;
-      }
-    }
-    if (!ret.todo) delete ret.todo;
-    return ret;
-  }
-  manageTodos() {
-    if (this.state.todos) {
-      Object.keys(this.state.todos).forEach(k => {
-        if (typeof this[k] == "function") {
-          this[k](this.state.todos[k]);
-        }
-      });
-      this.setState({ todos: null });
-    }
   }
   componentWillUnmount() {
     removeMaterial(parentNode, index);
@@ -116,12 +89,13 @@ RHDBaseMaterial.propTypes = {
 const materialPropKeys = Object.keys(RHDBaseMaterial.propTypes);
 
 const RHDMaterial = props => {
-  return;
-  <RHDNodeConsumer>
-    {({ nodeId }) => {
-      return <RHDBaseMaterial {...this.props} parentNode={nodeId} />;
-    }}
-  </RHDNodeConsumer>;
+  return (
+    <RHDNodeConsumer>
+      {({ nodeID }) => {
+        return <RHDBaseMaterial {...props} parentNode={nodeID} />;
+      }}
+    </RHDNodeConsumer>
+  );
 };
 export { RHDMaterial, RHDMaterialConsumer };
 export default RHDMaterial;
