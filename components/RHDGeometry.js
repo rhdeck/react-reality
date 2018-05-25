@@ -8,7 +8,7 @@ const { Provider, Consumer: RHDGeometryConsumer } = createContext({});
 const RHDGeometry = (mountFunc, geomProps, numSides) => {
   const RHDBaseGeometry = class extends Component {
     state = {
-      updateState: "shouldMount" // Finite state: shouldMount, doMount, Mounting, doNext, do, doing, done
+      updateState: "doMount" // Finite state: shouldMount, doMount, Mounting, doNext, do, doing, done
     };
     constructor(props) {
       super(props);
@@ -22,7 +22,7 @@ const RHDGeometry = (mountFunc, geomProps, numSides) => {
         try {
           await mountFunc(this.state.geomProps, this.props.parentNode);
           this.setState(({ updateState }) => {
-            updateState: updateState == "doNext" ? "do" : "done";
+            return { updateState: updateState == "doNext" ? "do" : "done" };
           });
         } catch (e) {
           this.setState({ updateState: "doMount" });
@@ -35,7 +35,7 @@ const RHDGeometry = (mountFunc, geomProps, numSides) => {
         try {
           //DO something
           this.setState(({ updateState }) => {
-            updateState: updateState == "doNext" ? "do" : "done";
+            return { updateState: updateState == "doNext" ? "do" : "done" };
           });
         } catch (e) {
           console.log("I got an error", e);
@@ -53,13 +53,23 @@ const RHDGeometry = (mountFunc, geomProps, numSides) => {
       };
     }
     render() {
-      this.nativeUpdate();
       if (!this.props.children) return null;
+      if (
+        ["shouldMount", "doMount", "Mounting"].indexOf(this.state.updateState) >
+        -1
+      )
+        return null;
       return (
         <Provider value={this.state.providerValue}>
           {this.props.children}
         </Provider>
       );
+    }
+    componentDidMount() {
+      this.nativeUpdate();
+    }
+    componentDidUpdate() {
+      this.nativeUpdate();
     }
     static getDerivedStateFromProps(nextProps, prevState) {
       var ret = prevState;
