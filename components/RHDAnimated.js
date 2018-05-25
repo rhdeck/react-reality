@@ -11,11 +11,9 @@ class RHDAnimated extends Component {
     return <Provider {...this.props} value={this.providerValue} />;
   }
   async willNativeUpdate() {
-    console.log("animating", this.props);
     await setAnimation(this.props.seconds, this.props.easing);
   }
   async didNativeUpdate() {
-    console.log("End animate");
     //Do nothing
   }
 }
