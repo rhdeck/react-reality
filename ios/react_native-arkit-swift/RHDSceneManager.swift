@@ -102,7 +102,6 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
     }
     @objc func updateNode(_ forNode: String, newProps: jsonType, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         guard let n = nodes[forNode] else { reject("no_node", "updateNode: No Node with name " + forNode, nil); return }
-        updateAnimation()
         setNodeProperties(n, properties: newProps)
         resolve(true)
     }
@@ -151,7 +150,6 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         resolve(true)
     }
     @objc func setMaterial(_ material:SCNMaterial, forNode: String, atPosition: Int, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        print("At position " + String(atPosition))
         guard let n = nodes[forNode] else { reject("no_node", "setMaterial:No Node with name " + forNode, nil); return }
         guard let g = n.geometry else { reject("no_geometry", "No Geometry at node with name " + forNode, nil); return }
         if g.materials.count > atPosition {
