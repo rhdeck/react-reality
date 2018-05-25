@@ -12,20 +12,21 @@ import RHDMaterial from "./RHDMaterial";
 import { RHDGeometryConsumer } from "./RHDGeometry";
 const RHDMaterials = props => {
   if (props.children == null) return null;
-  return;
-  <RHDGeometryConsumer>
-    {({ numSides }) => {
-      var out = [];
-      for (var s = 0; s < numSides; s++) {
-        var c = null;
-        c = Children.map(this.props.children, child => {
-          return React.cloneElement(child);
-        });
-        out.push(<RHDMaterial {...this.props} index={s} children={c} />);
-      }
-      return out;
-    }}
-  </RHDGeometryConsumer>;
+  return (
+    <RHDGeometryConsumer>
+      {({ numSides }) => {
+        var out = [];
+        for (var s = 0; s < numSides; s++) {
+          var c = null;
+          c = Children.map(props.children, child => {
+            return React.cloneElement(child);
+          });
+          out.push(<RHDMaterial {...props} index={s} children={c} key={s} />);
+        }
+        return out;
+      }}
+    </RHDGeometryConsumer>
+  );
 };
 RHDMaterials.propTypes = pickBy(
   RHDMaterial.propTypes,
