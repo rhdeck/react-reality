@@ -1,10 +1,20 @@
-import React, { Component, Children } from "react";
+import React, { Component, createContext } from "react";
 import { addSKScene } from "../RHDSceneManager";
 import PropTypes from "prop-types";
 import pickBy from "lodash/pickBy";
 import UUID from "uuid/v4";
-class RHDSKScene extends Component {
+import { RHDMaterialPropertyConsumer } from "./RHDMaterialProperty";
+import { RHDMaterial } from "..";
+const {
+  Provider: RHDSKNodeProvider,
+  Consumer: RHDSKNodeConsumer
+} = createContext({});
+class RHDBaseSKScene extends Component {
   identifier = UUID();
+  constructor(props) {
+    super(props);
+    this.state = { providerValue: { SKNodeID: SKNode } };
+  }
   async nativeUpdate() {
     const scene = {
       ...pickBy(this.props, (v, k) => {
@@ -30,17 +40,16 @@ class RHDSKScene extends Component {
   render() {
     this.nativeUpdate();
     if (!this.props.children) return null;
-    const c = Children.map(this.props.children, child => {
-      return React.cloneElement(child, {
-        parentSKNode: this.identifier
-      });
-    });
-    return c;
+    return (
+      <RHDSKNodeProvider value={this.state.providerValue}>
+        {this.props.children}
+      </RHDSKNodeProvider>
+    );
   }
   componentWillUnmount() {}
 }
 
-RHDSKScene.propTypes = {
+RHDBaseSKScene.propTypes = {
   height: PropTypes.number,
   width: PropTypes.number,
   id: PropTypes.string,
@@ -49,5 +58,16 @@ RHDSKScene.propTypes = {
   index: PropTypes.number,
   materialProperty: PropTypes.string
 };
-const sceneKeys = Object.keys(RHDSKScene.propTypes);
+const sceneKeys = Object.keys(RHDBaseSKScene.propTypes);
+
+const RHDSKScene = props => {
+  return (
+    <RHDMaterialPropertyConsumer>
+      {({ parentNode, id, index }) => {
+        return <RHDBaseSKScene {...{ ...props, parentNode, id, index }} />;
+      }}
+    </RHDMaterialPropertyConsumer>
+  );
+};
+export { RHDSKScene, RHDSKNodeConsumer, RHDSKNodeProvider };
 export default RHDSKScene;

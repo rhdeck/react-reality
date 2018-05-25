@@ -3,8 +3,8 @@ import { removeSKNode, setSKLabelNode } from "../RHDSceneManager";
 import PropTypes from "prop-types";
 import pickBy from "lodash/pickBy";
 import UUID from "uuid/v4";
-
-class RHDSKLabel extends Component {
+import { RHDSKNodeProvider, RHDSKNodeConsumer } from "./RHDSKScene";
+class RHDBaseSKLabel extends Component {
   identifier = UUID();
   async nativeUpdate() {
     const label = {
@@ -23,19 +23,18 @@ class RHDSKLabel extends Component {
   render() {
     this.nativeUpdate();
     if (!this.props.children) return null;
-    const c = Children.map(this.props.children, child => {
-      return React.cloneElement(child, {
-        parentSKNode: this.identifier
-      });
-    });
-    return c;
+    return (
+      <RHDSKNodeProvider value={this.state.providerValue}>
+        {this.props.children}
+      </RHDSKNodeProvider>
+    );
   }
   async componentWillUnmount() {
     const result = await removeSKNode(this.identifier);
     return result;
   }
 }
-RHDSKLabel.propTypes = {
+RHDBaseSKLabel.propTypes = {
   position: PropTypes.shape({
     x: PropTypes.number,
     y: PropTypes.number
@@ -48,5 +47,17 @@ RHDSKLabel.propTypes = {
   fontColor: PropTypes.number, // Note this requires a preprocessed color
   width: PropTypes.number
 };
-const SKLabelKeys = Object.keys(RHDSKLabel.propTypes);
+const SKLabelKeys = Object.keys(RHDBaseSKLabel.propTypes);
+const RHDSKLabel = props => {
+  return (
+    <RHDSKNodeConsumer>
+      {({ SKNodeID }) => {
+        return <RHDBaseSKLabel {...props} parentSKNode={SKNodeID} />;
+      }}
+    </RHDSKNodeConsumer>
+  );
+};
+RHDSKLabel.propTypes = { ...RHDBaseSKLabel.propTypes };
+export { RHDSKLabel, RHDSKNodeConsumer };
+
 export default RHDSKLabel;
