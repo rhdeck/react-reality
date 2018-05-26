@@ -39,7 +39,10 @@ import {
   setAnimationDuration,
   setAnimationType,
   setAnimation,
-  getAnchors
+  getAnchors,
+  updateSKScene,
+  getPOV,
+  setPOVSensitivity
 } from "./RNSwiftBridge";
 const NativeObj = NativeModules.RHDSceneManager;
 //const { RHDSceneManager } = NativeModules;
@@ -124,6 +127,12 @@ const removeImageDetection = async () => {
 const removeAnimation = async () => {
   return await setAnimationDuration(0);
 };
+const detectPositionChange = cb => {
+  addListener("positionChanged", cb);
+};
+const stopDetectPositionChange = () => {
+  removeListener("positionChanged");
+};
 export {
   clear,
   resume,
@@ -152,5 +161,12 @@ export {
   removeAnimation,
   setAnimationDuration,
   setAnimation,
-  getAnchors
+  getAnchors,
+  removeSKNode,
+  removeSKScene,
+  updateSKScene,
+  detectPositionChange,
+  stopDetectPositionChange,
+  getPOV,
+  setPOVSensitivity
 };

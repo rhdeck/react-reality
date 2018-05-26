@@ -68,6 +68,7 @@ class RHDBaseNode extends Component {
     if (this.state.updateState == "domount") {
       this.setState({ updateState: "mounting" });
       try {
+        console.log("Node mounting");
         const parentNode = this.props.parentNode ? this.props.parentNode : "";
         const np = { ...this.state.nodeProps, id: this.state.identifier };
         // if (typeof this.props.willNativeUpdate == "function")
@@ -83,6 +84,7 @@ class RHDBaseNode extends Component {
       }
     } else if (this.state.updateState == "do") {
       this.setState({ updateState: "doing" });
+      console.log("Node updating");
       try {
         if (typeof this.props.willNativeUpdate == "function")
           await this.props.willNativeUpdate();

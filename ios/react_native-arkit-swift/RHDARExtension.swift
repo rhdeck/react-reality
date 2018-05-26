@@ -159,15 +159,18 @@ typealias SCNTextNode = SCNNode
     }
     @objc class func SKScene(_ json: jsonType) -> SKScene {
         let s = SpriteKit.SKScene()
-        if
-            let w = json["height"] as? Double,
-            let h = json["width"] as? Double {
-            s.size = CGSize(width: CGFloat(w), height: CGFloat(h))
-        }
-        if let x = json["name"] as? String { s.name = x }
-        if let i = json["color"] { s.backgroundColor = RCTConvert.uiColor(i) }
+        doUpdateSKScene(s, json: json)
         return s
     }
+}
+func doUpdateSKScene(_ scene:SKScene, json:jsonType) {
+    if
+        let w = json["height"] as? Double,
+        let h = json["width"] as? Double {
+        scene.size = CGSize(width: CGFloat(w), height: CGFloat(h))
+    }
+    if let x = json["name"] as? String { scene.name = x }
+    if let i = json["color"] { scene.backgroundColor = RCTConvert.uiColor(i) }
 }
 func doUpdateSKLabelNode(_ skln:SKLabelNode, json: jsonType) {
     if let s = json["text"] as? String { skln.text = s }

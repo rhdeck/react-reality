@@ -59,6 +59,10 @@ class RHDMonoview: UIView, ARSCNViewDelegate {
         scene.addAnchor(anchor, withNode: node)
         
     }
+    func renderer(_ renderer: SCNSceneRenderer, didRenderScene scene: SCNScene, atTime time: TimeInterval) {
+        guard let scene = RHDSceneManager.sharedInstance else { return }
+        if let pov = renderer.pointOfView { scene.updatePOV(pov) }
+    }
     
     
 }

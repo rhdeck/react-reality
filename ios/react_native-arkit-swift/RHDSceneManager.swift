@@ -245,6 +245,30 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         }
         resolve(true)
     }
+    @objc func updateSKScene(_ scene:jsonType, forNode: String, atPosition: Int, withType: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        guard let n = nodes[forNode] else { reject("no_node", "addSKScene: No Node with name " + forNode, nil); return }
+        guard let g = n.geometry else { reject("no_geometry", "No Geometry at node with name " + forNode, nil); return }
+        let m = g.materials[atPosition]
+        var mp:SCNMaterialProperty
+        switch(withType) {
+        case "diffuse":
+            mp = m.diffuse
+        case "normal":
+            mp = m.normal
+        case "specular":
+            mp = m.specular
+        default:
+            reject("invalid_materialproperty", "Invalid Matieral Property Type: " + withType, nil)
+            return
+        }
+        if let thisScene = mp.contents as? SKScene {
+            doUpdateSKScene(thisScene, json: scene)
+            resolve(true)
+        } else {
+            reject("no_scene", "Did not find scene", nil)
+        }
+    }
+        
     @objc func setSKLabelNode(_ node: SKLabelNode, toParent: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         setSKNode(node, toParent: toParent, resolve: resolve, reject: reject)
     }
@@ -529,7 +553,7 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         baseNodes[id] = withNode
         let alignment:String = anchor.alignment == .horizontal ? "horizontal": "vertical"
         anchors[id] = ["type": "plane",  "plane": ["width": width, "height":height,"alignment": alignment ]];
-        doSendEvent("RHDPlaneEvent", message: ["key": "planeAnchorChanged", "data": ["id": id, "action":"add", "plane": ["width": width, "height":height]]])
+        doSendEvent("RHDPlaneEvent", message: ["key": "planeAnchorAdded", "data": ["id": id, "action":"add", "anchor": anchors[id]]])
         fixOrphans()
     }
 
@@ -546,7 +570,7 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         //baseNodes[id] = withNode // <- This shuld already be here
         let alignment:String = anchor.alignment == .horizontal ? "horizontal": "vertical"
         anchors[id] = ["type": "plane",  "plane": ["width": width, "height":height,"alignment": alignment ]];
-        doSendEvent("RHDPlaneEvent", message: ["key": "planeAnchorChanged", "data": ["id": id, "action": "update", "plane": ["width": width, "height":height]]])
+        doSendEvent("RHDPlaneEvent", message: ["key": "planeAnchorChanged", "data": ["id": id, "action": "update", "anchor": anchors[id]]])
         fixOrphans()
     }
     
@@ -622,5 +646,22 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         doDetectImages = doDetect
         setDetectionImages()
         resolve(true)
+    }
+    //MARK: Point of View methods
+    var lastPosition:SCNVector3 = SCNVector3()
+    var lastOrientation:SCNVector4 = SCNVector4()
+    var sensitivity:Float = 0.05
+    func updatePOV(_ pointOfView: SCNNode) {
+        if abs(lastPosition.x - pointOfView.position.x) > sensitivity || abs(lastPosition.y - pointOfView.position.y) > sensitivity || abs(lastPosition.z - pointOfView.position.z) > sensitivity {
+            doSendEvent("RHDAREvent", message: ["key": "positionChanged", "data": ["position": vector3ToJson(pointOfView.position)]])
+            lastPosition = pointOfView.position
+        }
+    }
+    @objc func setPOVSensitivity(_ newSensitivity:Double , resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        sensitivity = Float(newSensitivity)
+        resolve(true)
+    }
+    @objc func getPOV(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        resolve(lastPosition)
     }
 }

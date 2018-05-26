@@ -50,6 +50,7 @@ class RHDPrimaryView: UIView, ARSCNViewDelegate {
             pointOfView.position.z += rotatedEyePosSCNV.z * self.interPupilaryDistance
             // Set PointOfView for SecondView
             sv.pointOfView = pointOfView
+            if let pov = renderer.pointOfView { sm.updatePOV(pov) }
         }
     }
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {

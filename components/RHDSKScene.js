@@ -1,11 +1,9 @@
 import React, { Component, createContext } from "react";
-import { addSKScene } from "../RHDSceneManager";
+import { addSKScene, removeSKScene, updateSKScene } from "../RHDSceneManager";
 import PropTypes from "prop-types";
 import pickBy from "lodash/pickBy";
 import UUID from "uuid/v4";
 import { RHDMaterialPropertyConsumer } from "./RHDMaterialProperty";
-import { RHDMaterial } from "..";
-import { removeSKScene } from "../RNSwiftBridge";
 const {
   Provider: RHDSKNodeProvider,
   Consumer: RHDSKNodeConsumer
@@ -24,9 +22,7 @@ class RHDBaseSKScene extends Component {
       this.setState({ updateState: "Mounting" });
       try {
         const scene = {
-          ...pickBy(this.props, (v, k) => {
-            return sceneKeys.indexOf(k) > -1;
-          }),
+          ...propFilter(this.props),
           name: this.state.identifier
         };
         console.log("Adding SKNode");
@@ -40,15 +36,42 @@ class RHDBaseSKScene extends Component {
           return { updateState: updateState == "donext" ? "do" : "done" };
         });
       } catch (e) {
-        console.log("SKScene Mount Error", e);
         this.setState({ updateState: "doMount" });
       }
+    } else if (this.state.updateState == "do") {
+      this.setState({ updateState: "doing" });
+      try {
+        const scene = {
+          ...propFilter(this.props),
+          name: this.state.identifier
+        };
+        await updateSKScene(
+          scene,
+          this.props.parentNode,
+          this.props.index,
+          this.props.materialProperty
+        );
+        this.setState(({ updateState }) => {
+          return { updateState: updateState == "donext" ? "do" : "done" };
+        });
+      } catch (e) {
+        this.setState({ updateState: "do" });
+      }
+      const scene = {};
     }
   }
   static getDerivedStateFromProps(nextProps, prevState) {
     var ret = prevState;
     if (nextProps.id && prevState.identifier != nextProps.id) {
       ret.identifier = nextProps.id;
+      if (["doMount", "Mounting"].indexOf(ret.updateState) == -1)
+        ret.updateState =
+          ["doing", "Mounting"].indexOf(ret.updateState) == -1
+            ? "do"
+            : "donext";
+    }
+    if (propDiff(prevState.sceneProps, nextProps, propFilter)) {
+      ret.sceneProps = propFilter(nextProps);
       if (["doMount", "Mounting"].indexOf(ret.updateState) == -1)
         ret.updateState =
           ["doing", "Mounting"].indexOf(ret.updateState) == -1
@@ -108,3 +131,32 @@ const RHDSKScene = props => {
 };
 export { RHDSKScene, RHDSKNodeConsumer, RHDSKNodeProvider };
 export default RHDSKScene;
+
+const propFilter = props => {
+  return {
+    ...pickBy(props, (v, k) => sceneKeys.indexOf(k) > -1)
+  };
+};
+
+const propDiff = (a, b) => {
+  if (a === b) return false;
+  if (a & !b || !a & b) return true;
+  const af = propFilter(a);
+  const bf = propFilter(b);
+
+  const afk = Object.keys(af);
+  const bfk = Object.keys(bf);
+  if (afk.length != bfk.length) return true;
+  if (
+    afk.filter(k => {
+      return bfk.indexOf(k) === -1;
+    }).length
+  )
+    return true;
+  if (
+    afk.filter(k => {
+      return bf[k] != af[k];
+    }).length
+  )
+    return true;
+};

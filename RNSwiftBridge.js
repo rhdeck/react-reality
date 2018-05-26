@@ -95,6 +95,14 @@ const addSKScene = async (scene, forNode, atPosition, withType) => {
     withType
   );
 };
+const updateSKScene = async (scene, forNode, atPosition, withType) => {
+  return await NativeRHDSceneManager.updateSKScene(
+    scene,
+    forNode,
+    atPosition,
+    withType
+  );
+};
 const setSKLabelNode = async (node, toParent) => {
   return await NativeRHDSceneManager.setSKLabelNode(node, toParent);
 };
@@ -153,6 +161,12 @@ const removeRecognizerImage = async name => {
 const setImageDetection = async doDetect => {
   return await NativeRHDSceneManager.setImageDetection(doDetect);
 };
+const setPOVSensitivity = async newSensitivity => {
+  return await NativeRHDSceneManager.setPOVSensitivity(newSensitivity);
+};
+const getPOV = async () => {
+  return await NativeRHDSceneManager.getPOV();
+};
 //#endregion
 //#region Exports
 export {
@@ -178,6 +192,7 @@ export {
   addSKSceneReference,
   addSKSceneByReference,
   addSKScene,
+  updateSKScene,
   setSKLabelNode,
   updateSKLabelNode,
   setSKNode,
@@ -195,6 +210,8 @@ export {
   getAnchors,
   addRecognizerImage,
   removeRecognizerImage,
-  setImageDetection
+  setImageDetection,
+  setPOVSensitivity,
+  getPOV
 };
 //#endregion

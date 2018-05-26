@@ -19,6 +19,7 @@ import RHDSKScene from "./components/RHDSKScene";
 import RHDSKLabel from "./components/RHDSKLabel";
 import RHDAnimated from "./components/RHDAnimated";
 import { RHDARWrapper, RHDARConsumer } from "./RHDARWrapper";
+import { RHDPosition, RHDPositionConsumer } from "./RHDPosition";
 export {
   RHDMonoView,
   RHDBox,
@@ -41,5 +42,7 @@ export {
   RHDSKLabel,
   RHDARWrapper,
   RHDARConsumer,
-  RHDAnimated
+  RHDAnimated,
+  RHDPosition,
+  RHDPositionConsumer
 };
