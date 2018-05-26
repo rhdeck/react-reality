@@ -189,8 +189,10 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         resolve(true)
     }
     @objc func removeMaterial(_ forNode: String, atPosition: Int, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        guard atPosition > -1 else { reject("bad_position", "Position must be 0 or greater", nil); return}
         guard let n = nodes[forNode] else { reject("no_node", "removeMaterial:No Node with name " + forNode, nil); return }
         guard let g = n.geometry else { reject("no_geometry", "No Geometry at node with name " + forNode, nil); return }
+        guard g.materials.count > atPosition else  { reject("bad_position", "Position is higher than allowed for this geometry", nil); return}
         g.removeMaterial(at: atPosition)
         resolve(true)
     }
@@ -241,6 +243,7 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
             addSKNode(scene, toParent: "")
             mp.contents = scene
         }
+        resolve(true)
     }
     @objc func setSKLabelNode(_ node: SKLabelNode, toParent: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         setSKNode(node, toParent: toParent, resolve: resolve, reject: reject)
@@ -261,6 +264,7 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
     func addSKNode(_ node: SKNode, toParent: String) {
         if let n = node.name {
             SKNodes[n] = node
+            NSLog("Adding SKNode id " + n + " to parent " + toParent)
         }
         if toParent == "" {
             fixSKOrphans()
@@ -476,15 +480,21 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
     override func supportedEvents() -> [String]! {
         return [
         "ARSessionError",
-        "RHDAR"
+        "RHDAREvent",
+        "RHDPlaneEvent",
+        "RHDImageEvent"
         ]
     }
     func doSendEvent(_ key: String, message:Any?) {
-        guard let l = listenedEvents[key], l > 0 else { return }
+        NSLog("I am supposed to transmit event " + key)
+        guard let l = listenedEvents[key], l > 0 else { NSLog("Nobody is listening to event " + key); return }
+        NSLog("Here I send event " + key)
         sendEvent(withName: key, body: message)
     }
     var listenedEvents:[String:Int] = [:]
     override func addListener(_ eventName: String!) {
+        super.addListener(eventName)
+        NSLog("Someone wants to listen to " + eventName)
         if let val = listenedEvents[eventName] {
             listenedEvents[eventName] = val + 1
         } else {
@@ -492,6 +502,7 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         }
     }
     override func removeListeners(_ count: Double) {
+        super.removeListeners(count)
         // Kill off all my listeners please
         listenedEvents = [:]
     }
@@ -512,36 +523,30 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         if let pa = anchor as? ARPlaneAnchor { removePlaneAnchor(pa, withNode: withNode)}
     }
     func addPlaneAnchor(_ anchor: ARPlaneAnchor, withNode: SCNNode) {
-        guard
-            let n = withNode.childNodes.first
-            else { return }
         let id = anchor.identifier.uuidString
         let width = CGFloat(anchor.extent.x)
         let height = CGFloat(anchor.extent.z)
-        let x = CGFloat(anchor.center.x)
-        let y = CGFloat(anchor.center.y)
-        let z = CGFloat(anchor.center.z)
-        n.position = SCNVector3(x, y, z)
-        baseNodes[id] = withNode // <- This shuld already be here
-        anchors[id] = ["type": "plane", "plane": ["width": width, "height":height ]];
-        sendEvent(withName: "RHDAR", body: ["key": "planeAnchorChanged", "data": ["id": id, "action":"add", "plane": ["width": width, "height":height]]])
+        baseNodes[id] = withNode
+        let alignment:String = anchor.alignment == .horizontal ? "horizontal": "vertical"
+        anchors[id] = ["type": "plane",  "plane": ["width": width, "height":height,"alignment": alignment ]];
+        doSendEvent("RHDPlaneEvent", message: ["key": "planeAnchorChanged", "data": ["id": id, "action":"add", "plane": ["width": width, "height":height]]])
         fixOrphans()
     }
 
     func updatePlaneAnchor(_ anchor:ARPlaneAnchor, withNode: SCNNode) {
-        guard
-            let n = withNode.childNodes.first
-        else { return }
+        //guard
+        //    let n = withNode.childNodes.first
+        //else { return }
         let id = anchor.identifier.uuidString
         let width = CGFloat(anchor.extent.x)
         let height = CGFloat(anchor.extent.z)
-        let x = CGFloat(anchor.center.x)
-        let y = CGFloat(anchor.center.y)
-        let z = CGFloat(anchor.center.z)
-        n.position = SCNVector3(x, y, z)
+//        let x = CGFloat(anchor.center.x)
+//        let y = CGFloat(anchor.center.y)
+//        let z = CGFloat(anchor.center.z)
         //baseNodes[id] = withNode // <- This shuld already be here
-        anchors[id] = ["type": "plane", "plane": ["width": width, "height":height ]];
-        sendEvent(withName: "RHDAR", body: ["key": "planeAnchorChanged", "data": ["id": id, "action": "update", "plane": ["width": width, "height":height]]])
+        let alignment:String = anchor.alignment == .horizontal ? "horizontal": "vertical"
+        anchors[id] = ["type": "plane",  "plane": ["width": width, "height":height,"alignment": alignment ]];
+        doSendEvent("RHDPlaneEvent", message: ["key": "planeAnchorChanged", "data": ["id": id, "action": "update", "plane": ["width": width, "height":height]]])
         fixOrphans()
     }
     
@@ -549,7 +554,8 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         let id = anchor.identifier.uuidString
         anchors.removeValue(forKey: id)
         baseNodes.removeValue(forKey: id)
-        
+        doSendEvent("RHDPlaneEvent", message: ["key": "planeAnchorRemoved", "data": ["id": id]])
+
     }
     var doDetectPlanes:Bool = false
     @objc func setPlaneDetection(_ detectPlanes: Bool, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
@@ -558,16 +564,15 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         resolve(true)
     }
     func setPlaneDetection() {
-        guard let s = session else { return }
         if(doDetectPlanes) {
-            configuration.planeDetection = .vertical
+            configuration.planeDetection = ARWorldTrackingConfiguration.PlaneDetection(rawValue: 3)
         } else {
             configuration.planeDetection = ARWorldTrackingConfiguration.PlaneDetection(rawValue: 0)
         }
         print("This is horizontal: " + String(ARWorldTrackingConfiguration.PlaneDetection.horizontal.rawValue) + " and this is vertical " + String(ARWorldTrackingConfiguration.PlaneDetection.vertical.rawValue))
         doResume()
     }
-    @objc func getAnchors(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseResolveBlock) {
+    @objc func getAnchors(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         resolve(anchors)
     }
     func addImageAnchor(_ anchor: ARImageAnchor, withNode: SCNNode) {
@@ -575,18 +580,20 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         let id = anchor.identifier.uuidString
         anchors[id] = ["type": "image", "image": name]
         baseNodes[id] = withNode.childNodes.first
-        sendEvent(withName: "RHDAR", body: ["key": "imageAnchorChanged", "data":["id":id, "action": "add", "name": name]])
+        doSendEvent("RHDImageEvent", message: ["key": "imageAnchorChanged", "data":["id":id, "action": "add", "name": name]])
     }
     
     func updateImageAnchor(_ anchor: ARImageAnchor, withNode: SCNNode) {
         let id = anchor.identifier.uuidString
         guard let name =  anchors[id]?["image"] else { return }
-        sendEvent(withName: "RHDAR", body: ["key": "imageAnchorChanged", "data":["id":id, "action": "update", "name":name]])
+        doSendEvent("RHDImageEvent", message: ["key": "imageAnchorChanged", "data":["id":id, "action": "update", "name":name]])
     }
     func removeImageAnchor(_ anchor: ARImageAnchor, withNode: SCNNode) {
         let id = anchor.identifier.uuidString
         anchors.removeValue(forKey: id)
         baseNodes.removeValue(forKey: id)
+        doSendEvent("RHDImageEvent", message: ["key": "imageAnchorRemoved", "data": ["id": id]])
+
     }
     //MARK: Image Recognizer methods
     @objc func addRecognizerImage(_ url:String, name: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {

@@ -14,6 +14,7 @@ import {
 } from "./lib/propTypes";
 import pickBy from "lodash/pickBy";
 import { RHDNodeConsumer } from "./RHDNode";
+import { RHDAnimatedConsumer } from "./RHDAnimated";
 const { Provider, Consumer: RHDMaterialConsumer } = createContext({});
 class RHDBaseMaterial extends Component {
   state = {
@@ -35,8 +36,14 @@ class RHDBaseMaterial extends Component {
       );
       const index = this.props.index ? this.props.index : 0;
       this.setState({ updateState: "Mounting" });
-      setMaterial(filteredProps, this.props.parentNode, index);
-      this.setState({ updateState: "done" });
+      try {
+        if (this.props.willNativeUpdate) await this.props.willNativeUpdate();
+        setMaterial(filteredProps, this.props.parentNode, index);
+        if (this.props.didNativeUpdate) await this.props.didNativeUpdate();
+        this.setState({ updateState: "done" });
+      } catch (e) {
+        this.setState({ updateState: "doMount" });
+      }
     }
   }
   componentDidMount() {
@@ -47,12 +54,14 @@ class RHDBaseMaterial extends Component {
   }
   async updateMaterial(id, property) {
     try {
+      if (this.props.willNativeUpdate) await this.props.willNativeUpdate();
       await setMaterialProperty(
         property,
         id,
         this.props.index,
         this.props.parentNode
       );
+      if (this.props.didNativeUpdate) await this.props.didNativeUpdate();
     } catch (e) {
       console.log("Uh oh , mp error", e);
     }
@@ -68,7 +77,11 @@ class RHDBaseMaterial extends Component {
     );
   }
   componentWillUnmount() {
-    removeMaterial(parentNode, index);
+    async () => {
+      try {
+        removeMaterial(this.props.parentNode, this.props.index);
+      } catch (e) {}
+    };
   }
 }
 RHDBaseMaterial.propTypes = {
@@ -84,17 +97,32 @@ RHDBaseMaterial.propTypes = {
   doubleSided: PropTypes.bool,
   litPerPixel: PropTypes.bool,
   transparency: PropTypes.number,
-  fillMode
+  fillMode,
+  willNativeUpdate: PropTypes.func,
+  didNativeUpdate: PropTypes.func
 };
 const materialPropKeys = Object.keys(RHDBaseMaterial.propTypes);
 
 const RHDMaterial = props => {
   return (
-    <RHDNodeConsumer>
-      {({ nodeID }) => {
-        return <RHDBaseMaterial {...props} parentNode={nodeID} />;
+    <RHDAnimatedConsumer>
+      {({ willNativeUpdate, didNativeUpdate }) => {
+        return (
+          <RHDNodeConsumer>
+            {({ nodeID }) => {
+              return (
+                <RHDBaseMaterial
+                  {...props}
+                  parentNode={nodeID}
+                  willNativeUpdate={willNativeUpdate}
+                  didNativeUpdate={didNativeUpdate}
+                />
+              );
+            }}
+          </RHDNodeConsumer>
+        );
       }}
-    </RHDNodeConsumer>
+    </RHDAnimatedConsumer>
   );
 };
 export { RHDMaterial, RHDMaterialConsumer };

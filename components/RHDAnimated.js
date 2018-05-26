@@ -11,18 +11,21 @@ class RHDAnimated extends Component {
     return <Provider {...this.props} value={this.providerValue} />;
   }
   async willNativeUpdate() {
-    await setAnimation(this.props.seconds, this.props.easing);
+    await setAnimation(
+      parseFloat(this.props.milliseconds) / 1000.0,
+      this.props.easing
+    );
   }
   async didNativeUpdate() {
     //Do nothing
   }
 }
 RHDAnimated.defaultProps = {
-  seconds: 1,
+  milliseconds: 250,
   easing: "inout"
 };
 RHDAnimated.propTypes = {
-  seconds: PropTypes.number,
+  milliseconds: PropTypes.number,
   easing: PropTypes.string
 };
 export { RHDAnimated, Consumer as RHDAnimatedConsumer };

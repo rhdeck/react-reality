@@ -78,14 +78,6 @@ class RHDARWrapper extends Component {
       ret.todos["setImageDetection"] = nextProps.imageDetection;
       ret.imageDetection = nextProps.imageDetection;
     }
-    if (nextProps.animationDuration !== prevState.animationDuration) {
-      ret.todos["setAnimationDuration"] = nextProps.animationDuration;
-      ret.animationDuration = nextProps.animationDuration;
-    }
-    if (nextProps.animationEasing !== prevState.animationDuration) {
-      ret.todos["setAnimationEasing"] = nextProps.animationEasing;
-      ret.animationEasing = nextProps.animationEasing;
-    }
     if (!ret.todos || Object.keys(ret.todos) == 0) {
       delete ret.todos;
     }
@@ -104,11 +96,11 @@ class RHDARWrapper extends Component {
     }
   }
   setPlaneDetection(newValue) {
-    if (newValue) addPlaneDetection(this.updatePlanes);
+    if (newValue) addPlaneDetection(this.updatePlanes.bind(this));
     else removePlaneDetection();
   }
   setImageDetection(newValue) {
-    if (newValue) addImageDetection(this.updateImages);
+    if (newValue) addImageDetection(this.updateImages.bind(this));
     else removeImageDetection();
   }
   setAnimationDuration(newValue) {
@@ -165,9 +157,7 @@ class RHDARWrapper extends Component {
 }
 RHDARWrapper.propTypes = {
   planeDetection: PropTypes.bool,
-  imageDetection: PropTypes.bool,
-  animationDuration: PropTypes.number,
-  animationEasing: PropTypes.string
+  imageDetection: PropTypes.bool
 };
 export { RHDARWrapper, RHDARConsumer };
 export default RHDARWrapper;

@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import pickBy from "lodash/pickBy";
 import includes from "lodash/includes";
 import { RHDMaterialConsumer } from "./RHDMaterial";
+import { RHDAnimatedConsumer } from "./RHDAnimated";
 const { Provider, Consumer: RHDMaterialPropertyConsumer } = createContext({});
 class RHDBaseMaterialProperty extends Component {
   state = {
@@ -31,18 +32,39 @@ class RHDBaseMaterialProperty extends Component {
   async nativeUpdate() {
     if (this.state.updateState == "doMount") {
       this.setState({ updateState: "Mounting" });
-      console.log("I am a-mounting", this.state.filteredProps);
-      await this.props.updateMaterial(this.props.id, this.state.filteredProps);
-      this.setState(({ updateState }) => {
-        return { updateState: updateState == "doNext" ? "do" : "done" };
-      });
+      try {
+        if (typeof this.props.willNativeUpdate == "function")
+          await this.props.willNativeUpdate();
+        await this.props.updateMaterial(
+          this.props.id,
+          this.state.filteredProps
+        );
+        if (typeof this.props.didNativeUpdate == "function")
+          await this.props.didNativeUpdate();
+        this.setState(({ updateState }) => {
+          return { updateState: updateState == "doNext" ? "do" : "done" };
+        });
+      } catch (e) {
+        this.setState({ updateState: "doMount" });
+      }
     }
     if (this.state.updateState == "do") {
       this.setState({ updateState: "doing" });
-      await this.props.updateMaterial(this.props.id, this.state.filteredProps);
-      this.setState(({ updateState }) => {
-        return { updateState: updateState == "doNext" ? "do" : "done" };
-      });
+      try {
+        if (typeof this.props.willNativeUpdate == "function")
+          await this.props.willNativeUpdate();
+        await this.props.updateMaterial(
+          this.props.id,
+          this.state.filteredProps
+        );
+        if (typeof this.props.didNativeUpdate == "function")
+          await this.props.didNativeUpdate();
+        this.setState(({ updateState }) => {
+          return { updateState: updateState == "doNext" ? "do" : "done" };
+        });
+      } catch (e) {
+        this.setState({ updateState: "do" });
+      }
     }
   }
   componentDidMount() {
@@ -70,24 +92,34 @@ RHDBaseMaterialProperty.propTypes = {
   id: PropTypes.string,
   path: PropTypes.string,
   color: PropTypes.number,
-  intensity: PropTypes.number
+  intensity: PropTypes.number,
+  willNativeUpdate: PropTypes.func,
+  didNativeUpdate: PropTypes.func
 };
 materialPropertyPropTypeKeys = Object.keys(RHDBaseMaterialProperty.propTypes);
 
 const RHDMaterialProperty = props => {
   return (
-    <RHDMaterialConsumer>
-      {({ updateMaterial, parentNode, index }) => {
+    <RHDAnimatedConsumer>
+      {({ willNativeUpdate, didNativeUpdate }) => {
         return (
-          <RHDBaseMaterialProperty
-            {...props}
-            updateMaterial={updateMaterial}
-            parentNode={parentNode}
-            index={index}
-          />
+          <RHDMaterialConsumer>
+            {({ updateMaterial, parentNode, index }) => {
+              return (
+                <RHDBaseMaterialProperty
+                  {...props}
+                  updateMaterial={updateMaterial}
+                  parentNode={parentNode}
+                  index={index}
+                  willNativeUpdate={willNativeUpdate}
+                  didNativeUpdate={didNativeUpdate}
+                />
+              );
+            }}
+          </RHDMaterialConsumer>
         );
       }}
-    </RHDMaterialConsumer>
+    </RHDAnimatedConsumer>
   );
 };
 const propFilter = props => {
@@ -95,7 +127,10 @@ const propFilter = props => {
     props,
     (v, k) =>
       materialPropertyPropTypeKeys.indexOf(k) > -1 &&
-      !includes(["updateMaterial", "id"], k)
+      !includes(
+        ["updateMaterial", "id", "willNativeUpdate", "didNativeUpdate"],
+        k
+      )
   );
 };
 const propDiff = (a, b) => {

@@ -4,6 +4,7 @@ import filter from "lodash/filter";
 import pickBy from "lodash/pickBy";
 import { removeGeometry } from "../RHDSceneManager";
 import { RHDNodeConsumer } from "./RHDNode";
+import { RHDAnimatedConsumer } from "./RHDAnimated";
 const { Provider, Consumer: RHDGeometryConsumer } = createContext({});
 const RHDGeometry = (mountFunc, geomProps, numSides) => {
   const RHDBaseGeometry = class extends Component {
@@ -20,7 +21,9 @@ const RHDGeometry = (mountFunc, geomProps, numSides) => {
           throw new Error("Cannot mount a Geometry without a parent Node");
         this.setState({ updateState: "Mounting" });
         try {
+          if (this.props.willNativeUpdate) await this.props.willNativeUpdate();
           await mountFunc(this.state.geomProps, this.props.parentNode);
+          if (this.props.didNativeUpdate) await this.props.didNativeUpdate();
           this.setState(({ updateState }) => {
             return { updateState: updateState == "doNext" ? "do" : "done" };
           });
@@ -33,6 +36,9 @@ const RHDGeometry = (mountFunc, geomProps, numSides) => {
           throw new Error("Cannot mount a Geometry without a parent Node");
         this.setState({ updateState: "doing" });
         try {
+          if (this.props.willNativeUpdate) await this.props.willNativeUpdate();
+          await mountFunc(this.state.geomProps, this.props.parentNode);
+          if (this.props.didNativeUpdate) await this.props.didNativeUpdate();
           //DO something
           this.setState(({ updateState }) => {
             return { updateState: updateState == "doNext" ? "do" : "done" };
@@ -55,8 +61,9 @@ const RHDGeometry = (mountFunc, geomProps, numSides) => {
     render() {
       if (!this.props.children) return null;
       if (
-        ["shouldMount", "doMount", "Mounting"].indexOf(this.state.updateState) >
-        -1
+        ["shouldMount", "doMount", "Mounting", "doing"].indexOf(
+          this.state.updateState
+        ) > -1
       )
         return null;
       return (
@@ -113,16 +120,31 @@ const RHDGeometry = (mountFunc, geomProps, numSides) => {
   };
   RHDBaseGeometry.propTypes = {
     ...geomProps,
-    parentNode: PropTypes.string
+    parentNode: PropTypes.string,
+    willNativeUpdate: PropTypes.func,
+    didNativeUpdate: PropTypes.func
   };
   const geomPropKeys = Object.keys(RHDBaseGeometry.propTypes);
   const RHDGeometry = props => {
     return (
-      <RHDNodeConsumer>
-        {({ nodeID }) => {
-          return <RHDBaseGeometry {...props} parentNode={nodeID} />;
+      <RHDAnimatedConsumer>
+        {({ willNativeUpdate, didNativeUpdate }) => {
+          return (
+            <RHDNodeConsumer>
+              {({ nodeID }) => {
+                return (
+                  <RHDBaseGeometry
+                    {...props}
+                    parentNode={nodeID}
+                    willNativeUpdate={willNativeUpdate}
+                    didNativeUpdate={didNativeUpdate}
+                  />
+                );
+              }}
+            </RHDNodeConsumer>
+          );
         }}
-      </RHDNodeConsumer>
+      </RHDAnimatedConsumer>
     );
   };
   return RHDGeometry;

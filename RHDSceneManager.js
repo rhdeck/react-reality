@@ -38,20 +38,25 @@ import {
   setImageDetection,
   setAnimationDuration,
   setAnimationType,
-  setAnimation
+  setAnimation,
+  getAnchors
 } from "./RNSwiftBridge";
-const { RHDSceneManager } = NativeModules;
+const NativeObj = NativeModules.RHDSceneManager;
+//const { RHDSceneManager } = NativeModules;
 //#region Event Management
 var cachedEmitter = null;
 var cachedListener = null;
 var cachedHandlers = {};
-const getEventListener = () => {
-  if (!cachedEmitter) cachedEmitter = new NativeEventEmitter(RHDSceneManager);
+const getEmitter = () => {
+  if (!cachedEmitter) {
+    cachedEmitter = new NativeEventEmitter(NativeObj);
+  }
   return cachedEmitter;
 };
 const addListener = (key, cb) => {
-  if (!cachedListener)
-    cachedListener = getEventListener().addListener("RHDAR", masterHandler);
+  if (!cachedListener) {
+    cachedListener = getEmitter().addListener("RHDAREvent", masterHandler);
+  }
   cachedHandlers[key] = cb;
 };
 const masterHandler = body => {
@@ -68,6 +73,7 @@ const removeListener = key => {
   delete cachedHandlers[key];
 };
 const stopListening = () => {
+  console.log("Killing my listener");
   if (cachedListener) {
     cachedListener.remove();
   }
@@ -75,21 +81,42 @@ const stopListening = () => {
 };
 //#endregion
 //#region Plane Detection
+var cachedPlaneListener;
+var cachedPlaneHandler;
 const addPlaneDetection = async cb => {
+  cachedPlaneHandler = cb;
+  if (!cachedPlaneListener) {
+    cachedPlaneListener = getEmitter().addListener(
+      "RHDPlaneEvent",
+      cachedPlaneHandler
+    );
+  }
   await setPlaneDetection(true);
-  addListener("planeDetected", cb);
 };
 const removePlaneDetection = async () => {
   await setPlaneDetection(false);
-  removeListener("planeDetected");
+  if (cachedPlaneListener) cachedPlaneListener.remove();
+  cachedPlaneHandler = null;
+  cachedPlaneListener = null;
 };
 //#endregion
 //#region Image Detection
+var cachedImageListener;
+var cachedImageHandler;
 const addImageDetection = async cb => {
-  addListener("imageDetected", cb);
+  cachedImageHandler = cb;
+  if (!cachedImageListener) {
+    cachedImageListener = getEmitter().addListener(
+      "RHDImageEvent",
+      cachedImageHandler
+    );
+  }
   return await setImageDetection(true);
 };
 const removeImageDetection = async () => {
+  if (cachedImageListener) cachedImageListener.remove();
+  cachedImageHandler = null;
+  cachedImageListener = null;
   removeListener("imageDetected");
   return await setImageDetection(false);
 };
@@ -124,5 +151,6 @@ export {
   setAnimationType,
   removeAnimation,
   setAnimationDuration,
-  setAnimation
+  setAnimation,
+  getAnchors
 };

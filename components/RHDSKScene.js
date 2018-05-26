@@ -5,48 +5,81 @@ import pickBy from "lodash/pickBy";
 import UUID from "uuid/v4";
 import { RHDMaterialPropertyConsumer } from "./RHDMaterialProperty";
 import { RHDMaterial } from "..";
+import { removeSKScene } from "../RNSwiftBridge";
 const {
   Provider: RHDSKNodeProvider,
   Consumer: RHDSKNodeConsumer
 } = createContext({});
 class RHDBaseSKScene extends Component {
-  identifier = UUID();
+  state = {
+    identifier: UUID(),
+    updateState: "doMount" // "doMount", "Mounting", "donext", "do", "doing", "done"
+  };
   constructor(props) {
     super(props);
-    this.state = { providerValue: { SKNodeID: SKNode } };
+    this.state.providerValue = { SKNodeID: this.state.identifier };
   }
   async nativeUpdate() {
-    const scene = {
-      ...pickBy(this.props, (v, k) => {
-        return sceneKeys.indexOf(k) > -1;
-      }),
-      name: this.identifier
-    };
-    const result = await addSKScene(
-      scene,
-      this.props.parentNode,
-      this.props.index,
-      this.props.materialProperty
-    );
-    return result;
-  }
-  async componentWillMount() {
-    if (this.props.id) {
-      this.identifier = this.props.id;
+    if (this.state.updateState == "doMount") {
+      this.setState({ updateState: "Mounting" });
+      try {
+        const scene = {
+          ...pickBy(this.props, (v, k) => {
+            return sceneKeys.indexOf(k) > -1;
+          }),
+          name: this.state.identifier
+        };
+        console.log("Adding SKNode");
+        const result = await addSKScene(
+          scene,
+          this.props.parentNode,
+          this.props.index,
+          this.props.materialProperty
+        );
+        this.setState(({ updateState }) => {
+          return { updateState: updateState == "donext" ? "do" : "done" };
+        });
+      } catch (e) {
+        console.log("SKScene Mount Error", e);
+        this.setState({ updateState: "doMount" });
+      }
     }
-    await this.nativeUpdate();
   }
-  componentWillUpdate() {}
-  render() {
+  static getDerivedStateFromProps(nextProps, prevState) {
+    var ret = prevState;
+    if (nextProps.id && prevState.identifier != nextProps.id) {
+      ret.identifier = nextProps.id;
+      if (["doMount", "Mounting"].indexOf(ret.updateState) == -1)
+        ret.updateState =
+          ["doing", "Mounting"].indexOf(ret.updateState) == -1
+            ? "do"
+            : "donext";
+    }
+    return ret;
+  }
+  componentDidMount() {
     this.nativeUpdate();
+  }
+  componentDidUpdate() {
+    this.nativeUpdate();
+  }
+  render() {
     if (!this.props.children) return null;
+    if (["doMount", "Mounting"].indexOf(this.state.updateState) > -1)
+      return null;
     return (
       <RHDSKNodeProvider value={this.state.providerValue}>
         {this.props.children}
       </RHDSKNodeProvider>
     );
   }
-  componentWillUnmount() {}
+  componentWillUnmount() {
+    removeSKScene(
+      this.props.parentNode,
+      this.props.index,
+      this.props.materialProperty
+    );
+  }
 }
 
 RHDBaseSKScene.propTypes = {
@@ -63,8 +96,12 @@ const sceneKeys = Object.keys(RHDBaseSKScene.propTypes);
 const RHDSKScene = props => {
   return (
     <RHDMaterialPropertyConsumer>
-      {({ parentNode, id, index }) => {
-        return <RHDBaseSKScene {...{ ...props, parentNode, id, index }} />;
+      {({ parentNode, materialProperty, index }) => {
+        return (
+          <RHDBaseSKScene
+            {...{ ...props, parentNode, materialProperty, index }}
+          />
+        );
       }}
     </RHDMaterialPropertyConsumer>
   );
