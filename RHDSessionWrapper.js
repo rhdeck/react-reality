@@ -1,10 +1,11 @@
 import React, { Component, createContext } from "react";
 import PropTypes from "prop-types";
-import { clear, pause, resume } from "./RHDSceneManager";
+import { clear, pause, resume, setWorldTracking } from "./RHDSceneManager";
 const { Provider, Consumer: RHDSessionConsumer } = createContext();
 class RHDSessionWrapper extends Component {
   state = {
-    providerValue: this.setProviderValue(true)
+    providerValue: this.setProviderValue(true),
+    alignment: "gravity"
   };
   constructor(props) {
     super(props);
@@ -35,6 +36,16 @@ class RHDSessionWrapper extends Component {
     if (!skipState) this.setState({ providerValue });
     return providerValue;
   }
+  static setDerivedStateFromProps(nextProps, prevState) {
+    var ret = prevState;
+    if (nextProps.alignment && nextProps.alignment != prevState.alignment) {
+      if (prevState.isStarted) {
+        ret.alignment = nextProps.alignment;
+        setWorldTracking(ret.alignment);
+      }
+    }
+    return ret;
+  }
   render() {
     return (
       <Provider value={this.state.providerValue}>
@@ -47,5 +58,8 @@ class RHDSessionWrapper extends Component {
     );
   }
 }
+RHDSessionWrapper.propTypes = {
+  alignment: PropTypes.string
+};
 export { RHDSessionWrapper, RHDSessionConsumer };
 export default RHDSessionWrapper;
