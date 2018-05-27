@@ -26,7 +26,11 @@ class RHDTrackingWrapper extends Component {
     const providerValue = {
       anchors: this.state ? this.state.anchors : {}
     };
-    if (!skipState) this.setState({ providerValue });
+    if (!skipState)
+      this.setState({ providerValue }, () => {
+        if (this.props.didUpdateAnchors)
+          this.props.didUpdateAnchors(this.state.providerValue.anchors);
+      });
     return providerValue;
   }
   render() {
@@ -44,9 +48,7 @@ class RHDTrackingWrapper extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     const ret = prevState ? prevState : {};
     if (!ret.todos) ret.todos = {};
-    console.log("comparing n to p", nextProps, prevState);
     if (nextProps.planeDetection != prevState.planeDetection) {
-      console.log("Saying to do planedetection");
       ret.todos["setPlaneDetection"] = nextProps.planeDetection;
       ret.planeDetection = nextProps.planeDetection;
     }
@@ -105,16 +107,13 @@ class RHDTrackingWrapper extends Component {
     (async () => {
       await Promise.all(
         newKeys.map(k => {
-          console.log("lets add recognizer image", k, this.state.images[k]);
           const { width, url } = this.state.images[k];
           return addRecognizerImage(url, k, width);
         })
       );
-      console.log("All promises done");
       newKeys.forEach(k => {
         this.registeredImages[k] = this.state.images[k];
       });
-      console.log("Starting deadkeys");
       if (deadKeys.length) {
         await Promise.all(
           deadKeys.map(k => {
@@ -128,32 +127,46 @@ class RHDTrackingWrapper extends Component {
           return { images: { ...images } };
         });
       }
-      console.log("Finished with deadkeys");
     })();
   }
   async updatePlanes(data) {
-    if (!data || data.key == "planeAnchorAdded") {
+    if (!data) {
       const anchors = cleanAnchors(await getAnchors(data));
       this.setState({ anchors: anchors }, () => {
         this.setProviderValue();
       });
-    } else {
-      const k = data.id;
-      const anchor = cleanAnchor(data.anchor);
-      if (propDiff(this.state.anchors[k], anchor, cleanAnchor)) {
-        this.setState(
-          ({ anchors }) => {
-            return { anchors: { ...anchors, [k]: anchor } };
-          },
-          () => {
-            this.setProviderValue();
+    } else
+      switch (data.key) {
+        case "planeAnchorAdded":
+        case "planeAnchorChanged":
+          const k = data.id;
+          const anchor = cleanAnchor(data.anchor);
+          if (
+            !this.state.anchors[k] ||
+            propDiff(this.state.anchors[k], anchor, cleanAnchor)
+          ) {
+            this.setState(
+              ({ anchors }) => {
+                return { anchors: { ...anchors, [k]: anchor } };
+              },
+              () => {
+                this.setProviderValue();
+              }
+            );
           }
-        );
+          break;
+        case "planeAnchorRemoved":
+        default:
+          const anchors = cleanAnchors(await getAnchors(data));
+          this.setState({ anchors: anchors }, () => {
+            this.setProviderValue();
+          });
       }
-    }
   }
+
   async updateImages(data) {
     console.log("Got updateImaged notification", data);
+
     const anchors = await getAnchors(data);
     this.setState({ anchors: anchors }, () => {
       this.setProviderValue();
@@ -162,7 +175,8 @@ class RHDTrackingWrapper extends Component {
 }
 RHDTrackingWrapper.propTypes = {
   planeDetection: PropTypes.bool,
-  imageDetection: PropTypes.bool
+  imageDetection: PropTypes.bool,
+  didUpdateAnchors: PropTypes.func
 };
 export { RHDTrackingWrapper, RHDTrackingConsumer };
 export default RHDTrackingWrapper;
