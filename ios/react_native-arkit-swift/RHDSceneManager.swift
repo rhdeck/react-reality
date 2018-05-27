@@ -386,8 +386,6 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
     func doResume() {
         guard let s = session else { return }
         s.run(configuration)
-        print("Detection images")
-        print(configuration.detectionImages)
         fixOrphans()
     }
     @objc func pause(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
@@ -532,7 +530,7 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
     //MARK:ARAnchor delegate methods
     var baseNodes:[String:SCNNode] = [:]
     var anchors:[String:jsonType] = [:]
-    var anchorObjects: [String: ARAnchor]
+    var anchorObjects: [String: ARAnchor] = [:]
     func addAnchor(_ anchor: ARAnchor, withNode: SCNNode) {
         anchorObjects[anchor.identifier.uuidString] = anchor
         if let pa = anchor as? ARImageAnchor { addImageAnchor(pa, withNode: withNode) }
@@ -594,9 +592,9 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         let id = anchor.identifier.uuidString
         let w = anchor.referenceImage.physicalSize.width
         let h = anchor.referenceImage.physicalSize.height
-        anchors[id] = ["type": "image", "image": name, "plane": ["width": w, "height":h]]
+        anchors[id] = ["type": "image", "name": name, "plane": ["width": w, "height":h]]
         baseNodes[id] = withNode
-        doSendEvent("RHDImageEvent", message: ["key": "imageAnchorAdded", "data":["id":id, "action": "add", "anchor": anchors[id]]])
+        doSendEvent("RHDImageEvent", message: ["key": "imageAnchorAdded", "data":["id":id, "action": "add", "anchor": anchors[id]!]])
     }
     
     func updateImageAnchor(_ anchor: ARImageAnchor, withNode: SCNNode) {
@@ -604,8 +602,8 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         guard let name = anchors[id]?["image"] else { return }
         let w = anchor.referenceImage.physicalSize.width
         let h = anchor.referenceImage.physicalSize.height
-        anchors[id] = ["type": "image", "image": name, "plane": ["width": w, "height":h]]
-        doSendEvent("RHDImageEvent", message: ["key": "imageAnchorChanged", "data":["id":id, "action": "update", "anchor": anchors[id]]])
+        anchors[id] = ["type": "image", "name": name, "plane": ["width": w, "height":h]]
+        doSendEvent("RHDImageEvent", message: ["key": "imageAnchorChanged", "data":["id":id, "action": "update", "anchor": anchors[id]!]])
     }
     func removeImageAnchor(_ anchor: ARImageAnchor, withNode: SCNNode) {
         let id = anchor.identifier.uuidString
@@ -631,7 +629,7 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         guard let ci = CIImage(image: i) else { reject("no_ciimage", "Could not create Core Image value from " + url, nil); return}
         let context = CIContext(options: nil)
         guard let cg = context.createCGImage(ci, from: ci.extent) else { reject("no_cgimage", "Could not create CG Iamge from " + url, nil); return }
-        let x = ARReferenceImage(cg, orientation: CGImagePropertyOrientation.up, physicalWidth: width)
+        let x = ARReferenceImage(cg, orientation: CGImagePropertyOrientation.up, physicalWidth: CGFloat(width))
         x.name = name
         detectionImages[name] = x
         setDetectionImages()
@@ -676,5 +674,21 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
     }
     @objc func getPOV(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         resolve(lastPosition)
+    }
+    //MARK: World Tracking methods
+    @objc func setWorldTracking(_ trackingMode: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        var temp:ARWorldTrackingConfiguration.WorldAlignment
+        switch(trackingMode) {
+        case "camera":
+            temp = .camera
+        case "compass":
+            temp = .gravityAndHeading
+        default:
+            temp = .gravity
+        }
+        if(temp != configuration.worldAlignment) {
+            configuration.worldAlignment = temp
+            doResume()
+        }
     }
 }
