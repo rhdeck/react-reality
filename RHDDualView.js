@@ -6,7 +6,7 @@ import RHDSecondaryView from "./RHDSecondaryView";
 class RHDDualView extends Component {
   render() {
     return (
-      <SafeAreaView>
+      <SafeAreaView style={{ backgroundColor: "black" }}>
         <View
           style={{
             ...this.props.style,
@@ -19,7 +19,9 @@ class RHDDualView extends Component {
             style={{
               ...this.props.style,
               flexDirection: "row",
-              paddingHorizontal: 100
+              paddingHorizontal: 100,
+              height: "100%",
+              width: "100%"
             }}
           >
             <RHDPrimaryView
@@ -43,7 +45,3 @@ RHDDualView.propTypes = {
   ...RHDPrimaryView.propTypes
 };
 export default RHDDualView;
-/*
-
-       
-        */
