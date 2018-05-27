@@ -52,6 +52,7 @@ RCT_EXTERN_METHOD(removeRecognizerImage:(NSString *)name resolve:(RCTPromiseReso
 RCT_EXTERN_METHOD(setImageDetection:(BOOL)doDetect resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(setPOVSensitivity:(double)newSensitivity resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(getPOV:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
+RCT_EXTERN_METHOD(setWorldTracking:(NSString *)trackingMode resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 @end
 @interface RCT_EXTERN_MODULE(RHDSecondaryViewManager, RCTViewManager)
 @end
