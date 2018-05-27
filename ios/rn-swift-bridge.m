@@ -47,7 +47,7 @@ RCT_EXTERN_METHOD(setAnimationType:(NSString *)type resolve:(RCTPromiseResolveBl
 RCT_EXTERN_METHOD(setPlaneDetection:(BOOL)detectPlanes resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(getAnchors:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(removeAnchor:(NSString *)id resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
-RCT_EXTERN_METHOD(addRecognizerImage:(NSString *)url name:(NSString *)name resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
+RCT_EXTERN_METHOD(addRecognizerImage:(NSString *)url name:(NSString *)name width:(double)width resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(removeRecognizerImage:(NSString *)name resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(setImageDetection:(BOOL)doDetect resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(setPOVSensitivity:(double)newSensitivity resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);

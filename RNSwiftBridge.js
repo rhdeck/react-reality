@@ -155,8 +155,8 @@ const getAnchors = async () => {
 const removeAnchor = async id => {
   return await NativeRHDSceneManager.removeAnchor(id);
 };
-const addRecognizerImage = async (url, name) => {
-  return await NativeRHDSceneManager.addRecognizerImage(url, name);
+const addRecognizerImage = async (url, name, width) => {
+  return await NativeRHDSceneManager.addRecognizerImage(url, name, width);
 };
 const removeRecognizerImage = async name => {
   return await NativeRHDSceneManager.removeRecognizerImage(name);

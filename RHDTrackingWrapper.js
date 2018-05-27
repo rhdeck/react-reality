@@ -106,7 +106,8 @@ class RHDTrackingWrapper extends Component {
       await Promise.all(
         newKeys.map(k => {
           console.log("lets add recognizer image", k, this.state.images[k]);
-          return addRecognizerImage(this.state.images[k], k);
+          const { width, url } = this.state.images[k];
+          return addRecognizerImage(url, k, width);
         })
       );
       console.log("All promises done");

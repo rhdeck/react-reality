@@ -532,8 +532,9 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
     //MARK:ARAnchor delegate methods
     var baseNodes:[String:SCNNode] = [:]
     var anchors:[String:jsonType] = [:]
-
+    var anchorObjects: [String: ARAnchor]
     func addAnchor(_ anchor: ARAnchor, withNode: SCNNode) {
+        anchorObjects[anchor.identifier.uuidString] = anchor
         if let pa = anchor as? ARImageAnchor { addImageAnchor(pa, withNode: withNode) }
         if let pa = anchor as? ARPlaneAnchor { addPlaneAnchor(pa, withNode: withNode) }
     }
@@ -542,6 +543,7 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         if let pa = anchor as? ARPlaneAnchor { updatePlaneAnchor(pa, withNode: withNode)}
     }
     func removeAnchor(_ anchor: ARAnchor, withNode: SCNNode) {
+        anchorObjects.removeValue(forKey: anchor.identifier.uuidString)
         if let pa = anchor as? ARImageAnchor { removeImageAnchor(pa, withNode: withNode)}
         if let pa = anchor as? ARPlaneAnchor { removePlaneAnchor(pa, withNode: withNode)}
     }
@@ -614,17 +616,22 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
     }
     @objc func removeAnchor(_ id:String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         guard let s = session else {return}
+        guard let a = anchorObjects[id] else { return }
+        s.remove(anchor: a)
+        anchorObjects.removeValue(forKey: id)
+        anchors.removeValue(forKey: id)
+        baseNodes.removeValue(forKey: id)
         resolve(true)
     }
     //MARK: Image Recognizer methods
-    @objc func addRecognizerImage(_ url:String, name: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+    @objc func addRecognizerImage(_ url:String, name: String, width: Double, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         guard let fullURL = URL(string: url) else { reject("bad_url", "Could not resolve url " + url, nil); return}
         let path = fullURL.path
         guard let i = UIImage(contentsOfFile: path) else { reject("no_image", "could not get image from " + url, nil); return }
         guard let ci = CIImage(image: i) else { reject("no_ciimage", "Could not create Core Image value from " + url, nil); return}
         let context = CIContext(options: nil)
         guard let cg = context.createCGImage(ci, from: ci.extent) else { reject("no_cgimage", "Could not create CG Iamge from " + url, nil); return }
-        let x = ARReferenceImage(cg, orientation: CGImagePropertyOrientation.up, physicalWidth: 0.2)
+        let x = ARReferenceImage(cg, orientation: CGImagePropertyOrientation.up, physicalWidth: width)
         x.name = name
         detectionImages[name] = x
         setDetectionImages()
