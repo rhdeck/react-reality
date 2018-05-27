@@ -386,6 +386,8 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
     func doResume() {
         guard let s = session else { return }
         s.run(configuration)
+        print("Detection images")
+        print(configuration.detectionImages)
         fixOrphans()
     }
     @objc func pause(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
@@ -504,21 +506,18 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
     override func supportedEvents() -> [String]! {
         return [
         "ARSessionError",
-        "RHDAREvent",
+        "RHDEvent",
         "RHDPlaneEvent",
         "RHDImageEvent"
         ]
     }
     func doSendEvent(_ key: String, message:Any?) {
-        NSLog("I am supposed to transmit event " + key)
-        guard let l = listenedEvents[key], l > 0 else { NSLog("Nobody is listening to event " + key); return }
-        NSLog("Here I send event " + key)
+        guard let l = listenedEvents[key], l > 0 else { return }
         sendEvent(withName: key, body: message)
     }
     var listenedEvents:[String:Int] = [:]
     override func addListener(_ eventName: String!) {
         super.addListener(eventName)
-        NSLog("Someone wants to listen to " + eventName)
         if let val = listenedEvents[eventName] {
             listenedEvents[eventName] = val + 1
         } else {
@@ -556,30 +555,20 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         doSendEvent("RHDPlaneEvent", message: ["key": "planeAnchorAdded", "data": ["id": id, "action":"add", "anchor": anchors[id]]])
         fixOrphans()
     }
-
     func updatePlaneAnchor(_ anchor:ARPlaneAnchor, withNode: SCNNode) {
-        //guard
-        //    let n = withNode.childNodes.first
-        //else { return }
         let id = anchor.identifier.uuidString
         let width = CGFloat(anchor.extent.x)
         let height = CGFloat(anchor.extent.z)
-//        let x = CGFloat(anchor.center.x)
-//        let y = CGFloat(anchor.center.y)
-//        let z = CGFloat(anchor.center.z)
-        //baseNodes[id] = withNode // <- This shuld already be here
         let alignment:String = anchor.alignment == .horizontal ? "horizontal": "vertical"
         anchors[id] = ["type": "plane",  "plane": ["width": width, "height":height,"alignment": alignment ]];
         doSendEvent("RHDPlaneEvent", message: ["key": "planeAnchorChanged", "data": ["id": id, "action": "update", "anchor": anchors[id]]])
         fixOrphans()
     }
-    
     func removePlaneAnchor(_ anchor:ARPlaneAnchor, withNode: SCNNode) {
         let id = anchor.identifier.uuidString
         anchors.removeValue(forKey: id)
         baseNodes.removeValue(forKey: id)
         doSendEvent("RHDPlaneEvent", message: ["key": "planeAnchorRemoved", "data": ["id": id]])
-
     }
     var doDetectPlanes:Bool = false
     @objc func setPlaneDetection(_ detectPlanes: Bool, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
@@ -593,7 +582,6 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         } else {
             configuration.planeDetection = ARWorldTrackingConfiguration.PlaneDetection(rawValue: 0)
         }
-        print("This is horizontal: " + String(ARWorldTrackingConfiguration.PlaneDetection.horizontal.rawValue) + " and this is vertical " + String(ARWorldTrackingConfiguration.PlaneDetection.vertical.rawValue))
         doResume()
     }
     @objc func getAnchors(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
@@ -602,15 +590,20 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
     func addImageAnchor(_ anchor: ARImageAnchor, withNode: SCNNode) {
         guard let name = anchor.referenceImage.name else { return }
         let id = anchor.identifier.uuidString
-        anchors[id] = ["type": "image", "image": name]
-        baseNodes[id] = withNode.childNodes.first
-        doSendEvent("RHDImageEvent", message: ["key": "imageAnchorChanged", "data":["id":id, "action": "add", "name": name]])
+        let w = anchor.referenceImage.physicalSize.width
+        let h = anchor.referenceImage.physicalSize.height
+        anchors[id] = ["type": "image", "image": name, "plane": ["width": w, "height":h]]
+        baseNodes[id] = withNode
+        doSendEvent("RHDImageEvent", message: ["key": "imageAnchorAdded", "data":["id":id, "action": "add", "anchor": anchors[id]]])
     }
     
     func updateImageAnchor(_ anchor: ARImageAnchor, withNode: SCNNode) {
         let id = anchor.identifier.uuidString
-        guard let name =  anchors[id]?["image"] else { return }
-        doSendEvent("RHDImageEvent", message: ["key": "imageAnchorChanged", "data":["id":id, "action": "update", "name":name]])
+        guard let name = anchors[id]?["image"] else { return }
+        let w = anchor.referenceImage.physicalSize.width
+        let h = anchor.referenceImage.physicalSize.height
+        anchors[id] = ["type": "image", "image": name, "plane": ["width": w, "height":h]]
+        doSendEvent("RHDImageEvent", message: ["key": "imageAnchorChanged", "data":["id":id, "action": "update", "anchor": anchors[id]]])
     }
     func removeImageAnchor(_ anchor: ARImageAnchor, withNode: SCNNode) {
         let id = anchor.identifier.uuidString
@@ -619,11 +612,19 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         doSendEvent("RHDImageEvent", message: ["key": "imageAnchorRemoved", "data": ["id": id]])
 
     }
+    @objc func removeAnchor(_ id:String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        guard let s = session else {return}
+        resolve(true)
+    }
     //MARK: Image Recognizer methods
     @objc func addRecognizerImage(_ url:String, name: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        guard let i = UIImage(contentsOfFile: url) else { reject("no_image", "could not get image from " + url, nil); return }
-        guard let ci = i.cgImage else { reject("no_image", "Could not get CGImage instance from url " + url, nil); return }
-        let x = ARReferenceImage(ci, orientation: CGImagePropertyOrientation.up, physicalWidth: 0.2)
+        guard let fullURL = URL(string: url) else { reject("bad_url", "Could not resolve url " + url, nil); return}
+        let path = fullURL.path
+        guard let i = UIImage(contentsOfFile: path) else { reject("no_image", "could not get image from " + url, nil); return }
+        guard let ci = CIImage(image: i) else { reject("no_ciimage", "Could not create Core Image value from " + url, nil); return}
+        let context = CIContext(options: nil)
+        guard let cg = context.createCGImage(ci, from: ci.extent) else { reject("no_cgimage", "Could not create CG Iamge from " + url, nil); return }
+        let x = ARReferenceImage(cg, orientation: CGImagePropertyOrientation.up, physicalWidth: 0.2)
         x.name = name
         detectionImages[name] = x
         setDetectionImages()
@@ -638,8 +639,12 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
     var doDetectImages: Bool = false
     func setDetectionImages() {
         if(doDetectImages) {
-            configuration.detectionImages = Set(detectionImages.values.map{$0})
-        } else { configuration.detectionImages = nil}
+            if(detectionImages.count > 0) {
+                configuration.detectionImages = Set(detectionImages.values.map{$0})
+            }
+        } else {
+            configuration.detectionImages = nil
+        }
         doResume()
     }
     @objc func setImageDetection(_ doDetect:Bool, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
@@ -652,8 +657,9 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
     var lastOrientation:SCNVector4 = SCNVector4()
     var sensitivity:Float = 0.05
     func updatePOV(_ pointOfView: SCNNode) {
+        
         if abs(lastPosition.x - pointOfView.position.x) > sensitivity || abs(lastPosition.y - pointOfView.position.y) > sensitivity || abs(lastPosition.z - pointOfView.position.z) > sensitivity {
-            doSendEvent("RHDAREvent", message: ["key": "positionChanged", "data": ["position": vector3ToJson(pointOfView.position)]])
+            doSendEvent("RHDEvent", message: ["key": "positionChanged", "data": ["position": vector3ToJson(pointOfView.position), "orientation": vector4ToJson(pointOfView.orientation)]])
             lastPosition = pointOfView.position
         }
     }

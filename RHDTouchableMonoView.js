@@ -1,35 +1,31 @@
 import { TouchableWithoutFeedback } from "react-native";
 import React, { Component } from "react";
 import RHDMonoView from "./RHDMonoView";
-import RHDNode from "./components/RHDNode";
-import { doTap } from "./RHDSceneManager";
-import { RHDARConsumer } from "./RHDARWrapper";
+import { RHDTouchWrapper } from "./RHDTouchWrapper";
 const RHDTouchableMonoView = props => {
   return (
-    <RHDARConsumer>
-      {value => {
+    <RHDTouchWrapper>
+      {({ triggerAtLocation }) => {
         return (
           <TouchableWithoutFeedback
             onPress={({ nativeEvent: { locationX, locationY } }) => {
-              value.triggerAtLocation("onPress", locationX, locationY);
+              if (triggerAtLocation)
+                triggerAtLocation("onPress", locationX, locationY);
             }}
             onPressIn={({ nativeEvent: { locationX, locationY } }) => {
-              console.log(
-                "Running triggeratlocation from onpressin",
-                locationX,
-                locationY
-              );
-              value.triggerAtLocation("onPressIn", locationX, locationY);
+              if (triggerAtLocation)
+                triggerAtLocation("onPressIn", locationX, locationY);
             }}
             onPressOut={({ nativeEvent: { locationX, locationY } }) => {
-              value.triggerAtLocation("onPressOut", locationX, locationY);
+              if (triggerAtLocation)
+                triggerAtLocation("onPressOut", locationX, locationY);
             }}
           >
             <RHDMonoView {...props} />
           </TouchableWithoutFeedback>
         );
       }}
-    </RHDARConsumer>
+    </RHDTouchWrapper>
   );
 };
 RHDTouchableMonoView.propTypes = RHDMonoView.propTypes;

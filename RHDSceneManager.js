@@ -58,7 +58,7 @@ const getEmitter = () => {
 };
 const addListener = (key, cb) => {
   if (!cachedListener) {
-    cachedListener = getEmitter().addListener("RHDAREvent", masterHandler);
+    cachedListener = getEmitter().addListener("RHDEvent", masterHandler);
   }
   cachedHandlers[key] = cb;
 };

@@ -6,8 +6,8 @@ import {
   setPOVSensitivity
 } from "./RHDSceneManager";
 import PropTypes from "prop-types";
-const { Provider, Consumer: RHDARPositionConsumer } = createContext({});
-class RHDARPosition extends Component {
+const { Provider, Consumer: RHDPositionConsumer } = createContext({});
+class RHDPosition extends Component {
   state = { providerValue: null, sensitivity: 0.01 };
   componentDidMount() {
     detectPositionChange(this.onPositionChange.bind(this));
@@ -25,7 +25,7 @@ class RHDARPosition extends Component {
     return (
       <Provider value={this.state.providerValue}>
         {typeof this.props.children == "function" ? (
-          <RHDARPositionConsumer>{this.props.children}</RHDARPositionConsumer>
+          <RHDPositionConsumer>{this.props.children}</RHDPositionConsumer>
         ) : (
           this.props.children
         )}
@@ -42,12 +42,12 @@ class RHDARPosition extends Component {
   }
 }
 
-RHDARPosition.defaultProps = {
+RHDPosition.defaultProps = {
   sensitivity: 0.01
 };
-RHDARPosition.propTypes = {
+RHDPosition.propTypes = {
   didPositionChange: PropTypes.func,
   sensitivity: PropTypes.number
 };
-export { RHDARPosition, RHDARPositionConsumer };
-export default RHDARPosition;
+export { RHDPosition, RHDPositionConsumer };
+export default RHDPosition;

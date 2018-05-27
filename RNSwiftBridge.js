@@ -152,6 +152,9 @@ const setPlaneDetection = async detectPlanes => {
 const getAnchors = async () => {
   return await NativeRHDSceneManager.getAnchors();
 };
+const removeAnchor = async id => {
+  return await NativeRHDSceneManager.removeAnchor(id);
+};
 const addRecognizerImage = async (url, name) => {
   return await NativeRHDSceneManager.addRecognizerImage(url, name);
 };
@@ -208,6 +211,7 @@ export {
   setAnimationType,
   setPlaneDetection,
   getAnchors,
+  removeAnchor,
   addRecognizerImage,
   removeRecognizerImage,
   setImageDetection,

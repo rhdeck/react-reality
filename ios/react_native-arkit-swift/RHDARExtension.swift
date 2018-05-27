@@ -40,9 +40,9 @@ typealias SCNTextNode = SCNNode
         guard
             let w = json["width"] as? CGFloat,
             let h = json["height"] as? CGFloat,
-            let l = json["length"] as? CGFloat,
-            let chamfer = json["chamfer"] as? CGFloat
+            let l = json["length"] as? CGFloat
         else { return SceneKit.SCNBox() }
+        let chamfer = json["chamfer"] as? CGFloat ?? 0
         let g = SceneKit.SCNBox(width: w, height: h, length: l, chamferRadius: chamfer)
         return g
     }

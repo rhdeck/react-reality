@@ -1,7 +1,7 @@
 import { requireNativeComponent } from "react-native";
 import PropTypes from "prop-types";
 import React, { Component } from "react";
-import { RHDARConsumer } from "./RHDARWrapper";
+import { RHDSessionConsumer } from "./RHDSessionWrapper";
 class RHDBasePrimaryView extends Component {
   render() {
     var out = [
@@ -9,9 +9,9 @@ class RHDBasePrimaryView extends Component {
     ];
     if (this.props.children)
       out.push(
-        <RHDARConsumer key="RHDPrimaryViewConsumer">
+        <RHDSessionConsumer key="RHDPrimaryViewConsumer">
           {this.props.children}
-        </RHDARConsumer>
+        </RHDSessionConsumer>
       );
     return out;
   }
@@ -25,17 +25,11 @@ const NativeV = requireNativeComponent("RHDPrimaryView", RHDBasePrimaryView);
 
 const RHDPrimaryView = props => {
   return (
-    <RHDARConsumer>
-      {value => {
-        return (
-          <RHDBasePrimaryView
-            {...props}
-            start={value.start}
-            stop={value.stop}
-          />
-        );
+    <RHDSessionConsumer>
+      {({ start, stop }) => {
+        return <RHDBasePrimaryView {...props} start={start} stop={stop} />;
       }}
-    </RHDARConsumer>
+    </RHDSessionConsumer>
   );
 };
 RHDPrimaryView.propTypes = { ...RHDBasePrimaryView.propTypes };

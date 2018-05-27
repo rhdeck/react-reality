@@ -1,10 +1,6 @@
-# react-native-arkit-swift
+# react-reality
 
-# MAJOR UPDATE
-
-The previous version of this package was in part a port of [react-native-arkit](https://github.com/HippoAR/react-native-arkit). The structure and surface area have changed completely.
-
-Demo code from new API (Subject to rapid change)
+A React-based way of interacting with Augmented Reality. Currently IOS-Only
 
 ```jsx
 import React, { Component, Children } from "react";

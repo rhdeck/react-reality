@@ -1,17 +1,17 @@
 import { requireNativeComponent } from "react-native";
 import PropTypes from "prop-types";
 import React, { Component } from "react";
-import { RHDARConsumer } from "./RHDARWrapper";
+import { RHDSessionConsumer } from "./RHDSessionWrapper";
 class RHDBaseMonoView extends Component {
   render() {
     return [
       <NativeMV {...this.props} children={null} key="RHDMonoViewNative" />,
       typeof this.props.children == "function" ? (
-        <RHDARConsumer key="RHDMonoViewConsumer">
+        <RHDSessionConsumer key="RHDMonoViewConsumer">
           {value => {
             return this.props.children(value);
           }}
-        </RHDARConsumer>
+        </RHDSessionConsumer>
       ) : this.props.children ? (
         this.props.children
       ) : null
@@ -33,21 +33,11 @@ const NativeMV = requireNativeComponent("RHDMonoView", RHDBaseMonoView);
 
 const RHDMonoView = props => {
   return (
-    <RHDARConsumer>
-      {value => {
-        return (
-          <RHDBaseMonoView
-            {...props}
-            start={() => {
-              value.start();
-            }}
-            stop={() => {
-              value.stop();
-            }}
-          />
-        );
+    <RHDSessionConsumer>
+      {({ start, stop }) => {
+        return <RHDBaseMonoView {...props} start={start} stop={stop} />;
       }}
-    </RHDARConsumer>
+    </RHDSessionConsumer>
   );
 };
 

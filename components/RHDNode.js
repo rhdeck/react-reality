@@ -1,8 +1,9 @@
 import React, { Component, createContext } from "react";
 import PropTypes from "prop-types";
 import pickBy from "lodash/pickBy";
-import { RHDARConsumer } from "../RHDARWrapper";
+import { RHDSessionConsumer } from "../RHDSessionWrapper";
 import { RHDAnimatedConsumer } from "./RHDAnimated";
+import { RHDTouchConsumer } from "../RHDTouchWrapper";
 import {
   eulerAngles,
   orientation,
@@ -68,14 +69,13 @@ class RHDBaseNode extends Component {
     if (this.state.updateState == "domount") {
       this.setState({ updateState: "mounting" });
       try {
-        console.log("Node mounting");
         const parentNode = this.props.parentNode ? this.props.parentNode : "";
         const np = { ...this.state.nodeProps, id: this.state.identifier };
-        // if (typeof this.props.willNativeUpdate == "function")
-        //   await this.props.willNativeUpdate();
+        if (typeof this.props.willNativeUpdate == "function")
+          await this.props.willNativeUpdate();
         await addNode(np, parentNode);
-        // if (typeof this.props.willNativeUpdate == "function")
-        //   await this.props.didNativeUpdate();
+        if (typeof this.props.willNativeUpdate == "function")
+          await this.props.didNativeUpdate();
         this.setState(({ updateState }) => {
           return { updateState: updateState == "donext" ? "do" : "done" };
         });
@@ -84,7 +84,6 @@ class RHDBaseNode extends Component {
       }
     } else if (this.state.updateState == "do") {
       this.setState({ updateState: "doing" });
-      console.log("Node updating");
       try {
         if (typeof this.props.willNativeUpdate == "function")
           await this.props.willNativeUpdate();
@@ -130,36 +129,38 @@ RHDBaseNode.propTypes = {
 //#region RHDNode
 const RHDNode = props => {
   return (
-    <RHDARConsumer>
-      {({ registerNode, removeNode, isStarted }) => {
-        if (!isStarted) {
-          return null;
-        } else {
-          return (
-            <RHDNodeConsumer>
-              {({ nodeID }) => {
-                return (
-                  <RHDAnimatedConsumer>
-                    {({ willNativeUpdate, didNativeUpdate }) => {
-                      return (
-                        <RHDBaseNode
-                          parentNode={nodeID ? nodeID : ""}
-                          {...props}
-                          registerNode={registerNode}
-                          removeNode={removeNode}
-                          willNativeUpdate={willNativeUpdate}
-                          didNativeUpdate={didNativeUpdate}
-                        />
-                      );
-                    }}
-                  </RHDAnimatedConsumer>
-                );
-              }}
-            </RHDNodeConsumer>
-          );
-        }
+    <RHDSessionConsumer>
+      {({ isStarted }) => {
+        return isStarted ? (
+          <RHDTouchConsumer>
+            {({ registerNode, removeNode }) => {
+              return (
+                <RHDNodeConsumer>
+                  {({ nodeID }) => {
+                    return (
+                      <RHDAnimatedConsumer>
+                        {({ willNativeUpdate, didNativeUpdate }) => {
+                          return (
+                            <RHDBaseNode
+                              parentNode={nodeID ? nodeID : ""}
+                              {...props}
+                              registerNode={registerNode}
+                              removeNode={removeNode}
+                              willNativeUpdate={willNativeUpdate}
+                              didNativeUpdate={didNativeUpdate}
+                            />
+                          );
+                        }}
+                      </RHDAnimatedConsumer>
+                    );
+                  }}
+                </RHDNodeConsumer>
+              );
+            }}
+          </RHDTouchConsumer>
+        ) : null;
       }}
-    </RHDARConsumer>
+    </RHDSessionConsumer>
   );
 };
 RHDNode.propTypes = {
