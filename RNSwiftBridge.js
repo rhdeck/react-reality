@@ -170,6 +170,9 @@ const setPOVSensitivity = async newSensitivity => {
 const getPOV = async () => {
   return await NativeRHDSceneManager.getPOV();
 };
+const setWorldTracking = async trackingMode => {
+  return await NativeRHDSceneManager.setWorldTracking(trackingMode);
+};
 //#endregion
 //#region Exports
 export {
@@ -216,6 +219,7 @@ export {
   removeRecognizerImage,
   setImageDetection,
   setPOVSensitivity,
-  getPOV
+  getPOV,
+  setWorldTracking
 };
 //#endregion
