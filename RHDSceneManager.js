@@ -42,7 +42,8 @@ import {
   getAnchors,
   updateSKScene,
   getPOV,
-  setPOVSensitivity
+  setPOVSensitivity,
+  setWorldTracking
 } from "./RNSwiftBridge";
 const NativeObj = NativeModules.RHDSceneManager;
 //const { RHDSceneManager } = NativeModules;
@@ -76,7 +77,6 @@ const removeListener = key => {
   delete cachedHandlers[key];
 };
 const stopListening = () => {
-  console.log("Killing my listener");
   if (cachedListener) {
     cachedListener.remove();
   }
@@ -168,5 +168,6 @@ export {
   detectPositionChange,
   stopDetectPositionChange,
   getPOV,
-  setPOVSensitivity
+  setPOVSensitivity,
+  setWorldTracking
 };
