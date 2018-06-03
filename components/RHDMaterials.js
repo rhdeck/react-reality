@@ -1,12 +1,5 @@
 import React, { Component, Children } from "react";
 import PropTypes from "prop-types";
-import {
-  blendMode,
-  lightingModel,
-  shaders,
-  colorBufferWriteMask,
-  fillMode
-} from "./lib/propTypes";
 import pickBy from "lodash/pickBy";
 import RHDMaterial from "./RHDMaterial";
 import { RHDGeometryConsumer } from "./RHDGeometry";
