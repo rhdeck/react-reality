@@ -196,6 +196,79 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         g.removeMaterial(at: atPosition)
         resolve(true)
     }
+    //MARK:Model functions
+    var loadedModelStatus:[String:Bool] = [:]
+    var loadedModels:[String:SCNScene] = [:]
+    func loadModel(sourcePath: String) {
+        loadModel(sourcePath: sourcePath, successCB: {}) { x in }
+    }
+    func loadModel(sourcePath: String, successCB: ()->Void, errorCB: (Any)->Void) {
+        loadedModelStatus[sourcePath] = false;
+        let url = URL(fileURLWithPath: sourcePath)
+        loadedModelStatus[sourcePath] = true
+        if let s = try? SCNScene(url: url, options: nil) {
+            loadedModels[sourcePath] = s
+            successCB()
+        } else {
+            loadedModels[sourcePath] = nil
+        }
+    }
+    func loadModelAsync(sourcePath: String, successCB: @escaping ()->Void, errorCB: @escaping (Any)->Void) {
+        DispatchQueue(label: "RHDSceneLoader").async() {
+            self.loadModel(sourcePath: sourcePath, successCB: successCB, errorCB: errorCB)
+        }
+    }
+    func mountModel(targetNodeID: String, loadedModelID: String, atChild: String) -> Bool{
+        guard let n = nodes[targetNodeID] else { return false }
+        guard let lm = loadedModels[loadedModelID] else { return false }
+        guard let c = lm.rootNode.childNodes.first(where: {n in return n.name == atChild}) else { return false }
+        n.addChildNode(c)
+        return true
+    }
+    var loadedReferenceNodes:[String: SCNReferenceNode] = [:]
+    var loadedReferenceNodeStatus:[String:Bool] = [:]
+    func loadReferenceNode(sourcePath: String,successCB: ()->Void, errorCB: (Any)->Void) {
+        loadedReferenceNodeStatus[sourcePath] = false
+        let url = URL(fileURLWithPath: sourcePath)
+        guard let rn = SCNReferenceNode(url: url) else { errorCB("Cannot load reference node from url: " + url.absoluteString); return}
+        rn.load()
+        if(rn.isLoaded) {
+            loadedReferenceNodes[sourcePath] = rn
+            successCB()
+            loadedReferenceNodeStatus[sourcePath] = true
+        } else {
+            errorCB("Could not load")
+            loadedReferenceNodeStatus.removeValue(forKey: sourcePath)
+        }
+    }
+    func mountReferenceNode(targetNodeID: String, referenceNodeID: String) -> Bool{
+        guard let n = nodes[targetNodeID] else { return false }
+        guard let rn = loadedReferenceNodes[referenceNodeID] else { return false }
+        n.addChildNode(rn)
+        return true
+    }
+    func loadReferenceNodeAsync(sourcePath: String, successCB: @escaping ()->Void, errorCB: @escaping (Any)->Void) {
+        DispatchQueue(label: "RHDReferenceNodes").async() {
+            self.loadReferenceNode(sourcePath: sourcePath, successCB: successCB, errorCB: errorCB)
+        }
+    }
+    @objc func setModel(_ forNode: String, sourcePath: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        guard let n = nodes[forNode] else { reject("no_node", "addModel: No node with name " + forNode, nil); return}
+        loadReferenceNodeAsync(sourcePath: sourcePath, successCB: {
+            if let rn = self.loadedReferenceNodes[sourcePath] {
+                n.addChildNode(rn)
+                resolve(true)
+            } else {
+                reject("no_model", "Could not find a loaded model even though this was the success path", nil);
+            }
+        }) { message in
+            if let messageString = message as? String {
+                reject("setmodel_fail", messageString, nil)
+            } else {
+                reject("setmodel_fail", "Setmodel failure: No further information", nil)
+            }
+        }
+    }
     //MARK:SKNode Functions
     var SKNodes:[String:SKNode] = [:]
     var SKOrphans:[String:[SKNode]] = [:]
