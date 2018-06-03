@@ -1,4 +1,5 @@
 import React, { Component, createContext } from "react";
+import { adopt } from "react-adopt";
 import {
   setMaterial,
   setMaterialProperty,
@@ -11,7 +12,7 @@ import {
   shaders,
   colorBufferWriteMask,
   fillMode
-} from "./lib/propTypes";
+} from "./propTypes";
 import pickBy from "lodash/pickBy";
 import { RHDNodeConsumer } from "./RHDNode";
 import { RHDAnimatedConsumer } from "./RHDAnimated";
@@ -102,27 +103,28 @@ RHDBaseMaterial.propTypes = {
   didNativeUpdate: PropTypes.func
 };
 const materialPropKeys = Object.keys(RHDBaseMaterial.propTypes);
-
+const Adoptee = adopt({
+  animated: <RHDAnimatedConsumer />,
+  node: <RHDNodeConsumer />
+});
 const RHDMaterial = props => {
   return (
-    <RHDAnimatedConsumer>
-      {({ willNativeUpdate, didNativeUpdate }) => {
+    <Adoptee>
+      {({
+        animated: { willNativeUpdate, didNativeUpdate },
+        node: { nodeID }
+      }) => {
         return (
-          <RHDNodeConsumer>
-            {({ nodeID }) => {
-              return (
-                <RHDBaseMaterial
-                  {...props}
-                  parentNode={nodeID}
-                  willNativeUpdate={willNativeUpdate}
-                  didNativeUpdate={didNativeUpdate}
-                />
-              );
-            }}
-          </RHDNodeConsumer>
+          <RHDBaseMaterial
+            {...props}
+            parentNode={nodeID}
+            willNativeUpdate={willNativeUpdate}
+            didNativeUpdate={didNativeUpdate}
+          />
         );
       }}
-    </RHDAnimatedConsumer>
+      }}
+    </Adoptee>
   );
 };
 export { RHDMaterial, RHDMaterialConsumer };

@@ -2,6 +2,7 @@ import React, { Component, createContext } from "react";
 import PropTypes from "prop-types";
 import pickBy from "lodash/pickBy";
 import includes from "lodash/includes";
+import { adopt } from "react-adopt";
 import { RHDMaterialConsumer } from "./RHDMaterial";
 import { RHDAnimatedConsumer } from "./RHDAnimated";
 const { Provider, Consumer: RHDMaterialPropertyConsumer } = createContext({});
@@ -97,29 +98,29 @@ RHDBaseMaterialProperty.propTypes = {
   didNativeUpdate: PropTypes.func
 };
 materialPropertyPropTypeKeys = Object.keys(RHDBaseMaterialProperty.propTypes);
-
+const Adoptee = adopt({
+  animated: <RHDAnimatedConsumer />,
+  material: <RHDMaterialConsumer />
+});
 const RHDMaterialProperty = props => {
   return (
-    <RHDAnimatedConsumer>
-      {({ willNativeUpdate, didNativeUpdate }) => {
+    <Adoptee>
+      {({
+        animated: { willNativeUpdate, didNativeUpdate },
+        material: { updateMaterial, parentNode, index }
+      }) => {
         return (
-          <RHDMaterialConsumer>
-            {({ updateMaterial, parentNode, index }) => {
-              return (
-                <RHDBaseMaterialProperty
-                  {...props}
-                  updateMaterial={updateMaterial}
-                  parentNode={parentNode}
-                  index={index}
-                  willNativeUpdate={willNativeUpdate}
-                  didNativeUpdate={didNativeUpdate}
-                />
-              );
-            }}
-          </RHDMaterialConsumer>
+          <RHDBaseMaterialProperty
+            {...props}
+            updateMaterial={updateMaterial}
+            parentNode={parentNode}
+            index={index}
+            willNativeUpdate={willNativeUpdate}
+            didNativeUpdate={didNativeUpdate}
+          />
         );
       }}
-    </RHDAnimatedConsumer>
+    </Adoptee>
   );
 };
 const propFilter = props => {

@@ -2,6 +2,7 @@ import React, { Component, Children, createContext } from "react";
 import PropTypes from "prop-types";
 import filter from "lodash/filter";
 import pickBy from "lodash/pickBy";
+import { adopt } from "react-adopt";
 import { removeGeometry } from "../RHDSceneManager";
 import { RHDNodeConsumer } from "./RHDNode";
 import { RHDAnimatedConsumer } from "./RHDAnimated";
@@ -125,26 +126,27 @@ const RHDGeometry = (mountFunc, geomProps, numSides) => {
     didNativeUpdate: PropTypes.func
   };
   const geomPropKeys = Object.keys(RHDBaseGeometry.propTypes);
+  const Adoptee = adopt({
+    animated: <RHDAnimatedConsumer />,
+    node: <RHDNodeConsumer />
+  });
   const RHDGeometry = props => {
     return (
-      <RHDAnimatedConsumer>
-        {({ willNativeUpdate, didNativeUpdate }) => {
+      <Adoptee>
+        {({
+          animated: { willNativeUpdate, didNativeUpdate },
+          node: { nodeID }
+        }) => {
           return (
-            <RHDNodeConsumer>
-              {({ nodeID }) => {
-                return (
-                  <RHDBaseGeometry
-                    {...props}
-                    parentNode={nodeID}
-                    willNativeUpdate={willNativeUpdate}
-                    didNativeUpdate={didNativeUpdate}
-                  />
-                );
-              }}
-            </RHDNodeConsumer>
+            <RHDBaseGeometry
+              {...props}
+              parentNode={nodeID}
+              willNativeUpdate={willNativeUpdate}
+              didNativeUpdate={didNativeUpdate}
+            />
           );
         }}
-      </RHDAnimatedConsumer>
+      </Adoptee>
     );
   };
   return RHDGeometry;

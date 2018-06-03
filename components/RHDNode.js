@@ -1,6 +1,7 @@
 import React, { Component, createContext } from "react";
 import PropTypes from "prop-types";
 import pickBy from "lodash/pickBy";
+import { adopt } from "react-adopt";
 import { RHDSessionConsumer } from "../RHDSessionProvider";
 import { RHDAnimatedConsumer } from "./RHDAnimated";
 import { RHDTouchConsumer } from "../RHDTouchProvider";
@@ -12,7 +13,7 @@ import {
   scale,
   opacity,
   renderingOrder
-} from "./lib/propTypes";
+} from "./propTypes";
 import UUID from "uuid/v4";
 import { addNode, removeNode, updateNode } from "../RHDSceneManager";
 const { Provider, Consumer: RHDNodeConsumer } = createContext({});
@@ -127,40 +128,33 @@ RHDBaseNode.propTypes = {
 };
 //#endregion
 //#region RHDNode
+const Adoptee = adopt({
+  session: <RHDSessionConsumer />,
+  touch: <RHDTouchConsumer />,
+  node: <RHDNodeConsumer />,
+  animated: <RHDAnimatedConsumer />
+});
 const RHDNode = props => {
   return (
-    <RHDSessionConsumer>
-      {({ isStarted }) => {
+    <Adoptee>
+      {({
+        session: { isStarted },
+        touch: { registerNode, removeNode },
+        node: { nodeID },
+        animated: { willNativeUpdate, didNativeUpdate }
+      }) => {
         return isStarted ? (
-          <RHDTouchConsumer>
-            {({ registerNode, removeNode }) => {
-              return (
-                <RHDNodeConsumer>
-                  {({ nodeID }) => {
-                    return (
-                      <RHDAnimatedConsumer>
-                        {({ willNativeUpdate, didNativeUpdate }) => {
-                          return (
-                            <RHDBaseNode
-                              parentNode={nodeID ? nodeID : ""}
-                              {...props}
-                              registerNode={registerNode}
-                              removeNode={removeNode}
-                              willNativeUpdate={willNativeUpdate}
-                              didNativeUpdate={didNativeUpdate}
-                            />
-                          );
-                        }}
-                      </RHDAnimatedConsumer>
-                    );
-                  }}
-                </RHDNodeConsumer>
-              );
-            }}
-          </RHDTouchConsumer>
+          <RHDBaseNode
+            parentNode={nodeID ? nodeID : ""}
+            {...props}
+            registerNode={registerNode}
+            removeNode={removeNode}
+            willNativeUpdate={willNativeUpdate}
+            didNativeUpdate={didNativeUpdate}
+          />
         ) : null;
       }}
-    </RHDSessionConsumer>
+    </Adoptee>
   );
 };
 RHDNode.propTypes = {
