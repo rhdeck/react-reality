@@ -34,7 +34,6 @@ class RHDTrackingProvider extends Component {
     return providerValue;
   }
   render() {
-    console.log("rendering trackingwrapper");
     return (
       <Provider value={this.state.providerValue}>
         {typeof this.props.children == "function" ? (
