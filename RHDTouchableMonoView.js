@@ -1,10 +1,10 @@
 import { TouchableWithoutFeedback } from "react-native";
 import React, { Component } from "react";
 import RHDMonoView from "./RHDMonoView";
-import { RHDTouchWrapper } from "./RHDTouchWrapper";
+import { RHDTouchProvider } from "./RHDTouchProvider";
 const RHDTouchableMonoView = props => {
   return (
-    <RHDTouchWrapper>
+    <RHDTouchProvider>
       {({ triggerAtLocation }) => {
         return (
           <TouchableWithoutFeedback
@@ -25,7 +25,7 @@ const RHDTouchableMonoView = props => {
           </TouchableWithoutFeedback>
         );
       }}
-    </RHDTouchWrapper>
+    </RHDTouchProvider>
   );
 };
 RHDTouchableMonoView.propTypes = RHDMonoView.propTypes;

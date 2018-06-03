@@ -18,10 +18,13 @@ import RHDDualView from "./RHDDualView";
 import RHDSKScene from "./components/RHDSKScene";
 import RHDSKLabel from "./components/RHDSKLabel";
 import RHDAnimated from "./components/RHDAnimated";
-import { RHDSessionConsumer, RHDSessionWrapper } from "./RHDSessionWrapper";
+import { RHDSessionConsumer, RHDSessionProvider } from "./RHDSessionProvider";
 import { RHDPosition, RHDPositionConsumer } from "./RHDPosition";
-import { RHDTouchWrapper, RHDTouchConsumer } from "./RHDTouchWrapper";
-import { RHDTrackingConsumer, RHDTrackingWrapper } from "./RHDTrackingWrapper";
+import { RHDTouchProvider, RHDTouchConsumer } from "./RHDTouchProvider";
+import {
+  RHDTrackingConsumer,
+  RHDTrackingProvider
+} from "./RHDTrackingProvider";
 export {
   RHDMonoView,
   RHDBox,
@@ -43,12 +46,12 @@ export {
   RHDSKScene,
   RHDSKLabel,
   RHDSessionConsumer,
-  RHDSessionWrapper,
+  RHDSessionProvider,
   RHDAnimated,
   RHDPosition,
   RHDPositionConsumer,
-  RHDTouchWrapper,
+  RHDTouchProvider,
   RHDTouchConsumer,
   RHDTrackingConsumer,
-  RHDTrackingWrapper
+  RHDTrackingProvider
 };

@@ -25,7 +25,6 @@ class RHDBaseSKScene extends Component {
           ...propFilter(this.props),
           name: this.state.identifier
         };
-        console.log("Adding SKNode");
         const result = await addSKScene(
           scene,
           this.props.parentNode,

@@ -1,9 +1,9 @@
 import React, { Component, createContext } from "react";
 import PropTypes from "prop-types";
 import pickBy from "lodash/pickBy";
-import { RHDSessionConsumer } from "../RHDSessionWrapper";
+import { RHDSessionConsumer } from "../RHDSessionProvider";
 import { RHDAnimatedConsumer } from "./RHDAnimated";
-import { RHDTouchConsumer } from "../RHDTouchWrapper";
+import { RHDTouchConsumer } from "../RHDTouchProvider";
 import {
   eulerAngles,
   orientation,

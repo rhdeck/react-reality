@@ -21,9 +21,7 @@ class RHDBaseSKLabel extends Component {
           ...propFilter(this.props),
           name: this.state.identifier
         };
-        console.log("SKLabel Adding", label, this.props.parentSKNode);
         const result = await setSKLabelNode(label, this.props.parentSKNode);
-        console.log("SKLabel added", result);
         this.setState(({ updateState }) => {
           return { updateState: updateState == "donext" ? "do" : "done" };
         });
@@ -37,9 +35,7 @@ class RHDBaseSKLabel extends Component {
           ...propFilter(this.props),
           name: this.state.identifier
         };
-        console.log("SKLabel Updating", label, this.props.parentSKNode);
         const result = await setSKLabelNode(label, this.props.parentSKNode);
-        console.log("SKLabel updated", result);
         this.setState(({ updateState }) => {
           return { updateState: updateState == "donext" ? "do" : "done" };
         });

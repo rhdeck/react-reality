@@ -2,7 +2,7 @@ import React, { Component, createContext } from "react";
 import PropTypes from "prop-types";
 import { doTap } from "./RHDSceneManager";
 const { Provider, Consumer: RHDTouchConsumer } = createContext({});
-class RHDTouchWrapper extends Component {
+class RHDTouchProvider extends Component {
   registeredNodes = {};
   constructor(props) {
     super(props);
@@ -57,5 +57,5 @@ class RHDTouchWrapper extends Component {
     );
   }
 }
-export { RHDTouchWrapper, RHDTouchConsumer };
-export default RHDTouchWrapper;
+export { RHDTouchProvider, RHDTouchConsumer };
+export default RHDTouchProvider;

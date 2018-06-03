@@ -10,7 +10,7 @@ import {
   removeRecognizerImage
 } from "./RHDSceneManager";
 const { Provider, Consumer: RHDTrackingConsumer } = createContext();
-class RHDTrackingWrapper extends Component {
+class RHDTrackingProvider extends Component {
   state = {
     planeDetection: false,
     imageDetection: false,
@@ -173,13 +173,13 @@ class RHDTrackingWrapper extends Component {
     });
   }
 }
-RHDTrackingWrapper.propTypes = {
+RHDTrackingProvider.propTypes = {
   planeDetection: PropTypes.bool,
   imageDetection: PropTypes.bool,
   didUpdateAnchors: PropTypes.func
 };
-export { RHDTrackingWrapper, RHDTrackingConsumer };
-export default RHDTrackingWrapper;
+export { RHDTrackingProvider, RHDTrackingConsumer };
+export default RHDTrackingProvider;
 const cleanAnchors = o => {
   var out = {};
   if (!o) return out;

@@ -2,7 +2,7 @@ import React, { Component, createContext } from "react";
 import PropTypes from "prop-types";
 import { clear, pause, resume, setWorldTracking } from "./RHDSceneManager";
 const { Provider, Consumer: RHDSessionConsumer } = createContext();
-class RHDSessionWrapper extends Component {
+class RHDSessionProvider extends Component {
   state = {
     providerValue: this.setProviderValue(true),
     alignment: "gravity"
@@ -58,8 +58,8 @@ class RHDSessionWrapper extends Component {
     );
   }
 }
-RHDSessionWrapper.propTypes = {
+RHDSessionProvider.propTypes = {
   alignment: PropTypes.string
 };
-export { RHDSessionWrapper, RHDSessionConsumer };
-export default RHDSessionWrapper;
+export { RHDSessionProvider, RHDSessionConsumer };
+export default RHDSessionProvider;
