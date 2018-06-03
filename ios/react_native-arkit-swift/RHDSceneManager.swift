@@ -196,31 +196,31 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         g.removeMaterial(at: atPosition)
         resolve(true)
     }
-    //MARK:Model functions
-    var loadedModelStatus:[String:Bool] = [:]
-    var loadedModels:[String:SCNScene] = [:]
-    func loadModel(sourcePath: String) {
-        loadModel(sourcePath: sourcePath, successCB: {}) { x in }
+    //MARK:SCNScene functions
+    var loadedSceneStatus:[String:Bool] = [:]
+    var loadedScenes:[String:SCNScene] = [:]
+    func loadScene(sourcePath: String) {
+        loadScene(sourcePath: sourcePath, successCB: {}) { x in }
     }
-    func loadModel(sourcePath: String, successCB: ()->Void, errorCB: (Any)->Void) {
-        loadedModelStatus[sourcePath] = false;
+    func loadScene(sourcePath: String, successCB: ()->Void, errorCB: (Any)->Void) {
+        loadedSceneStatus[sourcePath] = false;
         let url = URL(fileURLWithPath: sourcePath)
-        loadedModelStatus[sourcePath] = true
+        loadedSceneStatus[sourcePath] = true
         if let s = try? SCNScene(url: url, options: nil) {
-            loadedModels[sourcePath] = s
+            loadedScenes[sourcePath] = s
             successCB()
         } else {
-            loadedModels[sourcePath] = nil
+            loadedScenes[sourcePath] = nil
         }
     }
-    func loadModelAsync(sourcePath: String, successCB: @escaping ()->Void, errorCB: @escaping (Any)->Void) {
+    func loadSceneAsync(sourcePath: String, successCB: @escaping ()->Void, errorCB: @escaping (Any)->Void) {
         DispatchQueue(label: "RHDSceneLoader").async() {
-            self.loadModel(sourcePath: sourcePath, successCB: successCB, errorCB: errorCB)
+            self.loadScene(sourcePath: sourcePath, successCB: successCB, errorCB: errorCB)
         }
     }
-    func mountModel(targetNodeID: String, loadedModelID: String, atChild: String) -> Bool{
+    func mountScene(targetNodeID: String, loadedSceneID: String, atChild: String) -> Bool{
         guard let n = nodes[targetNodeID] else { return false }
-        guard let lm = loadedModels[loadedModelID] else { return false }
+        guard let lm = loadedScenes[loadedSceneID] else { return false }
         guard let c = lm.rootNode.childNodes.first(where: {n in return n.name == atChild}) else { return false }
         n.addChildNode(c)
         return true
@@ -252,20 +252,20 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
             self.loadReferenceNode(sourcePath: sourcePath, successCB: successCB, errorCB: errorCB)
         }
     }
-    @objc func setModel(_ forNode: String, sourcePath: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        guard let n = nodes[forNode] else { reject("no_node", "addModel: No node with name " + forNode, nil); return}
+    @objc func setScene(_ forNode: String, sourcePath: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        guard let n = nodes[forNode] else { reject("no_node", "addScene: No node with name " + forNode, nil); return}
         loadReferenceNodeAsync(sourcePath: sourcePath, successCB: {
             if let rn = self.loadedReferenceNodes[sourcePath] {
                 n.addChildNode(rn)
                 resolve(true)
             } else {
-                reject("no_model", "Could not find a loaded model even though this was the success path", nil);
+                reject("no_Scene", "Could not find a loaded Scene even though this was the success path", nil);
             }
         }) { message in
             if let messageString = message as? String {
-                reject("setmodel_fail", messageString, nil)
+                reject("setScene_fail", messageString, nil)
             } else {
-                reject("setmodel_fail", "Setmodel failure: No further information", nil)
+                reject("setScene_fail", "SetScene failure: No further information", nil)
             }
         }
     }

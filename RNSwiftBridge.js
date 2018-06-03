@@ -71,8 +71,8 @@ const removeGeometry = async forNode => {
 const removeMaterial = async (forNode, atPosition) => {
   return await NativeRHDSceneManager.removeMaterial(forNode, atPosition);
 };
-const setModel = async (forNode, sourcePath) => {
-  return await NativeRHDSceneManager.setModel(forNode, sourcePath);
+const setScene = async (forNode, sourcePath) => {
+  return await NativeRHDSceneManager.setScene(forNode, sourcePath);
 };
 const addSKSceneReference = async scene => {
   return await NativeRHDSceneManager.addSKSceneReference(scene);
@@ -198,7 +198,7 @@ export {
   setMaterialProperty,
   removeGeometry,
   removeMaterial,
-  setModel,
+  setScene,
   addSKSceneReference,
   addSKSceneByReference,
   addSKScene,
