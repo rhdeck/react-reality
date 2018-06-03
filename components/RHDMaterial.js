@@ -15,7 +15,7 @@ import {
 } from "./propTypes";
 import pickBy from "lodash/pickBy";
 import { RHDNodeConsumer } from "./RHDNode";
-import { RHDAnimatedConsumer } from "./RHDAnimated";
+import { RHDAnimatedConsumer } from "./RHDAnimatedProvider";
 const { Provider, Consumer: RHDMaterialConsumer } = createContext({});
 class RHDBaseMaterial extends Component {
   state = {

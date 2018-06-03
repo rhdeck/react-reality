@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import pickBy from "lodash/pickBy";
 import { adopt } from "react-adopt";
 import { RHDSessionConsumer } from "../RHDSessionProvider";
-import { RHDAnimatedConsumer } from "./RHDAnimated";
+import { RHDAnimatedConsumer } from "./RHDAnimatedProvider";
 import { RHDTouchConsumer } from "../RHDTouchProvider";
 import {
   eulerAngles,
