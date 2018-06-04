@@ -22,7 +22,7 @@ import RHDScene from "./components/RHDScene";
 import { RHDSessionConsumer, RHDSessionProvider } from "./RHDSessionProvider";
 import {
   RHDPositionProvider,
-  RHDPositionProviderConsumer
+  RHDPositionConsumer
 } from "./RHDPositionProvider";
 import { RHDTouchProvider, RHDTouchConsumer } from "./RHDTouchProvider";
 import {
@@ -53,7 +53,7 @@ export {
   RHDSessionProvider,
   RHDAnimatedProvider,
   RHDPositionProvider,
-  RHDPositionProviderConsumer,
+  RHDPositionConsumer,
   RHDTouchProvider,
   RHDTouchConsumer,
   RHDTrackingConsumer,
