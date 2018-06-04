@@ -20,7 +20,10 @@ import RHDSKLabel from "./components/RHDSKLabel";
 import RHDAnimatedProvider from "./components/RHDAnimatedProvider";
 import RHDScene from "./components/RHDScene";
 import { RHDSessionConsumer, RHDSessionProvider } from "./RHDSessionProvider";
-import { RHDPosition, RHDPositionConsumer } from "./RHDPosition";
+import {
+  RHDPositionProvider,
+  RHDPositionProviderConsumer
+} from "./RHDPositionProvider";
 import { RHDTouchProvider, RHDTouchConsumer } from "./RHDTouchProvider";
 import {
   RHDTrackingConsumer,
@@ -49,8 +52,8 @@ export {
   RHDSessionConsumer,
   RHDSessionProvider,
   RHDAnimatedProvider,
-  RHDPosition,
-  RHDPositionConsumer,
+  RHDPositionProvider,
+  RHDPositionProviderConsumer,
   RHDTouchProvider,
   RHDTouchConsumer,
   RHDTrackingConsumer,
