@@ -1,6 +1,8 @@
 import Foundation
 import SceneKit
+import SceneKit.ModelIO
 import ARKit
+import ModelIO
 @objc(RHDSceneManager)
 class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
     static var sharedInstance:RHDSceneManager?
@@ -203,6 +205,7 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         loadScene(sourcePath: sourcePath, successCB: {}) { x in }
     }
     func loadScene(sourcePath: String, successCB: ()->Void, errorCB: (Any)->Void) {
+        guard loadedScenes[sourcePath] == nil else { successCB(); return; }
         loadedSceneStatus[sourcePath] = false;
         let url = URL(fileURLWithPath: sourcePath)
         loadedSceneStatus[sourcePath] = true
@@ -228,6 +231,7 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
     var loadedReferenceNodes:[String: SCNReferenceNode] = [:]
     var loadedReferenceNodeStatus:[String:Bool] = [:]
     func loadReferenceNode(sourcePath: String,successCB: ()->Void, errorCB: (Any)->Void) {
+        guard loadedReferenceNodes[sourcePath] == nil else { successCB(); return }
         loadedReferenceNodeStatus[sourcePath] = false
         let url = URL(fileURLWithPath: sourcePath)
         guard let rn = SCNReferenceNode(url: url) else { errorCB("Cannot load reference node from url: " + url.absoluteString); return}
@@ -268,6 +272,28 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
                 reject("setScene_fail", "SetScene failure: No further information", nil)
             }
         }
+    }
+    //MARK: MDL Functions
+    var loadedModels:[String: MDLAsset] = [:]
+    var loadedModelState:[String: Bool] = [:]
+    func loadModel(_ sourcePath: String) -> Bool{
+        guard loadedModels[sourcePath] == nil else { return true }
+        loadedModelState[sourcePath] = false
+        let u = URL(fileURLWithPath: sourcePath)
+        let m:MDLAsset = MDLAsset(url: u)
+        m.loadTextures() //Note this assumes that the loaded model is
+        loadedModels[sourcePath] = m
+        loadedModelState[sourcePath] = true
+        return true
+    }
+    func loadSceneFromModel(_ sourcePath: String) -> Bool {
+        guard let m = loadedModels[sourcePath] else { return false }
+        loadedScenes[sourcePath] = SCNScene(mdlAsset: m)
+        return true
+    }
+    @objc func setModel(_ forNode: String, sourcePath: String, success: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        if !loadModel(sourcePath) { reject("no_model", "Could not load model from path " + sourcePath, nil); return }
+        setScene(forNode, sourcePath: sourcePath, resolve: success, reject: reject)
     }
     //MARK:SKNode Functions
     var SKNodes:[String:SKNode] = [:]
@@ -643,8 +669,8 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         baseNodes.removeValue(forKey: id)
         doSendEvent("RHDPlaneEvent", message: ["key": "planeAnchorRemoved", "data": ["id": id]])
     }
-    var doDetectPlanes:Bool = false
-    @objc func setPlaneDetection(_ detectPlanes: Bool, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+    var doDetectPlanes:String = Int
+    @objc func setPlaneDetection(_ detectPlanes: Int, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         doDetectPlanes = detectPlanes
         setPlaneDetection()
         resolve(true)
