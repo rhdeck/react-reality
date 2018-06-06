@@ -14,7 +14,6 @@ import RHDMaterial from "./components/RHDMaterial";
 import RHDMaterialProperty from "./components/RHDMaterialProperty";
 import RHDMaterials from "./components/RHDMaterials";
 import RHDTouchableMonoView from "./RHDTouchableMonoView";
-import RHDDualView from "./RHDDualView";
 import RHDSKScene from "./components/RHDSKScene";
 import RHDSKLabel from "./components/RHDSKLabel";
 import RHDAnimatedProvider from "./components/RHDAnimatedProvider";
@@ -30,6 +29,7 @@ import {
   RHDTrackingConsumer,
   RHDTrackingProvider
 } from "./RHDTrackingProvider";
+import RHDShape from "./components/RHDShape";
 export {
   RHDMonoView,
   RHDBox,
@@ -47,7 +47,6 @@ export {
   RHDMaterialProperty,
   RHDMaterials,
   RHDTouchableMonoView,
-  RHDDualView,
   RHDSKScene,
   RHDSKLabel,
   RHDSessionConsumer,
@@ -60,5 +59,6 @@ export {
   RHDTrackingConsumer,
   RHDTrackingProvider,
   RHDScene,
-  RHDModel
+  RHDModel,
+  RHDShape
 };
