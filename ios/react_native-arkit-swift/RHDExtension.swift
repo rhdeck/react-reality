@@ -139,16 +139,15 @@ typealias SCNTextNode = SCNNode
     }
     @objc class func SCNShape(_ json: jsonType) -> SCNShape {
         guard
-            let shape = json["shape"] as? jsonType,
-            let svg = shape["pathSvg"] as? String,
-            let extrusion = shape["extrusion"] as? CGFloat
+            let svg = json["pathSvg"] as? String,
+            let extrusion = json["extrusion"] as? CGFloat
         else { return SceneKit.SCNShape()}
         let path = svgStringToBezier(svg)
-        if let f = shape["pathFlatness"] as? CGFloat { path.flatness = f }
+        if let f = json["pathFlatness"] as? CGFloat { path.flatness = f }
         let g = SceneKit.SCNShape(path: path, extrusionDepth: extrusion)
-        if let e = shape["chamferMode"] as? SCNChamferMode { g.chamferMode = e }
-        if let f = shape["chamferRadius"] as? CGFloat { g.chamferRadius = f }
-        if let _ = shape["chamferProfilePathSvg"] as? String { setChamferProfilePathSvg(g, properties: shape) }
+        if let e = json["chamferMode"] as? SCNChamferMode { g.chamferMode = e }
+        if let f = json["chamferRadius"] as? CGFloat { g.chamferRadius = f }
+        if let _ = json["chamferProfilePathSvg"] as? String { setChamferProfilePathSvg(g, properties: json) }
         return g
     }
     @objc class func SKLabelNode(_ json: jsonType) -> SKLabelNode {
