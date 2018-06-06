@@ -9,6 +9,7 @@ const RHDMaterials = props => {
     <RHDGeometryConsumer>
       {({ numSides }) => {
         var out = [];
+        if (!numSides) return null;
         for (var s = 0; s < numSides; s++) {
           var c = null;
           c = Children.map(props.children, child => {
