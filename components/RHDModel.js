@@ -8,5 +8,6 @@ export default RHDGeometry(
   },
   {
     path: PropTypes.string
-  }
+  },
+  0
 );
