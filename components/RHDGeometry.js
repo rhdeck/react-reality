@@ -7,6 +7,7 @@ import { removeGeometry } from "../RHDSceneManager";
 import { RHDNodeConsumer } from "./RHDNode";
 import { RHDAnimatedConsumer } from "./RHDAnimatedProvider";
 const { Provider, Consumer: RHDGeometryConsumer } = createContext({});
+
 const RHDGeometry = (mountFunc, geomProps, numSides) => {
   const RHDBaseGeometry = class extends Component {
     state = {
@@ -14,7 +15,9 @@ const RHDGeometry = (mountFunc, geomProps, numSides) => {
     };
     constructor(props) {
       super(props);
-      this.state.providerValue = { numSides };
+      this.state.providerValue = {
+        numSides: typeof numSides == "function" ? numSides(props) : numSides
+      };
     }
     async nativeUpdate() {
       if (this.state.updateState == "doMount") {
