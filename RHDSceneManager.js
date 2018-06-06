@@ -86,7 +86,7 @@ const stopListening = () => {
 //#region Plane Detection
 var cachedPlaneListener;
 var cachedPlaneHandler;
-const addPlaneDetection = async cb => {
+const addPlaneDetection = async (type, cb) => {
   cachedPlaneHandler = cb;
   if (!cachedPlaneListener) {
     cachedPlaneListener = getEmitter().addListener(
@@ -94,10 +94,10 @@ const addPlaneDetection = async cb => {
       cachedPlaneHandler
     );
   }
-  await setPlaneDetection(true);
+  await setPlaneDetection(type);
 };
 const removePlaneDetection = async () => {
-  await setPlaneDetection(false);
+  await setPlaneDetection("none");
   if (cachedPlaneListener) cachedPlaneListener.remove();
   cachedPlaneHandler = null;
   cachedPlaneListener = null;
@@ -137,8 +137,6 @@ export {
   clear,
   resume,
   pause,
-  addPlaneDetection,
-  removePlaneDetection,
   doTap,
   setMaterial,
   setMaterialProperty,
@@ -153,6 +151,8 @@ export {
   addSKSceneReference,
   setSKLabelNode,
   setSKNode,
+  addPlaneDetection,
+  removePlaneDetection,
   addImageDetection,
   removeImageDetection,
   addRecognizerImage,
