@@ -3,6 +3,11 @@ import SceneKit
 import SceneKit.ModelIO
 import ARKit
 import ModelIO
+let PlaneDetection:[String:UInt] = [
+    "horizontal": 1,
+    "vertical": 2,
+    "both": 3
+]
 @objc(RHDSceneManager)
 class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
     static var sharedInstance:RHDSceneManager?
@@ -281,7 +286,7 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         loadedModelState[sourcePath] = false
         let u = URL(fileURLWithPath: sourcePath)
         let m:MDLAsset = MDLAsset(url: u)
-        m.loadTextures() //Note this assumes that the loaded model is
+        m.loadTextures() //Note this assumes that the loaded model is in the same directory as its dependent textures
         loadedModels[sourcePath] = m
         loadedModelState[sourcePath] = true
         return true
@@ -291,10 +296,18 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         loadedScenes[sourcePath] = SCNScene(mdlAsset: m)
         return true
     }
-    @objc func setModel(_ forNode: String, sourcePath: String, success: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        if !loadModel(sourcePath) { reject("no_model", "Could not load model from path " + sourcePath, nil); return }
-        setScene(forNode, sourcePath: sourcePath, resolve: success, reject: reject)
+    @objc func setModel(_ forNode: String, sourcePath: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        guard loadModel(sourcePath) else { reject("no_model", "Could not load model from path " + sourcePath, nil); return }
+        //guard loadSceneFromModel(sourcePath) else { reject("no_scene", "Could not convert model to scene from path " + sourcePath, nil); return }
+        
+        //setScene(forNode, sourcePath: sourcePath, resolve: resolve, reject: reject)
+        //make a new node
+        guard let n = nodes[forNode] else { reject("no_node", "No node found with name " + forNode, nil); return}
+        let sn = SCNNode(mdlObject: loadedModels[sourcePath]!.object(at: 0)) 
+        n.addChildNode(sn)
+        resolve(true)
     }
+    
     //MARK:SKNode Functions
     var SKNodes:[String:SKNode] = [:]
     var SKOrphans:[String:[SKNode]] = [:]
@@ -669,18 +682,15 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         baseNodes.removeValue(forKey: id)
         doSendEvent("RHDPlaneEvent", message: ["key": "planeAnchorRemoved", "data": ["id": id]])
     }
-    var doDetectPlanes:String = Int
-    @objc func setPlaneDetection(_ detectPlanes: Int, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+    var doDetectPlanes:String = ""
+    @objc func setPlaneDetection(_ detectPlanes: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         doDetectPlanes = detectPlanes
         setPlaneDetection()
         resolve(true)
     }
     func setPlaneDetection() {
-        if(doDetectPlanes) {
-            configuration.planeDetection = ARWorldTrackingConfiguration.PlaneDetection(rawValue: 3)
-        } else {
-            configuration.planeDetection = ARWorldTrackingConfiguration.PlaneDetection(rawValue: 0)
-        }
+        let i = PlaneDetection[doDetectPlanes] ?? 0
+        configuration.planeDetection = ARWorldTrackingConfiguration.PlaneDetection(rawValue: i)
         doResume()
     }
     @objc func getAnchors(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
