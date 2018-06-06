@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		712815C32026480B00C460CB /* RHDARExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712815C22026480B00C460CB /* RHDARExtension.swift */; };
+		712815C32026480B00C460CB /* RHDExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712815C22026480B00C460CB /* RHDExtension.swift */; };
 		714545D92034E50D00E44E8D /* RHDSceneManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714545D82034E50D00E44E8D /* RHDSceneManager.swift */; };
 		714545DB2034EA9000E44E8D /* RHDMonoview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714545DA2034EA9000E44E8D /* RHDMonoview.swift */; };
 		714545DD2034EC9600E44E8D /* RHDMonoviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714545DC2034EC9600E44E8D /* RHDMonoviewManager.swift */; };
@@ -31,7 +31,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		712815C22026480B00C460CB /* RHDARExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RHDARExtension.swift; sourceTree = "<group>"; };
+		712815C22026480B00C460CB /* RHDExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RHDExtension.swift; sourceTree = "<group>"; };
 		714545D82034E50D00E44E8D /* RHDSceneManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RHDSceneManager.swift; sourceTree = "<group>"; };
 		714545DA2034EA9000E44E8D /* RHDMonoview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RHDMonoview.swift; sourceTree = "<group>"; };
 		714545DC2034EC9600E44E8D /* RHDMonoviewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RHDMonoviewManager.swift; sourceTree = "<group>"; };
@@ -84,7 +84,7 @@
 		71D8F37E1FB7A97B0000973C /* react_native-arkit-swift */ = {
 			isa = PBXGroup;
 			children = (
-				712815C22026480B00C460CB /* RHDARExtension.swift */,
+				712815C22026480B00C460CB /* RHDExtension.swift */,
 				714545DA2034EA9000E44E8D /* RHDMonoview.swift */,
 				714545DC2034EC9600E44E8D /* RHDMonoviewManager.swift */,
 				719D02A4204DD2E90096F3C1 /* RHDPrimaryView.swift */,
@@ -154,7 +154,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				712815C32026480B00C460CB /* RHDARExtension.swift in Sources */,
+				712815C32026480B00C460CB /* RHDExtension.swift in Sources */,
 				714DC6E12050C55100BACAE8 /* RHDPrimaryViewManager.swift in Sources */,
 				719D02A5204DD2E90096F3C1 /* RHDPrimaryView.swift in Sources */,
 				719D02A3204DCC020096F3C1 /* RHDSecondaryView.swift in Sources */,
