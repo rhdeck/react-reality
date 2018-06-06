@@ -12,7 +12,7 @@ import {
 const { Provider, Consumer: RHDTrackingConsumer } = createContext();
 class RHDTrackingProvider extends Component {
   state = {
-    planeDetection: false,
+    planeDetection: "none",
     imageDetection: false,
     transition: 0,
     anchors: {},
@@ -84,7 +84,8 @@ class RHDTrackingProvider extends Component {
   }
   setPlaneDetection(newValue) {
     console.log("Adding plane detection");
-    if (newValue) addPlaneDetection(this.updatePlanes.bind(this));
+    if (["horizontal", "vertical", "both"].indexOf(newValue) > -1)
+      addPlaneDetection(newValue, this.updatePlanes.bind(this));
     else removePlaneDetection();
   }
   setImageDetection(newValue) {
