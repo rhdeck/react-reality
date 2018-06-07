@@ -8,7 +8,7 @@ import { ARNodeConsumer } from "./ARNode";
 import { ARAnimatedConsumer } from "../ARAnimatedProvider";
 const { Provider, Consumer: ARGeometryConsumer } = createContext({});
 
-const ARGeometry = (mountFunc, geomProps, numSides) => {
+const ARGeometry = (mountFunc, geomProps, numSides, defaults) => {
   const ARBaseGeometry = class extends Component {
     state = {
       updateState: "doMount" // Finite state: shouldMount, doMount, Mounting, doNext, do, doing, done
@@ -128,6 +128,9 @@ const ARGeometry = (mountFunc, geomProps, numSides) => {
     willNativeUpdate: PropTypes.func,
     didNativeUpdate: PropTypes.func
   };
+  if (defaults) {
+    ARBaseGeometry.defaultProps = defaults;
+  }
   const geomPropKeys = Object.keys(ARBaseGeometry.propTypes);
   const Adoptee = adopt({
     animated: <ARAnimatedConsumer />,
