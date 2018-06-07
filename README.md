@@ -68,7 +68,7 @@ Should be instantiated as child of an ARSessionProvider. Spins up a session to d
 #### Sample
 
 ```xml
-<ARSessionPropvider>
+<ARSessionProvider>
   <ARTouchableMonoView>
     ...Other nodes rendered
     <ARNode onPress={()=>{console.log("I got pressed"}>
@@ -80,7 +80,27 @@ Should be instantiated as child of an ARSessionProvider. Spins up a session to d
 
 ## Providers
 
+React Reality is built with React 16.3 contexts implemented as a first-class design pattern. All providers allow you to control how the environment will operate, and by default they include their own consumer if their child is a function.
+
 ### ARSessionProvider
+
+Manages the augmented reality session. Note that no nodes are rendered until the session starts.
+
+#### Props
+
+- `alignment`: How the system should think about x/y/z when start up the AR environment. The device will be the origin - the question is whether the other axes are based onL
+  - `gravity` in which case y is up/down to Earth's gravity but x and z are relative to whichever way the phone is pointing at the start of the session,
+  - `compass` in which z is north/south and x is west/east or
+  - `camera` in which they are all based on the orientation of the device itself.
+    (Default: `gravity`)
+
+#### Sample
+
+```xml
+<ARSessionProvider alignment={compass}>
+  {Well-aligned nodes!}
+</ARSessionProvider>
+```
 
 ### ARPositionProvider
 
