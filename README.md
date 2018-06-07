@@ -1,6 +1,76 @@
 # react-reality
 
-A React-based way of interacting with Augmented Reality. Currently IOS-Only
+A React-based way of interacting with Augmented Reality. Make the world your provider
+
+Currently IOS-Only
+
+# Views
+
+## ARMonoView
+
+## ARTouchableMonoView
+
+## ARDualView
+
+# Providers
+
+## ARSessionProvider
+
+## ARPositionProvider
+
+## ARTouchProvider
+
+## ARTrackingProvider
+
+## ARAnimatedProvider
+
+# Consumers
+
+## ARTrackingConsumer
+
+# Nodes
+
+## ARNode
+
+# Geometries
+
+## ARBox
+
+## ARCapsule
+
+## ARCylinder
+
+## ARPlane
+
+## ARPyramid
+
+## ARSphere
+
+## ARText
+
+## ARTorus
+
+## ARTube
+
+# Models
+
+## ARScene
+
+## ARModel
+
+# Materials
+
+## ARMaterial
+
+## ARMaterials
+
+## ARMaterialProperty
+
+# Sprites
+
+## ARSKScene
+
+## ARSKLabel
 
 ```jsx
 import React, { Component, Children } from "react";
