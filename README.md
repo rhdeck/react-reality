@@ -12,7 +12,7 @@ A React-based, JSX-centric way of interacting with Augmented Reality. Make the w
 
 Currently IOS-Only, but SceneForm may change that!
 
-## Installation: React-Native Link
+## Installation: `react-native link`
 
 ```
 yarn add \
@@ -69,6 +69,15 @@ Geometries are generally simple shapes that can be attached to nodes. Only one g
 
 ### ARBox
 
+Creates a rectangular hexahedron geometry. C'mon. You know what a box is.
+
+#### Props
+
+- height: Height (y-axis) of the box, in meters (default: 1.0)
+- width: Width (x-axis) of the box, in meters (default: 1.0)
+- length: Length (z-axis) of the box, in meters (default: 1.0)
+- chamfer: How much to round the corners of the box (default: 0)
+
 ### ARCapsule
 
 ### ARCylinder
@@ -101,15 +110,38 @@ Geometries are generally simple shapes that can be attached to nodes. Only one g
 
 An affordance that applies all the ARMaterialProperty child components to every face of the material. (so you can make a red cube without having to specify each side)
 
+#### Props
+
+None
+
+#### Example
+
 ```jsx
-<ARBox height={1} width={1} length={1}>
+<ARBox>
   <ARMaterials>
-    <ARMaterialProperty id="diffuse" color="red'
+    <ARMaterialProperty color="red" />
   </ARMaterials>
 </ARBox>
 ```
 
 ### ARMaterialProperty
+
+#### Props
+
+- id: Type of material property. (Default, because this is the one you will want to use most often: **diffuse**)
+- color: Color to be applied. Takes a string or a number
+- path: Path to file with texture to apply, as an alternative to setting a flat color
+- intensity: How much to apply this property (basically lower washes out the effect/color/texture) 0.0-1.0
+
+```jsx
+<ARNode>
+  <ARBox>
+    <ARMaterials>
+      <ARMaterialProperty color="red"/>
+    </ARMaterials>
+  <ARBox>
+</ARNode>
+```
 
 ## Sprites
 
