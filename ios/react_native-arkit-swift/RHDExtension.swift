@@ -139,15 +139,29 @@ typealias SCNTextNode = SCNNode
     }
     @objc class func SCNShape(_ json: jsonType) -> SCNShape {
         guard
-            let svg = json["pathSvg"] as? String,
-            let extrusion = json["extrusion"] as? CGFloat
+            let svg = json["pathSvg"] as? String
         else { return SceneKit.SCNShape()}
+        let extrusion = json["extrusion"] as? CGFloat ?? 0.0
         let path = svgStringToBezier(svg)
         if let f = json["pathFlatness"] as? CGFloat { path.flatness = f }
-        let g = SceneKit.SCNShape(path: path, extrusionDepth: extrusion)
+        let uib = UIBezierPath(cgPath: path.cgPath)
+        let g = SceneKit.SCNShape(path: uib, extrusionDepth: extrusion)
         if let e = json["chamferMode"] as? SCNChamferMode { g.chamferMode = e }
         if let f = json["chamferRadius"] as? CGFloat { g.chamferRadius = f }
-        if let _ = json["chamferProfilePathSvg"] as? String { setChamferProfilePathSvg(g, properties: json) }
+        if let csvg = json["chamferProfilePathSvg"] as? String {
+            let cpath = svgStringToBezier(csvg)
+            if let f = json["chamferProfilePathFlatness"] as? CGFloat { cpath.flatness = f }
+            let bb:CGRect = cpath.bounds
+            if bb.size.width > 0 && bb.size.height > 0 {
+                let scalex = 1 / bb.size.width
+                let scaley = 1 / bb.size.height
+                let transform = CGAffineTransform(scaleX: scalex, y: scaley)
+                cpath.apply(transform)
+                let cgpath = cpath.cgPath
+                let upath = UIBezierPath(cgPath: cgpath)
+               // g.chamferProfile = upath //Disabled chamfer for now because it keeps crashing @TODO
+            }
+        }
         return g
     }
     @objc class func SKLabelNode(_ json: jsonType) -> SKLabelNode {
@@ -264,11 +278,16 @@ func setShapeProperties(_ g:SCNGeometry, properties: jsonType) {
         if let f = properties["pathFlatness"] as? CGFloat { path.flatness = f }
         shapeGeometry.path = path
     }
-    if let d = properties["chamferProfilesPethSvg"] as? jsonType { setChamferProfilePathSvg(shapeGeometry, properties: d) }
+    if let d = properties["chamferProfilesPathSvg"] as? jsonType { setChamferProfilePathSvg(shapeGeometry, properties: d) }
 }
 func svgStringToBezier(_ path:String) -> SVGBezierPath {
+    NSLog("Starting with path " + path)
     guard let paths:[SVGBezierPath] = SVGBezierPath.paths(fromSVGString: path) as? [SVGBezierPath] else { return SVGBezierPath() }
+    NSLog("I am continuing with interpreted paths: " + String(paths.count))
     let fullPath = paths[0];
+    NSLog("Fullpath")
+    NSLog(fullPath.svgRepresentation)
+    NSLog("that's all she wrote")
     if(paths.count > 1) {
         for x in 2...paths.count {
             let p = paths[x-1]
@@ -278,16 +297,18 @@ func svgStringToBezier(_ path:String) -> SVGBezierPath {
     return fullPath
 }
 func setChamferProfilePathSvg(_ g:SCNShape, properties: jsonType) {
-    guard let svg = properties["camferProfilePathSvg"] as? String else { return }
+    guard let svg = properties["chamferProfilePathSvg"] as? String else { return }
     let path = svgStringToBezier(svg)
-    if let f = properties["chamferProfilePathFlatness"] as? CGFloat { path.flatness = f }
-    let bb:CGRect = path.bounds
+    let cgpath = path.cgPath
+    let upath = UIBezierPath(cgPath: cgpath)
+    if let f = properties["chamferProfilePathFlatness"] as? CGFloat { upath.flatness = f }
+    let bb:CGRect = upath.bounds
     if bb.size.width > 0 && bb.size.height > 0 {
         let scalex = 1 / bb.size.width
         let scaley = 1 / bb.size.height
         let transform = CGAffineTransform(scaleX: scalex, y: scaley)
-        path.apply(transform)
-        g.chamferProfile = path
+        upath.apply(transform)
+        g.chamferProfile = upath
     }
 }
 func setLightProperties(_ light:SCNLight, properties: jsonType) {
