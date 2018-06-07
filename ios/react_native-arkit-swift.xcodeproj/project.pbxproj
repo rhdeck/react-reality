@@ -5,15 +5,16 @@
 	};
 	objectVersion = 48;
 	objects = {
+
 /* Begin PBXBuildFile section */
-		712815C32026480B00C460CB /* RHDExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712815C22026480B00C460CB /* RHDExtension.swift */; };
-		714545D92034E50D00E44E8D /* RHDSceneManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714545D82034E50D00E44E8D /* RHDSceneManager.swift */; };
-		714545DB2034EA9000E44E8D /* RHDMonoview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714545DA2034EA9000E44E8D /* RHDMonoview.swift */; };
-		714545DD2034EC9600E44E8D /* RHDMonoviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714545DC2034EC9600E44E8D /* RHDMonoviewManager.swift */; };
-		714DC6E12050C55100BACAE8 /* RHDPrimaryViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714DC6E02050C55100BACAE8 /* RHDPrimaryViewManager.swift */; };
-		714DC6E32050C56500BACAE8 /* RHDSecondaryViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714DC6E22050C56400BACAE8 /* RHDSecondaryViewManager.swift */; };
-		719D02A3204DCC020096F3C1 /* RHDSecondaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 719D02A2204DCC020096F3C1 /* RHDSecondaryView.swift */; };
-		719D02A5204DD2E90096F3C1 /* RHDPrimaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 719D02A4204DD2E90096F3C1 /* RHDPrimaryView.swift */; };
+		712815C32026480B00C460CB /* ARExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712815C22026480B00C460CB /* ARExtension.swift */; };
+		714545D92034E50D00E44E8D /* ARSceneManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714545D82034E50D00E44E8D /* ARSceneManager.swift */; };
+		714545DB2034EA9000E44E8D /* ARMonoview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714545DA2034EA9000E44E8D /* ARMonoview.swift */; };
+		714545DD2034EC9600E44E8D /* ARMonoviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714545DC2034EC9600E44E8D /* ARMonoviewManager.swift */; };
+		714DC6E12050C55100BACAE8 /* ARPrimaryViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714DC6E02050C55100BACAE8 /* ARPrimaryViewManager.swift */; };
+		714DC6E32050C56500BACAE8 /* ARSecondaryViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714DC6E22050C56400BACAE8 /* ARSecondaryViewManager.swift */; };
+		719D02A3204DCC020096F3C1 /* ARSecondaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 719D02A2204DCC020096F3C1 /* ARSecondaryView.swift */; };
+		719D02A5204DD2E90096F3C1 /* ARPrimaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 719D02A4204DD2E90096F3C1 /* ARPrimaryView.swift */; };
 		AAD78BA0AC6447529D3057BE /* rn-swift-bridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E00DCA45E7447438EF2917A /* rn-swift-bridge.m */; };
 /* End PBXBuildFile section */
 
@@ -30,14 +31,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		712815C22026480B00C460CB /* RHDExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RHDExtension.swift; sourceTree = "<group>"; };
-		714545D82034E50D00E44E8D /* RHDSceneManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RHDSceneManager.swift; sourceTree = "<group>"; };
-		714545DA2034EA9000E44E8D /* RHDMonoview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RHDMonoview.swift; sourceTree = "<group>"; };
-		714545DC2034EC9600E44E8D /* RHDMonoviewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RHDMonoviewManager.swift; sourceTree = "<group>"; };
-		714DC6E02050C55100BACAE8 /* RHDPrimaryViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RHDPrimaryViewManager.swift; sourceTree = "<group>"; };
-		714DC6E22050C56400BACAE8 /* RHDSecondaryViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RHDSecondaryViewManager.swift; sourceTree = "<group>"; };
-		719D02A2204DCC020096F3C1 /* RHDSecondaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RHDSecondaryView.swift; sourceTree = "<group>"; };
-		719D02A4204DD2E90096F3C1 /* RHDPrimaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RHDPrimaryView.swift; sourceTree = "<group>"; };
+		712815C22026480B00C460CB /* ARExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARExtension.swift; sourceTree = "<group>"; };
+		714545D82034E50D00E44E8D /* ARSceneManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARSceneManager.swift; sourceTree = "<group>"; };
+		714545DA2034EA9000E44E8D /* ARMonoview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARMonoview.swift; sourceTree = "<group>"; };
+		714545DC2034EC9600E44E8D /* ARMonoviewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARMonoviewManager.swift; sourceTree = "<group>"; };
+		714DC6E02050C55100BACAE8 /* ARPrimaryViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARPrimaryViewManager.swift; sourceTree = "<group>"; };
+		714DC6E22050C56400BACAE8 /* ARSecondaryViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARSecondaryViewManager.swift; sourceTree = "<group>"; };
+		719D02A2204DCC020096F3C1 /* ARSecondaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARSecondaryView.swift; sourceTree = "<group>"; };
+		719D02A4204DD2E90096F3C1 /* ARPrimaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARPrimaryView.swift; sourceTree = "<group>"; };
 		71D8F37C1FB7A97B0000973C /* libreact_native-arkit-swift.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libreact_native-arkit-swift.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		71D8F3881FB7AA9D0000973C /* react_native-arkit-swift-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "react_native-arkit-swift-Bridging-Header.h"; sourceTree = "<group>"; };
 		8E00DCA45E7447438EF2917A /* rn-swift-bridge.m */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.objc; path = "rn-swift-bridge.m"; sourceTree = "<group>"; };
@@ -83,14 +84,14 @@
 		71D8F37E1FB7A97B0000973C /* react_native-arkit-swift */ = {
 			isa = PBXGroup;
 			children = (
-				712815C22026480B00C460CB /* RHDExtension.swift */,
-				714545DA2034EA9000E44E8D /* RHDMonoview.swift */,
-				714545DC2034EC9600E44E8D /* RHDMonoviewManager.swift */,
-				719D02A4204DD2E90096F3C1 /* RHDPrimaryView.swift */,
-				714DC6E02050C55100BACAE8 /* RHDPrimaryViewManager.swift */,
-				714545D82034E50D00E44E8D /* RHDSceneManager.swift */,
-				719D02A2204DCC020096F3C1 /* RHDSecondaryView.swift */,
-				714DC6E22050C56400BACAE8 /* RHDSecondaryViewManager.swift */,
+				712815C22026480B00C460CB /* ARExtension.swift */,
+				714545DA2034EA9000E44E8D /* ARMonoview.swift */,
+				714545DC2034EC9600E44E8D /* ARMonoviewManager.swift */,
+				719D02A4204DD2E90096F3C1 /* ARPrimaryView.swift */,
+				714DC6E02050C55100BACAE8 /* ARPrimaryViewManager.swift */,
+				714545D82034E50D00E44E8D /* ARSceneManager.swift */,
+				719D02A2204DCC020096F3C1 /* ARSecondaryView.swift */,
+				714DC6E22050C56400BACAE8 /* ARSecondaryViewManager.swift */,
 			);
 			path = "react_native-arkit-swift";
 			sourceTree = "<group>";
@@ -153,15 +154,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				712815C32026480B00C460CB /* RHDExtension.swift in Sources */,
-				714DC6E12050C55100BACAE8 /* RHDPrimaryViewManager.swift in Sources */,
-				719D02A5204DD2E90096F3C1 /* RHDPrimaryView.swift in Sources */,
-				719D02A3204DCC020096F3C1 /* RHDSecondaryView.swift in Sources */,
-				714545DB2034EA9000E44E8D /* RHDMonoview.swift in Sources */,
-				714545D92034E50D00E44E8D /* RHDSceneManager.swift in Sources */,
-				714DC6E32050C56500BACAE8 /* RHDSecondaryViewManager.swift in Sources */,
+				712815C32026480B00C460CB /* ARExtension.swift in Sources */,
+				714DC6E12050C55100BACAE8 /* ARPrimaryViewManager.swift in Sources */,
+				719D02A5204DD2E90096F3C1 /* ARPrimaryView.swift in Sources */,
+				719D02A3204DCC020096F3C1 /* ARSecondaryView.swift in Sources */,
+				714545DB2034EA9000E44E8D /* ARMonoview.swift in Sources */,
+				714545D92034E50D00E44E8D /* ARSceneManager.swift in Sources */,
+				714DC6E32050C56500BACAE8 /* ARSecondaryViewManager.swift in Sources */,
 				AAD78BA0AC6447529D3057BE /* rn-swift-bridge.m in Sources */,
-				714545DD2034EC9600E44E8D /* RHDMonoviewManager.swift in Sources */,
+				714545DD2034EC9600E44E8D /* ARMonoviewManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
