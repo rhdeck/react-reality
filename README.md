@@ -4,73 +4,75 @@ A React-based way of interacting with Augmented Reality. Make the world your pro
 
 Currently IOS-Only
 
-# Views
+# Primitives
 
-## ARMonoView
+## Views
 
-## ARTouchableMonoView
+### ARMonoView
 
-## ARDualView
+### ARTouchableMonoView
 
-# Providers
+## Providers
 
-## ARSessionProvider
+### ARSessionProvider
 
-## ARPositionProvider
+### ARPositionProvider
 
-## ARTouchProvider
+### ARTouchProvider
 
-## ARTrackingProvider
+### ARTrackingProvider
 
-## ARAnimatedProvider
+### ARAnimatedProvider
 
-# Consumers
+## Consumers
 
-## ARTrackingConsumer
+### ARTrackingConsumer
 
-# Nodes
+## Nodes
 
-## ARNode
+### ARNode
 
-# Geometries
+## Geometries
 
-## ARBox
+### ARBox
 
-## ARCapsule
+### ARCapsule
 
-## ARCylinder
+### ARCylinder
 
-## ARPlane
+### ARPlane
 
-## ARPyramid
+### ARPyramid
 
-## ARSphere
+### ARSphere
 
-## ARText
+### ARText
 
-## ARTorus
+### ARTorus
 
-## ARTube
+### ARTube
 
-# Models
+## Models
 
-## ARScene
+### ARScene
 
-## ARModel
+### ARModel
 
-# Materials
+## Materials
 
-## ARMaterial
+### ARMaterial
 
-## ARMaterials
+### ARMaterials
 
-## ARMaterialProperty
+### ARMaterialProperty
 
-# Sprites
+## Sprites
 
-## ARSKScene
+### ARSKScene
 
-## ARSKLabel
+### ARSKLabel
+
+# Sample
 
 ```jsx
 import React, { Component, Children } from "react";
