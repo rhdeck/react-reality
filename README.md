@@ -12,14 +12,14 @@ A React-based, JSX-centric way of interacting with Augmented Reality. Make the w
 
 Currently IOS-Only, but SceneForm may change that!
 
-## Installation
+## Installation: React-Native Link
 
 ```
 yarn add \
   rhdeck/react-reality \
   react-native-swift \
   react-native-pod
-yarn link
+react-native link
 ```
 
 Since ARKit development requires iOS 11, the camera, and signing privileges to get onto device, I also recommend:
@@ -101,12 +101,13 @@ Geometries are generally simple shapes that can be attached to nodes. Only one g
 
 An affordance that applies all the ARMaterialProperty child components to every face of the material. (so you can make a red cube without having to specify each side)
 
-````jsx
+```jsx
 <ARBox height={1} width={1} length={1}>
   <ARMaterials>
     <ARMaterialProperty id="diffuse" color="red'
   </ARMaterials>
 </ARBox>
+```
 
 ### ARMaterialProperty
 
@@ -209,7 +210,7 @@ export default class ARTest extends Component {
     );
   }
 }
-````
+```
 
 # Important Credit-Where-Credit-Is-Due Note
 
