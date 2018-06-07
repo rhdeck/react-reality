@@ -92,10 +92,13 @@ ARBaseMaterialProperty.propTypes = {
   updateMaterial: PropTypes.func,
   id: PropTypes.string,
   path: PropTypes.string,
-  color: PropTypes.number,
+  color: PropTypes.oneOfType(PropTypes.string, PropTypes.number),
   intensity: PropTypes.number,
   willNativeUpdate: PropTypes.func,
   didNativeUpdate: PropTypes.func
+};
+ARBaseMaterialProperty.defaultProps = {
+  id: "diffuse"
 };
 materialPropertyPropTypeKeys = Object.keys(ARBaseMaterialProperty.propTypes);
 const Adoptee = adopt({

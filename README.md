@@ -1,8 +1,16 @@
 # react-reality
 
-A React-based way of interacting with Augmented Reality. Make the world your provider
+A React-based, JSX-centric way of interacting with Augmented Reality. Make the world your provider.
 
-Currently IOS-Only
+## Key Features
+
+- Primitives to give high control over every aspect. Makes animations so much easier to have nodes not attached to geometries
+- Layout Animations via <ARAnimatedProvider />
+- Provider-based (render prop!) tracking of self <ARTrackingProvider />, screen-touch on <ARTouchableMonoView /> and both images and planes via <ARTrackingProvider />
+- Support for touch events at the node level via onPress, onPressIn, and onPressOut events. Registered only if using a touchablemonoview
+- Support for mixing in scenes and models. Import Scenekit-compatible SCN and DAE via <ARScene /> and add models (like from Google Poly) via <ARModel />.
+
+Currently IOS-Only, but SceneForm may change that!
 
 # Primitives
 
@@ -34,6 +42,8 @@ Currently IOS-Only
 
 ## Geometries
 
+Geometries are generally simple shapes that can be attached to nodes. Only one geometry per node.
+
 ### ARBox
 
 ### ARCapsule
@@ -43,6 +53,8 @@ Currently IOS-Only
 ### ARPlane
 
 ### ARPyramid
+
+### ARShape
 
 ### ARSphere
 
@@ -63,6 +75,15 @@ Currently IOS-Only
 ### ARMaterial
 
 ### ARMaterials
+
+An affordance that applies all the ARMaterialProperty child components to every face of the material. (so you can make a red cube without having to specify each side)
+
+````jsx
+<ARBox height={1} width={1} length={1}>
+  <ARMaterials>
+    <ARMaterialProperty id="diffuse" color="red'
+  </ARMaterials>
+</ARBox>
 
 ### ARMaterialProperty
 
@@ -165,7 +186,7 @@ export default class ARTest extends Component {
     );
   }
 }
-```
+````
 
 # Important Credit-Where-Credit-Is-Due Note
 
