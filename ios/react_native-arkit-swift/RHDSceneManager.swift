@@ -142,6 +142,10 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
     @objc func setTube(_ g: SCNTube, forNode: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         setGeometry(g, forNode: forNode, resolve: resolve, reject: reject);
     }
+    @objc func setShape(_ g: SCNShape, forNode: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        setGeometry(g, forNode: forNode, resolve: resolve, reject: reject);
+
+    }
     @objc func setGeometry(_ geometry: SCNGeometry, forNode: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         guard let n = nodes[forNode] else { reject("no_node", "setGeometry:No Node with name " + forNode, nil); return }
         n.geometry = geometry;

@@ -8,18 +8,20 @@ export default RHDGeometry(
     extrusion: PropTypes.number,
     pathSvg: PropTypes.string,
     pathFlatness: PropTypes.number,
-    chamferMode,
+    chamferMode: PropTypes.number,
     chamferRadius: PropTypes.number,
     chamferProfilePathSvg: PropTypes.string,
     chamferProfilePathFlatness: PropTypes.number
   },
   props => {
+    var temp = 4; // Default where there is extrusion and chamfer but only one side - bezeled extruded disc
     if (!props.extrusion) {
-      return 1;
+      temp = 1; // Basically a plane
     } else if (props.chamferRadius == 0) {
-      return 3;
+      temp = 3; // There is extrusion but no chamfer - like an extruded disc
     } else if (props.chamferMode == 0) {
-      return 5;
-    } else return 4;
+      temp = 5; // THere is extrusion and double-chamfer - extruded disc with bezeling front and back
+    }
+    console.log("I am rendering sides for shape", temp);
   }
 );
