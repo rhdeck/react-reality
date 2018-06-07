@@ -9,5 +9,11 @@ export default ARGeometry(
     length: PropTypes.number,
     chamfer: PropTypes.number
   },
-  6
+  6,
+  {
+    height: 1,
+    width: 1,
+    length: 1,
+    chamfer: 0
+  }
 );
