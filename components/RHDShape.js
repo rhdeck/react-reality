@@ -17,11 +17,11 @@ export default RHDGeometry(
     var temp = 4; // Default where there is extrusion and chamfer but only one side - bezeled extruded disc
     if (!props.extrusion) {
       temp = 1; // Basically a plane
-    } else if (props.chamferRadius == 0) {
+    } else if (!props.chamferRadius) {
       temp = 3; // There is extrusion but no chamfer - like an extruded disc
     } else if (props.chamferMode == 0) {
       temp = 5; // THere is extrusion and double-chamfer - extruded disc with bezeling front and back
     }
-    console.log("I am rendering sides for shape", temp);
+    return temp;
   }
 );
