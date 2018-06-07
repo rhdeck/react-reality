@@ -508,7 +508,8 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         guard let s = session else { reject("no_session", "No session is loaded", nil); return }
         s.pause()
         resolve(true)
-    }//MARK: Animation Methods
+    }
+    //MARK: Animation Methods
     var animationDuration:CFTimeInterval = 0
     @objc func setAnimation(_ seconds: Double, type: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         animationDuration = seconds
