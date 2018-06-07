@@ -123,7 +123,6 @@ const RHDMaterial = props => {
           />
         );
       }}
-      }}
     </Adoptee>
   );
 };
