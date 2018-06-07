@@ -1,8 +1,8 @@
 import Foundation
 @objc(ARSecondaryViewManager)
-class RHDSecondaryViewManager : RCTViewManager {
-    override func view() -> RHDSecondaryView {
-        return (RHDSecondaryView()).start()
+class ARSecondaryViewManager : RCTViewManager {
+    override func view() -> ARSecondaryView {
+        return (ARSecondaryView()).start()
     }
     override class func requiresMainQueueSetup() -> Bool {
         return false

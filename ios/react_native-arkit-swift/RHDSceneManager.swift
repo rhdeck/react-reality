@@ -9,14 +9,14 @@ let PlaneDetection:[String:UInt] = [
     "both": 3
 ]
 @objc(ARSceneManager)
-class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
-    static var sharedInstance:RHDSceneManager?
+class ARSceneManager:RCTEventEmitter, ARSessionDelegate {
+    static var sharedInstance:ARSceneManager?
     override init() {
         super.init()
-        if let s = RHDSceneManager.sharedInstance {
+        if let s = ARSceneManager.sharedInstance {
             s.listenedEvents = [:]
         }
-        RHDSceneManager.sharedInstance = self
+        ARSceneManager.sharedInstance = self
     }
     var secondaryView:SCNView?
     var scene:SCNScene?
@@ -226,7 +226,7 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         }
     }
     func loadSceneAsync(sourcePath: String, successCB: @escaping ()->Void, errorCB: @escaping (Any)->Void) {
-        DispatchQueue(label: "RHDSceneLoader").async() {
+        DispatchQueue(label: "ARSceneLoader").async() {
             self.loadScene(sourcePath: sourcePath, successCB: successCB, errorCB: errorCB)
         }
     }
@@ -261,7 +261,7 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         return true
     }
     func loadReferenceNodeAsync(sourcePath: String, successCB: @escaping ()->Void, errorCB: @escaping (Any)->Void) {
-        DispatchQueue(label: "RHDReferenceNodes").async() {
+        DispatchQueue(label: "ARReferenceNodes").async() {
             self.loadReferenceNode(sourcePath: sourcePath, successCB: successCB, errorCB: errorCB)
         }
     }
@@ -621,9 +621,9 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
     override func supportedEvents() -> [String]! {
         return [
         "ARSessionError",
-        "RHDEvent",
-        "RHDPlaneEvent",
-        "RHDImageEvent"
+        "AREvent",
+        "ARPlaneEvent",
+        "ARImageEvent"
         ]
     }
     func doSendEvent(_ key: String, message:Any?) {
@@ -669,7 +669,7 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         baseNodes[id] = withNode
         let alignment:String = anchor.alignment == .horizontal ? "horizontal": "vertical"
         anchors[id] = ["type": "plane",  "plane": ["width": width, "height":height,"alignment": alignment ]];
-        doSendEvent("RHDPlaneEvent", message: ["key": "planeAnchorAdded", "data": ["id": id, "action":"add", "anchor": anchors[id]]])
+        doSendEvent("ARPlaneEvent", message: ["key": "planeAnchorAdded", "data": ["id": id, "action":"add", "anchor": anchors[id]]])
         fixOrphans()
     }
     func updatePlaneAnchor(_ anchor:ARPlaneAnchor, withNode: SCNNode) {
@@ -678,14 +678,14 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         let height = CGFloat(anchor.extent.z)
         let alignment:String = anchor.alignment == .horizontal ? "horizontal": "vertical"
         anchors[id] = ["type": "plane",  "plane": ["width": width, "height":height,"alignment": alignment ]];
-        doSendEvent("RHDPlaneEvent", message: ["key": "planeAnchorChanged", "data": ["id": id, "action": "update", "anchor": anchors[id]]])
+        doSendEvent("ARPlaneEvent", message: ["key": "planeAnchorChanged", "data": ["id": id, "action": "update", "anchor": anchors[id]]])
         fixOrphans()
     }
     func removePlaneAnchor(_ anchor:ARPlaneAnchor, withNode: SCNNode) {
         let id = anchor.identifier.uuidString
         anchors.removeValue(forKey: id)
         baseNodes.removeValue(forKey: id)
-        doSendEvent("RHDPlaneEvent", message: ["key": "planeAnchorRemoved", "data": ["id": id]])
+        doSendEvent("ARPlaneEvent", message: ["key": "planeAnchorRemoved", "data": ["id": id]])
     }
     var doDetectPlanes:String = ""
     @objc func setPlaneDetection(_ detectPlanes: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
@@ -708,7 +708,7 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         let h = anchor.referenceImage.physicalSize.height
         anchors[id] = ["type": "image", "name": name, "plane": ["width": w, "height":h]]
         baseNodes[id] = withNode
-        doSendEvent("RHDImageEvent", message: ["key": "imageAnchorAdded", "data":["id":id, "action": "add", "anchor": anchors[id]!]])
+        doSendEvent("ARImageEvent", message: ["key": "imageAnchorAdded", "data":["id":id, "action": "add", "anchor": anchors[id]!]])
     }
     
     func updateImageAnchor(_ anchor: ARImageAnchor, withNode: SCNNode) {
@@ -717,13 +717,13 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
         let w = anchor.referenceImage.physicalSize.width
         let h = anchor.referenceImage.physicalSize.height
         anchors[id] = ["type": "image", "name": name, "plane": ["width": w, "height":h]]
-        doSendEvent("RHDImageEvent", message: ["key": "imageAnchorChanged", "data":["id":id, "action": "update", "anchor": anchors[id]!]])
+        doSendEvent("ARImageEvent", message: ["key": "imageAnchorChanged", "data":["id":id, "action": "update", "anchor": anchors[id]!]])
     }
     func removeImageAnchor(_ anchor: ARImageAnchor, withNode: SCNNode) {
         let id = anchor.identifier.uuidString
         anchors.removeValue(forKey: id)
         baseNodes.removeValue(forKey: id)
-        doSendEvent("RHDImageEvent", message: ["key": "imageAnchorRemoved", "data": ["id": id]])
+        doSendEvent("ARImageEvent", message: ["key": "imageAnchorRemoved", "data": ["id": id]])
 
     }
     @objc func removeAnchor(_ id:String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
@@ -778,7 +778,7 @@ class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
     func updatePOV(_ pointOfView: SCNNode) {
         
         if abs(lastPosition.x - pointOfView.position.x) > sensitivity || abs(lastPosition.y - pointOfView.position.y) > sensitivity || abs(lastPosition.z - pointOfView.position.z) > sensitivity {
-            doSendEvent("RHDEvent", message: ["key": "positionChanged", "data": ["position": vector3ToJson(pointOfView.position), "orientation": vector4ToJson(pointOfView.orientation)]])
+            doSendEvent("AREvent", message: ["key": "positionChanged", "data": ["position": vector3ToJson(pointOfView.position), "orientation": vector4ToJson(pointOfView.orientation)]])
             lastPosition = pointOfView.position
         }
     }

@@ -2,14 +2,14 @@ import Foundation
 import SceneKit
 
 @objc(ARSecondaryView)
-class RHDSecondaryView: UIView {
+class ARSecondaryView: UIView {
     var sview: SCNView?
     var isStarted:Bool = false
    
-    func start() -> RHDSecondaryView {
+    func start() -> ARSecondaryView {
         guard !isStarted else { return self }
         if Thread.isMainThread {
-            guard let sm = RHDSceneManager.sharedInstance else { return self }
+            guard let sm = ARSceneManager.sharedInstance else { return self }
             let v = SCNView()
             sview = v
             v.scene = sm.scene

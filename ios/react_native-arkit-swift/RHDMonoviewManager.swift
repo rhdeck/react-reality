@@ -1,9 +1,9 @@
 import Foundation
 @objc(ARMonoViewManager)
-class RHDMonoviewManager:RCTViewManager {
-    var v: RHDMonoview?
-    override func view() -> RHDMonoview {
-        v = (RHDMonoview()).start()
+class ARMonoviewManager:RCTViewManager {
+    var v: ARMonoview?
+    override func view() -> ARMonoview {
+        v = (ARMonoview()).start()
         return v!
     }
     override class func requiresMainQueueSetup() -> Bool {

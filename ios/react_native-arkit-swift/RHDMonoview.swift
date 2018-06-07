@@ -1,7 +1,7 @@
 import Foundation
 import ARKit
 @objc(ARMonoView)
-class RHDMonoview: UIView, ARSCNViewDelegate {
+class ARMonoview: UIView, ARSCNViewDelegate {
     var arview: ARSCNView?
     var _preview:Bool = true
     var cachedPreview: Any?
@@ -22,12 +22,12 @@ class RHDMonoview: UIView, ARSCNViewDelegate {
             }
         }
     }
-    func start() -> RHDMonoview {
+    func start() -> ARMonoview {
         if Thread.isMainThread {
             let a = ARSCNView()
             arview = a
             a.delegate = self
-            guard let sm = RHDSceneManager.sharedInstance else { return self }
+            guard let sm = ARSceneManager.sharedInstance else { return self }
             a.session.delegate = sm
             sm.scene = a.scene
             sm.session = a.session
@@ -51,16 +51,16 @@ class RHDMonoview: UIView, ARSCNViewDelegate {
         resolve(["nodes": m]);
     }
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
-        guard let scene = RHDSceneManager.sharedInstance else { return }
+        guard let scene = ARSceneManager.sharedInstance else { return }
         scene.updateAnchor(anchor, withNode: node)
     }
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-        guard let scene = RHDSceneManager.sharedInstance else { return }
+        guard let scene = ARSceneManager.sharedInstance else { return }
         scene.addAnchor(anchor, withNode: node)
         
     }
     func renderer(_ renderer: SCNSceneRenderer, didRenderScene scene: SCNScene, atTime time: TimeInterval) {
-        guard let scene = RHDSceneManager.sharedInstance else { return }
+        guard let scene = ARSceneManager.sharedInstance else { return }
         if let pov = renderer.pointOfView { scene.updatePOV(pov) }
     }
     

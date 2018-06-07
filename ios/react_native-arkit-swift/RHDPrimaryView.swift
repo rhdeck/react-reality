@@ -2,16 +2,16 @@ import Foundation
 import ARKit
 
 @objc(ARPrimaryView)
-class RHDPrimaryView: UIView, ARSCNViewDelegate {
+class ARPrimaryView: UIView, ARSCNViewDelegate {
     var arview: ARSCNView?
     var onStart:RCTBubblingEventBlock?
     @objc var interPupilaryDistance:Float = 0.066
-    func start() -> RHDPrimaryView {
+    func start() -> ARPrimaryView {
         if Thread.isMainThread {
             let a = ARSCNView()
             arview = a
             a.delegate = self
-            guard let sm = RHDSceneManager.sharedInstance else { return self }
+            guard let sm = ARSceneManager.sharedInstance else { return self }
             a.session.delegate = sm
             sm.scene = a.scene
             sm.session = a.session
@@ -34,7 +34,7 @@ class RHDPrimaryView: UIView, ARSCNViewDelegate {
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
         DispatchQueue.main.async() {
             guard
-                let sm = RHDSceneManager.sharedInstance,
+                let sm = ARSceneManager.sharedInstance,
                 let sv = sm.secondaryView,
                 let pv = self.arview,
                 let pointOfView = pv.pointOfView?.clone()
@@ -54,16 +54,16 @@ class RHDPrimaryView: UIView, ARSCNViewDelegate {
         }
     }
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
-        guard let scene = RHDSceneManager.sharedInstance else { return }
+        guard let scene = ARSceneManager.sharedInstance else { return }
         scene.updateAnchor(anchor, withNode: node)
     }
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-        guard let scene = RHDSceneManager.sharedInstance else { return }
+        guard let scene = ARSceneManager.sharedInstance else { return }
         scene.addAnchor(anchor, withNode: node)
 
     }
     func renderer(_ renderer: SCNSceneRenderer, didRemove node: SCNNode, for anchor: ARAnchor) {
-        guard let scene = RHDSceneManager.sharedInstance else { return }
+        guard let scene = ARSceneManager.sharedInstance else { return }
         scene.removeAnchor(anchor, withNode: node)
     }
     
