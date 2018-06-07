@@ -1,7 +1,7 @@
 import Foundation
 import SceneKit
 
-@objc(RHDSecondaryView)
+@objc(ARSecondaryView)
 class RHDSecondaryView: UIView {
     var sview: SCNView?
     var isStarted:Bool = false

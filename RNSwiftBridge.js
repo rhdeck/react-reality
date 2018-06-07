@@ -1,59 +1,59 @@
 import { NativeModules } from "react-native";
-//#region Code for object RHDMonoViewManager
-const NativeRHDMonoViewManager = NativeModules.RHDMonoViewManager;
+//#region Code for object ARMonoViewManager
+const NativeARMonoViewManager = NativeModules.ARMonoViewManager;
 const doTap = async (x, y) => {
-  return await NativeRHDMonoViewManager.doTap(x, y);
+  return await NativeARMonoViewManager.doTap(x, y);
 };
 //#endregion
-//#region Code for object RHDSceneManager
-const NativeRHDSceneManager = NativeModules.RHDSceneManager;
+//#region Code for object ARSceneManager
+const NativeARSceneManager = NativeModules.ARSceneManager;
 const addNode = async (node, parentID) => {
-  return await NativeRHDSceneManager.addNode(node, parentID);
+  return await NativeARSceneManager.addNode(node, parentID);
 };
 const removeNode = async id => {
-  return await NativeRHDSceneManager.removeNode(id);
+  return await NativeARSceneManager.removeNode(id);
 };
 const updateNode = async (forNode, newProps) => {
-  return await NativeRHDSceneManager.updateNode(forNode, newProps);
+  return await NativeARSceneManager.updateNode(forNode, newProps);
 };
 const setBox = async (g, forNode) => {
-  return await NativeRHDSceneManager.setBox(g, forNode);
+  return await NativeARSceneManager.setBox(g, forNode);
 };
 const setCapsule = async (g, forNode) => {
-  return await NativeRHDSceneManager.setCapsule(g, forNode);
+  return await NativeARSceneManager.setCapsule(g, forNode);
 };
 const setCone = async (g, forNode) => {
-  return await NativeRHDSceneManager.setCone(g, forNode);
+  return await NativeARSceneManager.setCone(g, forNode);
 };
 const setCylinder = async (g, forNode) => {
-  return await NativeRHDSceneManager.setCylinder(g, forNode);
+  return await NativeARSceneManager.setCylinder(g, forNode);
 };
 const setPlane = async (g, forNode) => {
-  return await NativeRHDSceneManager.setPlane(g, forNode);
+  return await NativeARSceneManager.setPlane(g, forNode);
 };
 const setPyramid = async (g, forNode) => {
-  return await NativeRHDSceneManager.setPyramid(g, forNode);
+  return await NativeARSceneManager.setPyramid(g, forNode);
 };
 const setSphere = async (g, forNode) => {
-  return await NativeRHDSceneManager.setSphere(g, forNode);
+  return await NativeARSceneManager.setSphere(g, forNode);
 };
 const setText = async (g, forNode) => {
-  return await NativeRHDSceneManager.setText(g, forNode);
+  return await NativeARSceneManager.setText(g, forNode);
 };
 const setTorus = async (g, forNode) => {
-  return await NativeRHDSceneManager.setTorus(g, forNode);
+  return await NativeARSceneManager.setTorus(g, forNode);
 };
 const setTube = async (g, forNode) => {
-  return await NativeRHDSceneManager.setTube(g, forNode);
+  return await NativeARSceneManager.setTube(g, forNode);
 };
 const setShape = async (g, forNode) => {
-  return await NativeRHDSceneManager.setShape(g, forNode);
+  return await NativeARSceneManager.setShape(g, forNode);
 };
 const setGeometry = async (geometry, forNode) => {
-  return await NativeRHDSceneManager.setGeometry(geometry, forNode);
+  return await NativeARSceneManager.setGeometry(geometry, forNode);
 };
 const setMaterial = async (material, forNode, atPosition) => {
-  return await NativeRHDSceneManager.setMaterial(material, forNode, atPosition);
+  return await NativeARSceneManager.setMaterial(material, forNode, atPosition);
 };
 const setMaterialProperty = async (
   json,
@@ -61,7 +61,7 @@ const setMaterialProperty = async (
   forMaterialAtPosition,
   forNode
 ) => {
-  return await NativeRHDSceneManager.setMaterialProperty(
+  return await NativeARSceneManager.setMaterialProperty(
     json,
     propertyName,
     forMaterialAtPosition,
@@ -69,19 +69,19 @@ const setMaterialProperty = async (
   );
 };
 const removeGeometry = async forNode => {
-  return await NativeRHDSceneManager.removeGeometry(forNode);
+  return await NativeARSceneManager.removeGeometry(forNode);
 };
 const removeMaterial = async (forNode, atPosition) => {
-  return await NativeRHDSceneManager.removeMaterial(forNode, atPosition);
+  return await NativeARSceneManager.removeMaterial(forNode, atPosition);
 };
 const setScene = async (forNode, sourcePath) => {
-  return await NativeRHDSceneManager.setScene(forNode, sourcePath);
+  return await NativeARSceneManager.setScene(forNode, sourcePath);
 };
 const setModel = async (forNode, sourcePath) => {
-  return await NativeRHDSceneManager.setModel(forNode, sourcePath);
+  return await NativeARSceneManager.setModel(forNode, sourcePath);
 };
 const addSKSceneReference = async scene => {
-  return await NativeRHDSceneManager.addSKSceneReference(scene);
+  return await NativeARSceneManager.addSKSceneReference(scene);
 };
 const addSKSceneByReference = async (
   sceneName,
@@ -89,7 +89,7 @@ const addSKSceneByReference = async (
   atPosition,
   withType
 ) => {
-  return await NativeRHDSceneManager.addSKSceneByReference(
+  return await NativeARSceneManager.addSKSceneByReference(
     sceneName,
     forNode,
     atPosition,
@@ -97,7 +97,7 @@ const addSKSceneByReference = async (
   );
 };
 const addSKScene = async (scene, forNode, atPosition, withType) => {
-  return await NativeRHDSceneManager.addSKScene(
+  return await NativeARSceneManager.addSKScene(
     scene,
     forNode,
     atPosition,
@@ -105,7 +105,7 @@ const addSKScene = async (scene, forNode, atPosition, withType) => {
   );
 };
 const updateSKScene = async (scene, forNode, atPosition, withType) => {
-  return await NativeRHDSceneManager.updateSKScene(
+  return await NativeARSceneManager.updateSKScene(
     scene,
     forNode,
     atPosition,
@@ -113,74 +113,74 @@ const updateSKScene = async (scene, forNode, atPosition, withType) => {
   );
 };
 const setSKLabelNode = async (node, toParent) => {
-  return await NativeRHDSceneManager.setSKLabelNode(node, toParent);
+  return await NativeARSceneManager.setSKLabelNode(node, toParent);
 };
 const updateSKLabelNode = async json => {
-  return await NativeRHDSceneManager.updateSKLabelNode(json);
+  return await NativeARSceneManager.updateSKLabelNode(json);
 };
 const setSKNode = async (node, toParent) => {
-  return await NativeRHDSceneManager.setSKNode(node, toParent);
+  return await NativeARSceneManager.setSKNode(node, toParent);
 };
 const removeSKNode = async name => {
-  return await NativeRHDSceneManager.removeSKNode(name);
+  return await NativeARSceneManager.removeSKNode(name);
 };
 const removeSKScene = async (forNode, atPosition, withType) => {
-  return await NativeRHDSceneManager.removeSKScene(
+  return await NativeARSceneManager.removeSKScene(
     forNode,
     atPosition,
     withType
   );
 };
 const addSKLabelNode = async (node, toParent) => {
-  return await NativeRHDSceneManager.addSKLabelNode(node, toParent);
+  return await NativeARSceneManager.addSKLabelNode(node, toParent);
 };
 const addSKNode = async (node, toParent) => {
-  return await NativeRHDSceneManager.addSKNode(node, toParent);
+  return await NativeARSceneManager.addSKNode(node, toParent);
 };
 const clear = async () => {
-  return await NativeRHDSceneManager.clear();
+  return await NativeARSceneManager.clear();
 };
 const resume = async () => {
-  return await NativeRHDSceneManager.resume();
+  return await NativeARSceneManager.resume();
 };
 const pause = async () => {
-  return await NativeRHDSceneManager.pause();
+  return await NativeARSceneManager.pause();
 };
 const setAnimation = async (seconds, type) => {
-  return await NativeRHDSceneManager.setAnimation(seconds, type);
+  return await NativeARSceneManager.setAnimation(seconds, type);
 };
 const setAnimationDuration = async seconds => {
-  return await NativeRHDSceneManager.setAnimationDuration(seconds);
+  return await NativeARSceneManager.setAnimationDuration(seconds);
 };
 const setAnimationType = async type => {
-  return await NativeRHDSceneManager.setAnimationType(type);
+  return await NativeARSceneManager.setAnimationType(type);
 };
 const setPlaneDetection = async detectPlanes => {
-  return await NativeRHDSceneManager.setPlaneDetection(detectPlanes);
+  return await NativeARSceneManager.setPlaneDetection(detectPlanes);
 };
 const getAnchors = async () => {
-  return await NativeRHDSceneManager.getAnchors();
+  return await NativeARSceneManager.getAnchors();
 };
 const removeAnchor = async id => {
-  return await NativeRHDSceneManager.removeAnchor(id);
+  return await NativeARSceneManager.removeAnchor(id);
 };
 const addRecognizerImage = async (url, name, width) => {
-  return await NativeRHDSceneManager.addRecognizerImage(url, name, width);
+  return await NativeARSceneManager.addRecognizerImage(url, name, width);
 };
 const removeRecognizerImage = async name => {
-  return await NativeRHDSceneManager.removeRecognizerImage(name);
+  return await NativeARSceneManager.removeRecognizerImage(name);
 };
 const setImageDetection = async doDetect => {
-  return await NativeRHDSceneManager.setImageDetection(doDetect);
+  return await NativeARSceneManager.setImageDetection(doDetect);
 };
 const setPOVSensitivity = async newSensitivity => {
-  return await NativeRHDSceneManager.setPOVSensitivity(newSensitivity);
+  return await NativeARSceneManager.setPOVSensitivity(newSensitivity);
 };
 const getPOV = async () => {
-  return await NativeRHDSceneManager.getPOV();
+  return await NativeARSceneManager.getPOV();
 };
 const setWorldTracking = async trackingMode => {
-  return await NativeRHDSceneManager.setWorldTracking(trackingMode);
+  return await NativeARSceneManager.setWorldTracking(trackingMode);
 };
 //#endregion
 //#region Exports

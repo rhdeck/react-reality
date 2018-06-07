@@ -5,7 +5,6 @@
 	};
 	objectVersion = 48;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		712815C32026480B00C460CB /* RHDExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712815C22026480B00C460CB /* RHDExtension.swift */; };
 		714545D92034E50D00E44E8D /* RHDSceneManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714545D82034E50D00E44E8D /* RHDSceneManager.swift */; };
@@ -297,6 +296,7 @@
 					"/Users/ray/Documents/artesta/ios/Pods/**",
 					"/Users/ray/Documents/artestb/ios/Pods/**",
 				);
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -325,6 +325,7 @@
 					"/Users/ray/Documents/artesta/ios/Pods/**",
 					"/Users/ray/Documents/artestb/ios/Pods/**",
 				);
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";

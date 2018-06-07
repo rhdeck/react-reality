@@ -1,6 +1,6 @@
 import Foundation
 import ARKit
-@objc(RHDMonoView)
+@objc(ARMonoView)
 class RHDMonoview: UIView, ARSCNViewDelegate {
     var arview: ARSCNView?
     var _preview:Bool = true

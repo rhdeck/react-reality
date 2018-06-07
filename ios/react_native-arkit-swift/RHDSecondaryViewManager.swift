@@ -1,5 +1,5 @@
 import Foundation
-@objc(RHDSecondaryViewManager)
+@objc(ARSecondaryViewManager)
 class RHDSecondaryViewManager : RCTViewManager {
     override func view() -> RHDSecondaryView {
         return (RHDSecondaryView()).start()

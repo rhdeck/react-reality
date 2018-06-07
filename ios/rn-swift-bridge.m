@@ -1,14 +1,14 @@
 #import <React/RCTViewManager.h>
 #import <React/RCTEventEmitter.h>
 #import <React/RCTBridgeModule.h>
-@interface RCT_EXTERN_MODULE(RHDMonoViewManager, RCTViewManager)
+@interface RCT_EXTERN_MODULE(ARMonoViewManager, RCTViewManager)
 RCT_EXTERN_METHOD(doTap:(double)x y:(double)y resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXPORT_VIEW_PROPERTY(preview, BOOL);
 @end
-@interface RCT_EXTERN_MODULE(RHDPrimaryViewManager, RCTViewManager)
+@interface RCT_EXTERN_MODULE(ARPrimaryViewManager, RCTViewManager)
 RCT_EXPORT_VIEW_PROPERTY(interPupilaryDistance, float);
 @end
-@interface RCT_EXTERN_MODULE(RHDSceneManager, RCTEventEmitter)
+@interface RCT_EXTERN_MODULE(ARSceneManager, RCTEventEmitter)
 RCT_EXTERN_METHOD(addNode:(SCNNode *)node parentID:(NSString *)parentID resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(removeNode:(NSString *)id resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(updateNode:(NSString *)forNode newProps:(NSDictionary *)newProps resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
@@ -57,5 +57,5 @@ RCT_EXTERN_METHOD(setPOVSensitivity:(double)newSensitivity resolve:(RCTPromiseRe
 RCT_EXTERN_METHOD(getPOV:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(setWorldTracking:(NSString *)trackingMode resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 @end
-@interface RCT_EXTERN_MODULE(RHDSecondaryViewManager, RCTViewManager)
+@interface RCT_EXTERN_MODULE(ARSecondaryViewManager, RCTViewManager)
 @end

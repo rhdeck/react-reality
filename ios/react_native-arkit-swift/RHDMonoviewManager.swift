@@ -1,5 +1,5 @@
 import Foundation
-@objc(RHDMonoViewManager)
+@objc(ARMonoViewManager)
 class RHDMonoviewManager:RCTViewManager {
     var v: RHDMonoview?
     override func view() -> RHDMonoview {

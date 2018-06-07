@@ -8,7 +8,7 @@ let PlaneDetection:[String:UInt] = [
     "vertical": 2,
     "both": 3
 ]
-@objc(RHDSceneManager)
+@objc(ARSceneManager)
 class RHDSceneManager:RCTEventEmitter, ARSessionDelegate {
     static var sharedInstance:RHDSceneManager?
     override init() {

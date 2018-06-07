@@ -1,7 +1,7 @@
 import Foundation
 import ARKit
 
-@objc(RHDPrimaryView)
+@objc(ARPrimaryView)
 class RHDPrimaryView: UIView, ARSCNViewDelegate {
     var arview: ARSCNView?
     var onStart:RCTBubblingEventBlock?
