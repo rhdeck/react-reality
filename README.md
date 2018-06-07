@@ -12,7 +12,30 @@ A React-based, JSX-centric way of interacting with Augmented Reality. Make the w
 
 Currently IOS-Only, but SceneForm may change that!
 
-# Primitives
+## Installation
+
+```
+yarn add \
+  rhdeck/react-reality \
+  react-native-swift \
+  react-native-pod
+yarn link
+```
+
+Since ARKit development requires iOS 11, the camera, and signing privileges to get onto device, I also recommend:
+
+```
+yarn add \
+  react-native-fix-ios-version \
+  react-native-camera-ios-enable \
+  react-native-setdevteam
+react-native setdevteam
+react-native link
+```
+
+Sample/Template package deployed as RN Template TK
+
+# Reference
 
 ## Views
 
