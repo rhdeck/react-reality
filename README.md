@@ -295,6 +295,6 @@ export default class ARTest extends Component {
 }
 ```
 
-# Important Credit-Where-Credit-Is-Due Note
+# Credit-Where-Credit-Is-Due
 
 The idea for this package was as a Swift port of [react-native-arkit](https://github.com/HippoAR/react-native-arkit), a cool project written in Objective-C, which is not a cool language. Major props to @macrozone for a heck of a lot of work.
