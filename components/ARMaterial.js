@@ -1,4 +1,5 @@
 import React, { Component, createContext } from "react";
+import { processColor } from "react-native";
 import { adopt } from "react-adopt";
 import {
   setMaterial,
@@ -56,8 +57,15 @@ class ARBaseMaterial extends Component {
   async updateMaterial(id, property) {
     try {
       if (this.props.willNativeUpdate) await this.props.willNativeUpdate();
+      const filteredProperty = {
+        ...property,
+        color:
+          typeof property.color == "string"
+            ? processColor(property.color)
+            : property.color
+      };
       await setMaterialProperty(
-        property,
+        filteredProperty,
         id,
         this.props.index,
         this.props.parentNode
