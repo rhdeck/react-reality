@@ -84,8 +84,6 @@ Should be instantiated as child of an ARSessionProvider. Spins up a session to d
 
 ### ARPositionProvider
 
-### ARTouchProvider
-
 ### ARTrackingProvider
 
 ### ARAnimatedProvider
