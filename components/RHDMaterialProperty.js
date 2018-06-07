@@ -4,7 +4,7 @@ import pickBy from "lodash/pickBy";
 import includes from "lodash/includes";
 import { adopt } from "react-adopt";
 import { RHDMaterialConsumer } from "./RHDMaterial";
-import { RHDAnimatedConsumer } from "./RHDAnimatedProvider";
+import { RHDAnimatedConsumer } from "../RHDAnimatedProvider";
 const { Provider, Consumer: RHDMaterialPropertyConsumer } = createContext({});
 class RHDBaseMaterialProperty extends Component {
   state = {

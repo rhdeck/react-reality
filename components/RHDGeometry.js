@@ -5,7 +5,7 @@ import pickBy from "lodash/pickBy";
 import { adopt } from "react-adopt";
 import { removeGeometry } from "../RHDSceneManager";
 import { RHDNodeConsumer } from "./RHDNode";
-import { RHDAnimatedConsumer } from "./RHDAnimatedProvider";
+import { RHDAnimatedConsumer } from "../RHDAnimatedProvider";
 const { Provider, Consumer: RHDGeometryConsumer } = createContext({});
 
 const RHDGeometry = (mountFunc, geomProps, numSides) => {

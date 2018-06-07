@@ -16,7 +16,7 @@ import RHDMaterials from "./components/RHDMaterials";
 import RHDTouchableMonoView from "./RHDTouchableMonoView";
 import RHDSKScene from "./components/RHDSKScene";
 import RHDSKLabel from "./components/RHDSKLabel";
-import RHDAnimatedProvider from "./components/RHDAnimatedProvider";
+import RHDAnimatedProvider from "./RHDAnimatedProvider";
 import RHDScene from "./components/RHDScene";
 import RHDModel from "./components/RHDModel";
 import { RHDSessionConsumer, RHDSessionProvider } from "./RHDSessionProvider";
