@@ -35,6 +35,10 @@ react-native link
 
 Sample/Template package deployed as RN Template TK
 
+## Extensions
+
+- [`react-reality-holokit`](https://github.com/rhdeck/react-reality-holokit): Implementation of headset view to use the holokit by Amber Garage
+
 # Reference
 
 ## Views
