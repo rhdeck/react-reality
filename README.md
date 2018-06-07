@@ -63,7 +63,7 @@ Should be instantiated as child of an ARSessionProvider. Spins up a session to d
 
 #### Sample
 
-````xml
+```xml
 <ARSessionPropvider>
   <ARTouchableMonoView>
     ...Other nodes rendered
@@ -72,6 +72,7 @@ Should be instantiated as child of an ARSessionProvider. Spins up a session to d
     </ARNode>
   </ARTouchableMonoView>
 </ARSessionProvider>
+```
 
 ## Providers
 
@@ -152,7 +153,7 @@ None
     <ARMaterialProperty color="red" />
   </ARMaterials>
 </ARBox>
-````
+```
 
 ### ARMaterialProperty
 
