@@ -20,15 +20,8 @@ import ARAnimatedProvider from "./ARAnimatedProvider";
 import ARScene from "./components/ARScene";
 import ARModel from "./components/ARModel";
 import { ARSessionConsumer, ARSessionProvider } from "./ARSessionProvider";
-import {
-  ARPositionProvider,
-  ARPositionConsumer
-} from "./ARPositionProvider";
-import { ARTouchProvider, ARTouchConsumer } from "./ARTouchProvider";
-import {
-  ARTrackingConsumer,
-  ARTrackingProvider
-} from "./ARTrackingProvider";
+import { ARPositionProvider, ARPositionConsumer } from "./ARPositionProvider";
+import { ARTrackingConsumer, ARTrackingProvider } from "./ARTrackingProvider";
 import ARShape from "./components/ARShape";
 export {
   ARMonoView,
@@ -54,8 +47,6 @@ export {
   ARAnimatedProvider,
   ARPositionProvider,
   ARPositionConsumer,
-  ARTouchProvider,
-  ARTouchConsumer,
   ARTrackingConsumer,
   ARTrackingProvider,
   ARScene,
