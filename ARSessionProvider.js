@@ -61,5 +61,8 @@ class ARSessionProvider extends Component {
 ARSessionProvider.propTypes = {
   alignment: PropTypes.string
 };
+ARSessionProvider.defaultProps = {
+  alignment: "gravity"
+};
 export { ARSessionProvider, ARSessionConsumer };
 export default ARSessionProvider;
