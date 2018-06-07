@@ -22,13 +22,14 @@ RCT_EXTERN_METHOD(setSphere:(SCNSphere *)g forNode:(NSString *)forNode resolve:(
 RCT_EXTERN_METHOD(setText:(SCNText *)g forNode:(NSString *)forNode resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(setTorus:(SCNTorus *)g forNode:(NSString *)forNode resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(setTube:(SCNTube *)g forNode:(NSString *)forNode resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
+RCT_EXTERN_METHOD(setShape:(SCNShape *)g forNode:(NSString *)forNode resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(setGeometry:(SCNGeometry *)geometry forNode:(NSString *)forNode resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(setMaterial:(SCNMaterial *)material forNode:(NSString *)forNode atPosition:(NSInteger)atPosition resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(setMaterialProperty:(NSDictionary *)json propertyName:(NSString *)propertyName forMaterialAtPosition:(NSInteger)forMaterialAtPosition forNode:(NSString *)forNode resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(removeGeometry:(NSString *)forNode resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(removeMaterial:(NSString *)forNode atPosition:(NSInteger)atPosition resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(setScene:(NSString *)forNode sourcePath:(NSString *)sourcePath resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
-RCT_EXTERN_METHOD(setModel:(NSString *)forNode sourcePath:(NSString *)sourcePath success:(RCTPromiseResolveBlock)success reject:(RCTPromiseRejectBlock)reject);
+RCT_EXTERN_METHOD(setModel:(NSString *)forNode sourcePath:(NSString *)sourcePath resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(addSKSceneReference:(SKScene *)scene resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(addSKSceneByReference:(NSString *)sceneName forNode:(NSString *)forNode atPosition:(NSInteger)atPosition withType:(NSString *)withType resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(addSKScene:(SKScene *)scene forNode:(NSString *)forNode atPosition:(NSInteger)atPosition withType:(NSString *)withType resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);

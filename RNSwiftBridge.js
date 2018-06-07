@@ -46,6 +46,9 @@ const setTorus = async (g, forNode) => {
 const setTube = async (g, forNode) => {
   return await NativeRHDSceneManager.setTube(g, forNode);
 };
+const setShape = async (g, forNode) => {
+  return await NativeRHDSceneManager.setShape(g, forNode);
+};
 const setGeometry = async (geometry, forNode) => {
   return await NativeRHDSceneManager.setGeometry(geometry, forNode);
 };
@@ -196,6 +199,7 @@ export {
   setText,
   setTorus,
   setTube,
+  setShape,
   setGeometry,
   setMaterial,
   setMaterialProperty,
