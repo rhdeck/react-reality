@@ -78,14 +78,14 @@ Currently IOS-Only
 import React, { Component, Children } from "react";
 import { AppRegistry, View, Text, processColor } from "react-native";
 import {
-  RHDTouchableMonoView,
-  RHDPlane,
-  RHDNode,
-  RHDBox,
-  RHDMaterial,
-  RHDMaterials,
-  RHDMaterialProperty,
-  RHDText
+  ARTouchableMonoView,
+  ARPlane,
+  ARNode,
+  ARBox,
+  ARMaterial,
+  ARMaterials,
+  ARMaterialProperty,
+  ARText
 } from "react-reality";
 export default class ARTest extends Component {
   state = {
@@ -95,8 +95,8 @@ export default class ARTest extends Component {
   };
   render() {
     return (
-      <RHDTouchableMonoView style={{ flex: 1 }} debug>
-        <RHDNode
+      <ARTouchableMonoView style={{ flex: 1 }} debug>
+        <ARNode
           position={{ x: 1, y: 1, z: -5 }}
           onPressIn={() => {
             this.setState({ fatColor: "green" });
@@ -105,15 +105,15 @@ export default class ARTest extends Component {
             this.setState({ fatColor: "blue" });
           }}
         >
-          <RHDBox width={2} height={0.5} length={2} chamfer={0}>
-            <RHDMaterials roughness={0.5} metalness={0.2}>
-              <RHDMaterialProperty
+          <ARBox width={2} height={0.5} length={2} chamfer={0}>
+            <ARMaterials roughness={0.5} metalness={0.2}>
+              <ARMaterialProperty
                 id="diffuse"
                 color={processColor(this.state.fatColor)}
               />
-            </RHDMaterials>
-          </RHDBox>
-          <RHDNode
+            </ARMaterials>
+          </ARBox>
+          <ARNode
             position={{ x: 0.4, y: 3, z: 0 }}
             eulerAngles={{ x: 0.5, y: 0.2, z: 0 }}
             onPress={() => {
@@ -124,44 +124,44 @@ export default class ARTest extends Component {
               });
             }}
           >
-            <RHDBox width={0.5} height={2} length={0.5} chamfer={0}>
-              <RHDMaterial index={0}>
-                <RHDMaterialProperty
+            <ARBox width={0.5} height={2} length={0.5} chamfer={0}>
+              <ARMaterial index={0}>
+                <ARMaterialProperty
                   id="diffuse"
                   color={processColor(this.state.tallColor)}
                 />
-              </RHDMaterial>
-              <RHDMaterial index={1}>
-                <RHDMaterialProperty
+              </ARMaterial>
+              <ARMaterial index={1}>
+                <ARMaterialProperty
                   id="diffuse"
                   color={processColor(this.state.tallColor)}
                 />
-              </RHDMaterial>
-              <RHDMaterial index={2}>
-                <RHDMaterialProperty
+              </ARMaterial>
+              <ARMaterial index={2}>
+                <ARMaterialProperty
                   id="diffuse"
                   color={processColor("green")}
                 />
-              </RHDMaterial>
-              <RHDMaterial index={3}>
-                <RHDMaterialProperty
+              </ARMaterial>
+              <ARMaterial index={3}>
+                <ARMaterialProperty
                   id="diffuse"
                   color={processColor("green")}
                 />
-              </RHDMaterial>
-              <RHDMaterial index={4}>
-                <RHDMaterialProperty id="diffuse" color={processColor("red")} />
-              </RHDMaterial>
-              <RHDMaterial index={5}>
-                <RHDMaterialProperty id="diffuse" color={processColor("red")} />
-              </RHDMaterial>
-            </RHDBox>
-            <RHDNode position={{ x: 1, y: 1, z: 1 }}>
-              <RHDText text="hello" font={{ size: 0.5 }} />
-            </RHDNode>
-          </RHDNode>
-        </RHDNode>
-      </RHDTouchableMonoView>
+              </ARMaterial>
+              <ARMaterial index={4}>
+                <ARMaterialProperty id="diffuse" color={processColor("red")} />
+              </ARMaterial>
+              <ARMaterial index={5}>
+                <ARMaterialProperty id="diffuse" color={processColor("red")} />
+              </ARMaterial>
+            </ARBox>
+            <ARNode position={{ x: 1, y: 1, z: 1 }}>
+              <ARText text="hello" font={{ size: 0.5 }} />
+            </ARNode>
+          </ARNode>
+        </ARNode>
+      </ARTouchableMonoView>
     );
   }
 }
