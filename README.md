@@ -276,7 +276,3 @@ export default class ARTest extends Component {
 # Important Credit-Where-Credit-Is-Due Note
 
 The idea for this package was as a Swift port of [react-native-arkit](https://github.com/HippoAR/react-native-arkit), a cool project written in Objective-C, which is not a cool language. Major props to @macrozone for a heck of a lot of work.
-
-Also the headset view uses ideas from [iOS-ARKit-Headset-View](https://github.com/hanleyweng/iOS-ARKit-Headset-View) which is a cool Swift-first project
-
-And of course the best headset is [Holokit](https://holokit.io) from Amber Garage, who gave a talk at ARiA in January that was my inspiration for getting headset view going in the first place!
