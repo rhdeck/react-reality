@@ -3,13 +3,13 @@ import PropTypes from "prop-types";
 import filter from "lodash/filter";
 import pickBy from "lodash/pickBy";
 import { adopt } from "react-adopt";
-import { removeGeometry } from "../RHDSceneManager";
-import { RHDNodeConsumer } from "./RHDNode";
-import { RHDAnimatedConsumer } from "../RHDAnimatedProvider";
-const { Provider, Consumer: RHDGeometryConsumer } = createContext({});
+import { removeGeometry } from "../ARSceneManager";
+import { ARNodeConsumer } from "./ARNode";
+import { ARAnimatedConsumer } from "../ARAnimatedProvider";
+const { Provider, Consumer: ARGeometryConsumer } = createContext({});
 
-const RHDGeometry = (mountFunc, geomProps, numSides) => {
-  const RHDBaseGeometry = class extends Component {
+const ARGeometry = (mountFunc, geomProps, numSides) => {
+  const ARBaseGeometry = class extends Component {
     state = {
       updateState: "doMount" // Finite state: shouldMount, doMount, Mounting, doNext, do, doing, done
     };
@@ -58,7 +58,7 @@ const RHDGeometry = (mountFunc, geomProps, numSides) => {
         throw new Error("Cannot mount a Geometry without a parent Node");
       async () => {
         try {
-          await RHDSceneManager.removeGeometry(this.props.parentNode);
+          await ARSceneManager.removeGeometry(this.props.parentNode);
         } catch (e) {}
       };
     }
@@ -122,18 +122,18 @@ const RHDGeometry = (mountFunc, geomProps, numSides) => {
     )
       return true;
   };
-  RHDBaseGeometry.propTypes = {
+  ARBaseGeometry.propTypes = {
     ...geomProps,
     parentNode: PropTypes.string,
     willNativeUpdate: PropTypes.func,
     didNativeUpdate: PropTypes.func
   };
-  const geomPropKeys = Object.keys(RHDBaseGeometry.propTypes);
+  const geomPropKeys = Object.keys(ARBaseGeometry.propTypes);
   const Adoptee = adopt({
-    animated: <RHDAnimatedConsumer />,
-    node: <RHDNodeConsumer />
+    animated: <ARAnimatedConsumer />,
+    node: <ARNodeConsumer />
   });
-  const RHDGeometry = props => {
+  const ARGeometry = props => {
     return (
       <Adoptee>
         {({
@@ -141,7 +141,7 @@ const RHDGeometry = (mountFunc, geomProps, numSides) => {
           node: { nodeID }
         }) => {
           return (
-            <RHDBaseGeometry
+            <ARBaseGeometry
               {...props}
               parentNode={nodeID}
               willNativeUpdate={willNativeUpdate}
@@ -152,7 +152,7 @@ const RHDGeometry = (mountFunc, geomProps, numSides) => {
       </Adoptee>
     );
   };
-  return RHDGeometry;
+  return ARGeometry;
 };
-export { RHDGeometry, RHDGeometryConsumer };
-export default RHDGeometry;
+export { ARGeometry, ARGeometryConsumer };
+export default ARGeometry;

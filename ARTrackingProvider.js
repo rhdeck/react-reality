@@ -8,9 +8,9 @@ import {
   removeImageDetection,
   addRecognizerImage,
   removeRecognizerImage
-} from "./RHDSceneManager";
-const { Provider, Consumer: RHDTrackingConsumer } = createContext();
-class RHDTrackingProvider extends Component {
+} from "./ARSceneManager";
+const { Provider, Consumer: ARTrackingConsumer } = createContext();
+class ARTrackingProvider extends Component {
   state = {
     planeDetection: "none",
     imageDetection: false,
@@ -37,7 +37,7 @@ class RHDTrackingProvider extends Component {
     return (
       <Provider value={this.state.providerValue}>
         {typeof this.props.children == "function" ? (
-          <RHDTrackingConsumer>{this.props.children}</RHDTrackingConsumer>
+          <ARTrackingConsumer>{this.props.children}</ARTrackingConsumer>
         ) : (
           this.props.children
         )}
@@ -173,13 +173,13 @@ class RHDTrackingProvider extends Component {
     });
   }
 }
-RHDTrackingProvider.propTypes = {
+ARTrackingProvider.propTypes = {
   planeDetection: PropTypes.bool,
   imageDetection: PropTypes.bool,
   didUpdateAnchors: PropTypes.func
 };
-export { RHDTrackingProvider, RHDTrackingConsumer };
-export default RHDTrackingProvider;
+export { ARTrackingProvider, ARTrackingConsumer };
+export default ARTrackingProvider;
 const cleanAnchors = o => {
   var out = {};
   if (!o) return out;

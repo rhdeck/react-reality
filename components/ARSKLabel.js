@@ -1,10 +1,10 @@
 import React, { Component, Children } from "react";
-import { removeSKNode, setSKLabelNode } from "../RHDSceneManager";
+import { removeSKNode, setSKLabelNode } from "../ARSceneManager";
 import PropTypes from "prop-types";
 import pickBy from "lodash/pickBy";
 import UUID from "uuid/v4";
-import { RHDSKNodeProvider, RHDSKNodeConsumer } from "./RHDSKScene";
-class RHDBaseSKLabel extends Component {
+import { ARSKNodeProvider, ARSKNodeConsumer } from "./ARSKScene";
+class ARBaseSKLabel extends Component {
   state = {
     identifier: UUID(),
     updateState: "doMount"
@@ -55,9 +55,9 @@ class RHDBaseSKLabel extends Component {
       return null;
     if (!this.props.children) return null;
     return (
-      <RHDSKNodeProvider value={this.state.providerValue}>
+      <ARSKNodeProvider value={this.state.providerValue}>
         {this.props.children}
-      </RHDSKNodeProvider>
+      </ARSKNodeProvider>
     );
   }
   componentWillUnmount() {
@@ -74,7 +74,7 @@ class RHDBaseSKLabel extends Component {
     return ret;
   }
 }
-RHDBaseSKLabel.propTypes = {
+ARBaseSKLabel.propTypes = {
   position: PropTypes.shape({
     x: PropTypes.number,
     y: PropTypes.number
@@ -87,14 +87,14 @@ RHDBaseSKLabel.propTypes = {
   fontColor: PropTypes.number, // Note this requires a preprocessed color
   width: PropTypes.number
 };
-const SKLabelKeys = Object.keys(RHDBaseSKLabel.propTypes);
-const RHDSKLabel = props => {
+const SKLabelKeys = Object.keys(ARBaseSKLabel.propTypes);
+const ARSKLabel = props => {
   return (
-    <RHDSKNodeConsumer>
+    <ARSKNodeConsumer>
       {({ SKNodeID }) => {
-        return <RHDBaseSKLabel {...props} parentSKNode={SKNodeID} />;
+        return <ARBaseSKLabel {...props} parentSKNode={SKNodeID} />;
       }}
-    </RHDSKNodeConsumer>
+    </ARSKNodeConsumer>
   );
 };
 const propFilter = props => {
@@ -126,6 +126,6 @@ const propDiff = (a, b) => {
     return true;
 };
 
-RHDSKLabel.propTypes = { ...RHDBaseSKLabel.propTypes };
-export { RHDSKLabel, RHDSKNodeConsumer };
-export default RHDSKLabel;
+ARSKLabel.propTypes = { ...ARBaseSKLabel.propTypes };
+export { ARSKLabel, ARSKNodeConsumer };
+export default ARSKLabel;

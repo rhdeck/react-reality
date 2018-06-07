@@ -1,12 +1,12 @@
 import React, { Component, Children } from "react";
 import PropTypes from "prop-types";
 import pickBy from "lodash/pickBy";
-import RHDMaterial from "./RHDMaterial";
-import { RHDGeometryConsumer } from "./RHDGeometry";
-const RHDMaterials = props => {
+import ARMaterial from "./ARMaterial";
+import { ARGeometryConsumer } from "./ARGeometry";
+const ARMaterials = props => {
   if (props.children == null) return null;
   return (
-    <RHDGeometryConsumer>
+    <ARGeometryConsumer>
       {({ numSides }) => {
         var out = [];
         if (!numSides) return null;
@@ -15,15 +15,15 @@ const RHDMaterials = props => {
           c = Children.map(props.children, child => {
             return React.cloneElement(child);
           });
-          out.push(<RHDMaterial {...props} index={s} children={c} key={s} />);
+          out.push(<ARMaterial {...props} index={s} children={c} key={s} />);
         }
         return out;
       }}
-    </RHDGeometryConsumer>
+    </ARGeometryConsumer>
   );
 };
-RHDMaterials.propTypes = pickBy(
-  RHDMaterial.propTypes,
+ARMaterials.propTypes = pickBy(
+  ARMaterial.propTypes,
   (v, k) => ["index"].indexOf(k) === -1
 );
-export default RHDMaterials;
+export default ARMaterials;

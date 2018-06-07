@@ -1,8 +1,8 @@
 import React, { createContext, Component } from "react";
 import PropTypes from "prop-types";
-import { setAnimation, removeAnimation } from "../RHDSceneManager";
+import { setAnimation, removeAnimation } from "../ARSceneManager";
 const { Provider, Consumer } = createContext({});
-class RHDAnimatedProvider extends Component {
+class ARAnimatedProvider extends Component {
   providerValue = {
     willNativeUpdate: this.willNativeUpdate.bind(this),
     didNativeUpdate: this.didNativeUpdate.bind(this)
@@ -20,13 +20,13 @@ class RHDAnimatedProvider extends Component {
     //Do nothing
   }
 }
-RHDAnimatedProvider.defaultProps = {
+ARAnimatedProvider.defaultProps = {
   milliseconds: 250,
   easing: "inout"
 };
-RHDAnimatedProvider.propTypes = {
+ARAnimatedProvider.propTypes = {
   milliseconds: PropTypes.number,
   easing: PropTypes.string
 };
-export { RHDAnimatedProvider, Consumer as RHDAnimatedConsumer };
-export default RHDAnimatedProvider;
+export { ARAnimatedProvider, Consumer as ARAnimatedConsumer };
+export default ARAnimatedProvider;

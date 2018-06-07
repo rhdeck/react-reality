@@ -1,10 +1,10 @@
 import { TouchableWithoutFeedback } from "react-native";
 import React, { Component } from "react";
-import RHDMonoView from "./RHDMonoView";
-import { RHDTouchProvider } from "./RHDTouchProvider";
-const RHDTouchableMonoView = props => {
+import ARMonoView from "./ARMonoView";
+import { ARTouchProvider } from "./ARTouchProvider";
+const ARTouchableMonoView = props => {
   return (
-    <RHDTouchProvider>
+    <ARTouchProvider>
       {({ triggerAtLocation }) => {
         return (
           <TouchableWithoutFeedback
@@ -21,12 +21,12 @@ const RHDTouchableMonoView = props => {
                 triggerAtLocation("onPressOut", locationX, locationY);
             }}
           >
-            <RHDMonoView {...props} />
+            <ARMonoView {...props} />
           </TouchableWithoutFeedback>
         );
       }}
-    </RHDTouchProvider>
+    </ARTouchProvider>
   );
 };
-RHDTouchableMonoView.propTypes = RHDMonoView.propTypes;
-export default RHDTouchableMonoView;
+ARTouchableMonoView.propTypes = ARMonoView.propTypes;
+export default ARTouchableMonoView;

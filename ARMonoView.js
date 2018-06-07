@@ -1,17 +1,17 @@
 import { requireNativeComponent } from "react-native";
 import PropTypes from "prop-types";
 import React, { Component } from "react";
-import { RHDSessionConsumer } from "./RHDSessionProvider";
-class RHDBaseMonoView extends Component {
+import { ARSessionConsumer } from "./ARSessionProvider";
+class ARBaseMonoView extends Component {
   render() {
     return [
-      <NativeMV {...this.props} children={null} key="RHDMonoViewNative" />,
+      <NativeMV {...this.props} children={null} key="ARMonoViewNative" />,
       typeof this.props.children == "function" ? (
-        <RHDSessionConsumer key="RHDMonoViewConsumer">
+        <ARSessionConsumer key="ARMonoViewConsumer">
           {value => {
             return this.props.children(value);
           }}
-        </RHDSessionConsumer>
+        </ARSessionConsumer>
       ) : this.props.children ? (
         this.props.children
       ) : null
@@ -24,23 +24,23 @@ class RHDBaseMonoView extends Component {
     if (typeof this.props.stop == "function") this.props.stop();
   }
 }
-RHDBaseMonoView.propTypes = {
+ARBaseMonoView.propTypes = {
   preview: PropTypes.bool,
   start: PropTypes.func,
   stop: PropTypes.func
 };
-const NativeMV = requireNativeComponent("RHDMonoView", RHDBaseMonoView);
+const NativeMV = requireNativeComponent("ARMonoView", ARBaseMonoView);
 
-const RHDMonoView = props => {
+const ARMonoView = props => {
   return (
-    <RHDSessionConsumer>
+    <ARSessionConsumer>
       {({ start, stop }) => {
-        return <RHDBaseMonoView {...props} start={start} stop={stop} />;
+        return <ARBaseMonoView {...props} start={start} stop={stop} />;
       }}
-    </RHDSessionConsumer>
+    </ARSessionConsumer>
   );
 };
 
-RHDMonoView.propTypes = { ...RHDBaseMonoView.propTypes };
+ARMonoView.propTypes = { ...ARBaseMonoView.propTypes };
 
-export default RHDMonoView;
+export default ARMonoView;

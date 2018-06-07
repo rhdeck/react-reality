@@ -1,8 +1,8 @@
 import React, { Component, createContext } from "react";
 import PropTypes from "prop-types";
-import { clear, pause, resume, setWorldTracking } from "./RHDSceneManager";
-const { Provider, Consumer: RHDSessionConsumer } = createContext();
-class RHDSessionProvider extends Component {
+import { clear, pause, resume, setWorldTracking } from "./ARSceneManager";
+const { Provider, Consumer: ARSessionConsumer } = createContext();
+class ARSessionProvider extends Component {
   state = {
     providerValue: this.setProviderValue(true),
     alignment: "gravity"
@@ -50,7 +50,7 @@ class RHDSessionProvider extends Component {
     return (
       <Provider value={this.state.providerValue}>
         {typeof this.props.children == "function" ? (
-          <RHDSessionConsumer>{this.props.children}</RHDSessionConsumer>
+          <ARSessionConsumer>{this.props.children}</ARSessionConsumer>
         ) : (
           this.props.children
         )}
@@ -58,8 +58,8 @@ class RHDSessionProvider extends Component {
     );
   }
 }
-RHDSessionProvider.propTypes = {
+ARSessionProvider.propTypes = {
   alignment: PropTypes.string
 };
-export { RHDSessionProvider, RHDSessionConsumer };
-export default RHDSessionProvider;
+export { ARSessionProvider, ARSessionConsumer };
+export default ARSessionProvider;

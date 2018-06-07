@@ -4,7 +4,7 @@ import {
   setMaterial,
   setMaterialProperty,
   removeMaterial
-} from "../RHDSceneManager";
+} from "../ARSceneManager";
 import PropTypes from "prop-types";
 import {
   blendMode,
@@ -14,10 +14,10 @@ import {
   fillMode
 } from "./propTypes";
 import pickBy from "lodash/pickBy";
-import { RHDNodeConsumer } from "./RHDNode";
-import { RHDAnimatedConsumer } from "../RHDAnimatedProvider";
-const { Provider, Consumer: RHDMaterialConsumer } = createContext({});
-class RHDBaseMaterial extends Component {
+import { ARNodeConsumer } from "./ARNode";
+import { ARAnimatedConsumer } from "../ARAnimatedProvider";
+const { Provider, Consumer: ARMaterialConsumer } = createContext({});
+class ARBaseMaterial extends Component {
   state = {
     updateState: "doMount" // States: doMount, Mounting, (doNext, doing,) done
   };
@@ -85,7 +85,7 @@ class RHDBaseMaterial extends Component {
     };
   }
 }
-RHDBaseMaterial.propTypes = {
+ARBaseMaterial.propTypes = {
   parentNode: PropTypes.string,
   index: PropTypes.number,
   metalness: PropTypes.number,
@@ -102,12 +102,12 @@ RHDBaseMaterial.propTypes = {
   willNativeUpdate: PropTypes.func,
   didNativeUpdate: PropTypes.func
 };
-const materialPropKeys = Object.keys(RHDBaseMaterial.propTypes);
+const materialPropKeys = Object.keys(ARBaseMaterial.propTypes);
 const Adoptee = adopt({
-  animated: <RHDAnimatedConsumer />,
-  node: <RHDNodeConsumer />
+  animated: <ARAnimatedConsumer />,
+  node: <ARNodeConsumer />
 });
-const RHDMaterial = props => {
+const ARMaterial = props => {
   return (
     <Adoptee>
       {({
@@ -115,7 +115,7 @@ const RHDMaterial = props => {
         node: { nodeID }
       }) => {
         return (
-          <RHDBaseMaterial
+          <ARBaseMaterial
             {...props}
             parentNode={nodeID}
             willNativeUpdate={willNativeUpdate}
@@ -126,5 +126,5 @@ const RHDMaterial = props => {
     </Adoptee>
   );
 };
-export { RHDMaterial, RHDMaterialConsumer };
-export default RHDMaterial;
+export { ARMaterial, ARMaterialConsumer };
+export default ARMaterial;

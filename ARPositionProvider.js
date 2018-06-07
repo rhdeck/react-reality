@@ -4,10 +4,10 @@ import {
   stopDetectPositionChange,
   detectPositionChange,
   setPOVSensitivity
-} from "./RHDSceneManager";
+} from "./ARSceneManager";
 import PropTypes from "prop-types";
-const { Provider, Consumer: RHDPositionConsumer } = createContext({});
-class RHDPositionProvider extends Component {
+const { Provider, Consumer: ARPositionConsumer } = createContext({});
+class ARPositionProvider extends Component {
   state = { providerValue: null, sensitivity: 0.01 };
   componentDidMount() {
     detectPositionChange(this.onPositionChange.bind(this));
@@ -25,7 +25,7 @@ class RHDPositionProvider extends Component {
     return (
       <Provider value={this.state.providerValue}>
         {typeof this.props.children == "function" ? (
-          <RHDPositionConsumer>{this.props.children}</RHDPositionConsumer>
+          <ARPositionConsumer>{this.props.children}</ARPositionConsumer>
         ) : (
           this.props.children
         )}
@@ -42,12 +42,12 @@ class RHDPositionProvider extends Component {
   }
 }
 
-RHDPositionProvider.defaultProps = {
+ARPositionProvider.defaultProps = {
   sensitivity: 0.01
 };
-RHDPositionProvider.propTypes = {
+ARPositionProvider.propTypes = {
   didPositionChange: PropTypes.func,
   sensitivity: PropTypes.number
 };
-export { RHDPositionProvider, RHDPositionConsumer };
-export default RHDPositionProvider;
+export { ARPositionProvider, ARPositionConsumer };
+export default ARPositionProvider;

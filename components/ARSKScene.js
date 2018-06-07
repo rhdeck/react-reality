@@ -1,14 +1,14 @@
 import React, { Component, createContext } from "react";
-import { addSKScene, removeSKScene, updateSKScene } from "../RHDSceneManager";
+import { addSKScene, removeSKScene, updateSKScene } from "../ARSceneManager";
 import PropTypes from "prop-types";
 import pickBy from "lodash/pickBy";
 import UUID from "uuid/v4";
-import { RHDMaterialPropertyConsumer } from "./RHDMaterialProperty";
+import { ARMaterialPropertyConsumer } from "./ARMaterialProperty";
 const {
-  Provider: RHDSKNodeProvider,
-  Consumer: RHDSKNodeConsumer
+  Provider: ARSKNodeProvider,
+  Consumer: ARSKNodeConsumer
 } = createContext({});
-class RHDBaseSKScene extends Component {
+class ARBaseSKScene extends Component {
   state = {
     identifier: UUID(),
     updateState: "doMount" // "doMount", "Mounting", "donext", "do", "doing", "done"
@@ -90,9 +90,9 @@ class RHDBaseSKScene extends Component {
     if (["doMount", "Mounting"].indexOf(this.state.updateState) > -1)
       return null;
     return (
-      <RHDSKNodeProvider value={this.state.providerValue}>
+      <ARSKNodeProvider value={this.state.providerValue}>
         {this.props.children}
-      </RHDSKNodeProvider>
+      </ARSKNodeProvider>
     );
   }
   componentWillUnmount() {
@@ -104,7 +104,7 @@ class RHDBaseSKScene extends Component {
   }
 }
 
-RHDBaseSKScene.propTypes = {
+ARBaseSKScene.propTypes = {
   height: PropTypes.number,
   width: PropTypes.number,
   id: PropTypes.string,
@@ -113,23 +113,23 @@ RHDBaseSKScene.propTypes = {
   index: PropTypes.number,
   materialProperty: PropTypes.string
 };
-const sceneKeys = Object.keys(RHDBaseSKScene.propTypes);
+const sceneKeys = Object.keys(ARBaseSKScene.propTypes);
 
-const RHDSKScene = props => {
+const ARSKScene = props => {
   return (
-    <RHDMaterialPropertyConsumer>
+    <ARMaterialPropertyConsumer>
       {({ parentNode, materialProperty, index }) => {
         return (
-          <RHDBaseSKScene
+          <ARBaseSKScene
             {...{ ...props, parentNode, materialProperty, index }}
           />
         );
       }}
-    </RHDMaterialPropertyConsumer>
+    </ARMaterialPropertyConsumer>
   );
 };
-export { RHDSKScene, RHDSKNodeConsumer, RHDSKNodeProvider };
-export default RHDSKScene;
+export { ARSKScene, ARSKNodeConsumer, ARSKNodeProvider };
+export default ARSKScene;
 
 const propFilter = props => {
   return {

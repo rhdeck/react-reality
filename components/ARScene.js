@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
-import RHDGeometry from "./RHDGeometry";
+import ARGeometry from "./ARGeometry";
 import { setScene } from "../RNSwiftBridge";
-export default RHDGeometry(
+export default ARGeometry(
   async ({ path }, nodeID) => {
     return await setScene(nodeID, path);
   },

@@ -35,7 +35,7 @@ function calcOffsetByZoom(width, height, imageWidth, imageHeight, zoom) {
   };
 }
 
-class RHDZoomResponder extends Component {
+class ARZoomResponder extends Component {
   constructor(props) {
     super(props);
 

@@ -3,10 +3,10 @@ import PropTypes from "prop-types";
 import pickBy from "lodash/pickBy";
 import includes from "lodash/includes";
 import { adopt } from "react-adopt";
-import { RHDMaterialConsumer } from "./RHDMaterial";
-import { RHDAnimatedConsumer } from "../RHDAnimatedProvider";
-const { Provider, Consumer: RHDMaterialPropertyConsumer } = createContext({});
-class RHDBaseMaterialProperty extends Component {
+import { ARMaterialConsumer } from "./ARMaterial";
+import { ARAnimatedConsumer } from "../ARAnimatedProvider";
+const { Provider, Consumer: ARMaterialPropertyConsumer } = createContext({});
+class ARBaseMaterialProperty extends Component {
   state = {
     updateState: "doMount" // valid states: doMount, Mounting, doNext, do, doing, done
   };
@@ -88,7 +88,7 @@ class RHDBaseMaterialProperty extends Component {
     return ret;
   }
 }
-RHDBaseMaterialProperty.propTypes = {
+ARBaseMaterialProperty.propTypes = {
   updateMaterial: PropTypes.func,
   id: PropTypes.string,
   path: PropTypes.string,
@@ -97,12 +97,12 @@ RHDBaseMaterialProperty.propTypes = {
   willNativeUpdate: PropTypes.func,
   didNativeUpdate: PropTypes.func
 };
-materialPropertyPropTypeKeys = Object.keys(RHDBaseMaterialProperty.propTypes);
+materialPropertyPropTypeKeys = Object.keys(ARBaseMaterialProperty.propTypes);
 const Adoptee = adopt({
-  animated: <RHDAnimatedConsumer />,
-  material: <RHDMaterialConsumer />
+  animated: <ARAnimatedConsumer />,
+  material: <ARMaterialConsumer />
 });
-const RHDMaterialProperty = props => {
+const ARMaterialProperty = props => {
   return (
     <Adoptee>
       {({
@@ -110,7 +110,7 @@ const RHDMaterialProperty = props => {
         material: { updateMaterial, parentNode, index }
       }) => {
         return (
-          <RHDBaseMaterialProperty
+          <ARBaseMaterialProperty
             {...props}
             updateMaterial={updateMaterial}
             parentNode={parentNode}
@@ -156,5 +156,5 @@ const propDiff = (a, b) => {
   )
     return true;
 };
-export { RHDMaterialProperty, RHDMaterialPropertyConsumer };
-export default RHDMaterialProperty;
+export { ARMaterialProperty, ARMaterialPropertyConsumer };
+export default ARMaterialProperty;

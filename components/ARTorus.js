@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
-import RHDGeometry from "./RHDGeometry";
+import ARGeometry from "./ARGeometry";
 
 import { setTorus } from "../RNSwiftBridge";
-export default RHDGeometry(setTorus, {
+export default ARGeometry(setTorus, {
   ringR: PropTypes.number,
   pipeR: PropTypes.number
 });

@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
-import RHDGeometry from "./RHDGeometry";
+import ARGeometry from "./ARGeometry";
 
 import { setCapsule } from "../RNSwiftBridge";
-export default RHDGeometry(setCapsule, {
+export default ARGeometry(setCapsule, {
   capR: PropTypes.number,
   height: PropTypes.number
 });

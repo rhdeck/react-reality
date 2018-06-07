@@ -2,9 +2,9 @@ import React, { Component, createContext } from "react";
 import PropTypes from "prop-types";
 import pickBy from "lodash/pickBy";
 import { adopt } from "react-adopt";
-import { RHDSessionConsumer } from "../RHDSessionProvider";
-import { RHDAnimatedConsumer } from ".../RHDAnimatedProvider";
-import { RHDTouchConsumer } from "../RHDTouchProvider";
+import { ARSessionConsumer } from "../ARSessionProvider";
+import { ARAnimatedConsumer } from ".../ARAnimatedProvider";
+import { ARTouchConsumer } from "../ARTouchProvider";
 import {
   eulerAngles,
   orientation,
@@ -15,10 +15,10 @@ import {
   renderingOrder
 } from "./propTypes";
 import UUID from "uuid/v4";
-import { addNode, removeNode, updateNode } from "../RHDSceneManager";
-const { Provider, Consumer: RHDNodeConsumer } = createContext({});
+import { addNode, removeNode, updateNode } from "../ARSceneManager";
+const { Provider, Consumer: ARNodeConsumer } = createContext({});
 //#region BaseNode
-class RHDBaseNode extends Component {
+class ARBaseNode extends Component {
   state = {
     updateState: "shouldmount", // Valid values: "shouldmount", "domount", "mounting", "donext", "do", "doing", "done"
     identifier: null
@@ -118,7 +118,7 @@ corePropTypes = {
   parentNode: PropTypes.string
 };
 const nodeProps = Object.keys(corePropTypes);
-RHDBaseNode.propTypes = {
+ARBaseNode.propTypes = {
   ...corePropTypes,
   onPress: PropTypes.func,
   onPressIn: PropTypes.func,
@@ -127,14 +127,14 @@ RHDBaseNode.propTypes = {
   didNativeUpdate: PropTypes.func
 };
 //#endregion
-//#region RHDNode
+//#region ARNode
 const Adoptee = adopt({
-  session: <RHDSessionConsumer />,
-  touch: <RHDTouchConsumer />,
-  node: <RHDNodeConsumer />,
-  animated: <RHDAnimatedConsumer />
+  session: <ARSessionConsumer />,
+  touch: <ARTouchConsumer />,
+  node: <ARNodeConsumer />,
+  animated: <ARAnimatedConsumer />
 });
-const RHDNode = props => {
+const ARNode = props => {
   return (
     <Adoptee>
       {({
@@ -144,7 +144,7 @@ const RHDNode = props => {
         animated: { willNativeUpdate, didNativeUpdate }
       }) => {
         return isStarted ? (
-          <RHDBaseNode
+          <ARBaseNode
             parentNode={nodeID ? nodeID : ""}
             {...props}
             registerNode={registerNode}
@@ -157,8 +157,8 @@ const RHDNode = props => {
     </Adoptee>
   );
 };
-RHDNode.propTypes = {
-  ...RHDBaseNode.propTypes
+ARNode.propTypes = {
+  ...ARBaseNode.propTypes
 };
 //#endregion
 //#region Utility functions
@@ -192,5 +192,5 @@ const propDiff = (a, b, func) => {
     return true;
 };
 //#endregion
-export { RHDNode, RHDNodeConsumer };
-export default RHDNode;
+export { ARNode, ARNodeConsumer };
+export default ARNode;

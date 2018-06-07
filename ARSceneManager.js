@@ -45,8 +45,8 @@ import {
   setPOVSensitivity,
   setWorldTracking
 } from "./RNSwiftBridge";
-const NativeObj = NativeModules.RHDSceneManager;
-//const { RHDSceneManager } = NativeModules;
+const NativeObj = NativeModules.ARSceneManager;
+//const { ARSceneManager } = NativeModules;
 //#region Event Management
 var cachedEmitter = null;
 var cachedListener = null;
@@ -59,7 +59,7 @@ const getEmitter = () => {
 };
 const addListener = (key, cb) => {
   if (!cachedListener) {
-    cachedListener = getEmitter().addListener("RHDEvent", masterHandler);
+    cachedListener = getEmitter().addListener("AREvent", masterHandler);
   }
   cachedHandlers[key] = cb;
 };
@@ -90,7 +90,7 @@ const addPlaneDetection = async (type, cb) => {
   cachedPlaneHandler = cb;
   if (!cachedPlaneListener) {
     cachedPlaneListener = getEmitter().addListener(
-      "RHDPlaneEvent",
+      "ARPlaneEvent",
       cachedPlaneHandler
     );
   }
@@ -110,7 +110,7 @@ const addImageDetection = async cb => {
   cachedImageHandler = cb;
   if (!cachedImageListener) {
     cachedImageListener = getEmitter().addListener(
-      "RHDImageEvent",
+      "ARImageEvent",
       cachedImageHandler
     );
   }

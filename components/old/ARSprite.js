@@ -5,7 +5,7 @@ import { NativeModules, Animated } from "react-native";
 
 import { position } from "./lib/propTypes";
 
-const ARKitManager = NativeModules.RHDARViewManager;
+const ARKitManager = NativeModules.ARARViewManager;
 
 const ARSprite = withAnimationFrame(
   class extends Component {

@@ -1,8 +1,8 @@
 import React, { Component, createContext } from "react";
 import PropTypes from "prop-types";
-import { doTap } from "./RHDSceneManager";
-const { Provider, Consumer: RHDTouchConsumer } = createContext({});
-class RHDTouchProvider extends Component {
+import { doTap } from "./ARSceneManager";
+const { Provider, Consumer: ARTouchConsumer } = createContext({});
+class ARTouchProvider extends Component {
   registeredNodes = {};
   constructor(props) {
     super(props);
@@ -49,7 +49,7 @@ class RHDTouchProvider extends Component {
     return (
       <Provider value={this.state.providerValue}>
         {typeof this.props.children == "function" ? (
-          <RHDTouchConsumer>{this.props.children}</RHDTouchConsumer>
+          <ARTouchConsumer>{this.props.children}</ARTouchConsumer>
         ) : (
           this.props.children
         )}
@@ -57,5 +57,5 @@ class RHDTouchProvider extends Component {
     );
   }
 }
-export { RHDTouchProvider, RHDTouchConsumer };
-export default RHDTouchProvider;
+export { ARTouchProvider, ARTouchConsumer };
+export default ARTouchProvider;

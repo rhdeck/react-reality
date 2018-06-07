@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
-import RHDGeometry from "./RHDGeometry";
+import ARGeometry from "./ARGeometry";
 import { setPlane } from "../RNSwiftBridge";
-export default RHDGeometry(
+export default ARGeometry(
   setPlane,
   {
     width: PropTypes.number,
