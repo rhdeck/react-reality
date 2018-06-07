@@ -41,7 +41,37 @@ Sample/Template package deployed as RN Template TK
 
 ### ARMonoView
 
+A "magic glass" renderer of both the real and virtual space from your point of view.
+
+Should be instantiated as child of an ARSessionProvider. Spins up a session to display the nodes designated as children/descendants.
+
+#### Sample
+
+```xml
+<ARSessionProvider>
+  <ARMonoView>
+    <ARNode ... />
+  </ARMonoView>
+</ARSessionProvider>
+```
+
 ### ARTouchableMonoView
+
+Like `ARMonoView` but adds touchability, so that descendant nodes can implement touch event handlers.
+
+Should be instantiated as child of an ARSessionProvider. Spins up a session to display the nodes designated as children/descendants.
+
+#### Sample
+
+````xml
+<ARSessionPropvider>
+  <ARTouchableMonoView>
+    ...Other nodes rendered
+    <ARNode onPress={()=>{console.log("I got pressed"}>
+      ...Geometries, etc
+    </ARNode>
+  </ARTouchableMonoView>
+</ARSessionProvider>
 
 ## Providers
 
@@ -116,13 +146,13 @@ None
 
 #### Example
 
-```jsx
+```xml
 <ARBox>
   <ARMaterials>
     <ARMaterialProperty color="red" />
   </ARMaterials>
 </ARBox>
-```
+````
 
 ### ARMaterialProperty
 
@@ -133,14 +163,12 @@ None
 - path: Path to file with texture to apply, as an alternative to setting a flat color
 - intensity: How much to apply this property (basically lower washes out the effect/color/texture) 0.0-1.0
 
-```jsx
-<ARNode>
-  <ARBox>
-    <ARMaterials>
-      <ARMaterialProperty color="red"/>
-    </ARMaterials>
-  <ARBox>
-</ARNode>
+```xml
+<ARBox>
+  <ARMaterials>
+    <ARMaterialProperty color="blue"/>
+  </ARMaterials>
+<ARBox>
 ```
 
 ## Sprites
