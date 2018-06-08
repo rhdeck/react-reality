@@ -11,5 +11,10 @@ export default ARGeometry(
     widthSegmentCount: PropTypes.number,
     heightSegmentCount: PropTypes.number
   },
-  1
+  1,
+  {
+    width: 1,
+    height: 1,
+    cornerRadius: 0
+  }
 );
