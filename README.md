@@ -432,9 +432,45 @@ _Note_ As implied by the `height` prop, the default position of a tube is vertic
 
 ## Models
 
+Mounting complex models that come from other sources makes developing interesting AR experiences much much easier. Scenes and models get mounted to nodes of interest (such as a detected anchor) and the animations etc just work.
+
 ### ARScene
 
+A wrapper for importing pre-build SCN scenes and iOS-compatible DAE ensembles.
+
+_Note_ ARKit seems a little skittish about properly mounting textures for these scenes.
+
+Animate, move it around etc by manipulating a parent node.
+
+Comes with animations running right from the point of mount.
+
+#### Props
+
+- `path`: Local file path to the downloaded SCN or DAE file.
+
+#### Sample
+
+```jsx
+<ARNode>
+  <ARScene path={localpath_to_scn_file} />
+<ARNode>
+```
+
 ### ARModel
+
+A wrapper for downloaded OBJ models, such as those you can get from Google Poly. Note that it will load textures for a downloaded model from the path relative to that model, whihc means if you get the OBJ and MTL file in the same directory, you probably get all your texture goodness without further work.
+
+#### Props
+
+- `path`: Local file path to the downloaded OBJ file.
+
+#### Sample
+
+```jsx
+<ARNode>
+  <ARModel path={localpath_to_obj_file} />
+</ARNode>
+```
 
 ## Materials
 
@@ -502,6 +538,8 @@ Material Properties define how a material interacts with light. The most common 
 ```
 
 ## 2-D Content
+
+Mounting 2-D content on 3-D objects in space creates cool effects for far less compuational cost, making a smoother experience.
 
 ### ARSKScene
 
