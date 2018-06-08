@@ -484,12 +484,10 @@ Control over the material applied to a side of a geometry. Directly calling this
 
 The rest of these props are for more advanced/subtle manipulation. Most of your control is in the `<ARMaterialProperty />` component.
 
-@TODO fill in smarter descriptions of these
-
 - `metalness`: Number 0-1
 - `roughness`: Number 0-1
-- `blendMode`:
-- `lightingModel`:
+- `blendMode`: "Add", "Subtract", "Multiply", "Screen", "Replace"
+- `lightingModel`: "Constant", "Blinn", "Phong", "Lambert", "PhysicallyBased"
 - `shaders`: Object {Geometry, Surface, LightingModel, Fragment}
 - `writesToDepthBuffer`: Boolean
 - `colorBufferWriteMask`: "All", "None", "Alpha", "Blue", "Red", "Green
@@ -497,6 +495,8 @@ The rest of these props are for more advanced/subtle manipulation. Most of your 
 - `litPerPixel`: Boolean
 - `transparency`: 0-1
 - `fillMode`: "Fill" or "Lines"
+
+**@TODO** fill in smarter descriptions of these
 
 ### ARMaterials
 
@@ -541,11 +541,66 @@ Material Properties define how a material interacts with light. The most common 
 
 Mounting 2-D content on 3-D objects in space creates cool effects for far less compuational cost, making a smoother experience.
 
+Note all dimensions here are in pixels - the scene is stretched or compressed based on the size of the face of geometry (e.g. the `<ARPlane />` it is mounted on.
+
 ### ARSKScene
+
+Wrapper for a 2-D scene that uses SpriteKit technology on iOS.
+
+Must be mounted to a `<ARMaterialProperty />` See sample.
+
+#### Props
+
+- `height`: Pixel height of the SKScene. NOte that this is scaled/stretched based on the geometry this is mounted on. A small "height" on a huge plane will look fuzzy. A big "height" on a tiny plane will look sharp,but be more computational intensive than is really visible.
+- `width`: Pixel width of SKScene
+- `color`: Background color of the scene
+
+#### Sample
+
+```jsx
+<ARNode>
+  <ARPlane>
+    <ARMaterials>
+      <ARMaterialProperty>
+        <ARSKScene color="yellow">
+          <ARSKLabel text="hi there" />
+        </ARSKScene>
+      </ARMaterialProperty>
+    </ARMaterials>
+  </ARPlane>
+</ARNode>
+```
 
 ### ARSKLabel
 
-# Sample
+A text label to be rendered in a `<ARSKScene />`.
+
+#### Props
+
+- `text`: Text to be rendered as a string
+- `position`: Offset of top-left from parent SK element {x, y}
+- `fontName`: Font to use (Default: system default)
+- `fontSize`: Size of font to use. Number, not string. (Default: system default)
+- `fontColor`: Color to draw with
+- `width`: Pixel width to allocate to the text (will wrap within this pixel constraint)
+
+#### Sample
+
+```jsx
+<ARNode>
+  <ARPlane>
+    <ARMaterials>
+      <ARMaterialProperty>
+        <ARSKScene color="yellow">
+          <ARSKLabel text="hi there" fontColor="purple" fontSize={25} />
+        </ARSKScene>
+      </ARMaterialProperty>
+    </ARMaterials>
+  </ARPlane>
+</ARNode>
+```
+
+# App.js sample
 
 ```jsx
 import React, { Component, Children } from "react";
@@ -642,4 +697,4 @@ export default class ARTest extends Component {
 
 # Credit-Where-Credit-Is-Due
 
-The idea for this package was as a Swift port of [react-native-arkit](https://github.com/HippoAR/react-native-arkit), a cool project written in Objective-C, which is not a cool language. Major props to @macrozone for a heck of a lot of work.
+The idea for this package was as a Swift port of [react-native-arkit](https://github.com/react-native-ar/react-native-arkit), a cool project written in Objective-C, which is not a cool language. Major props to @macrozone for a heck of a lot of work.
