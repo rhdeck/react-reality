@@ -7,7 +7,7 @@ Currently IOS-Only, but SceneForm may change that!
 ## Key Features
 
 - Primitives to give high control over every aspect. Makes animations so much easier to have nodes not attached to geometries
-- Layout Animations via <ARAnimatedProvider />
+- Layout Animations via `<ARAnimatedProvider />`
 - Provider-based (render prop!) tracking of self `<ARPositionProvider />`, screen-touch on `<ARTouchableMonoView />` and both images and planes via `<ARTrackingProvider />`
 - Support for touch events at the node level via onPress, onPressIn, and onPressOut events. Registered only if using a touchablemonoview
 - Support for mixing in scenes and models. Import Scenekit-compatible SCN and DAE via `<ARScene />` and add models (like from Google Poly) via `<ARModel />`.
