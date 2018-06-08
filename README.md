@@ -112,7 +112,25 @@ Manages the augmented reality session. Note that no nodes are rendered until the
 
 ### ARPositionProvider
 
+Tracks changes in the position of the primary point of view For `<ARMonoView />`, this is just the position of the device itself.
+
+If the immediate child is a function, the provider will wrap it in an `<ARPositionConsumer />` to pass the function those arguments.
+
 #### Props
+
+- sensitivity: the required observed change, in meters, in any direction to trigger either the `onPositionChange` prop or a re-fire of the `<ARPositionConsumer />` render prop.
+- onPositionChange: fires every time the position changes by more the designated sensitivity. Contains one argument with a `position` object (x,y,z) and an `orientation` (x,y,z,w)
+
+#### Sample
+
+```jsx
+<ARPositionProvider
+  sensitivity={0.05} //Fires with 5cm of movement
+  onPositionChange={({ position, orientation }) => {
+    console.log("my new lateral position is ", position.x);
+  }}
+/>
+```
 
 ### ARTrackingProvider
 
