@@ -665,16 +665,16 @@ export default class ARTest extends Component {
                   />
                 </ARMaterial>
                 <ARMaterial index={2}>
-                  <ARMaterialProperty id="diffuse" color={"green"} />
+                  <ARMaterialProperty id="diffuse" color="green" />
                 </ARMaterial>
                 <ARMaterial index={3}>
                   <ARMaterialProperty id="diffuse" color={"green"} />
                 </ARMaterial>
                 <ARMaterial index={4}>
-                  <ARMaterialProperty id="diffuse" color={"red"} />
+                  <ARMaterialProperty id="diffuse" color="red" />
                 </ARMaterial>
                 <ARMaterial index={5}>
-                  <ARMaterialProperty id="diffuse" color={"red"} />
+                  <ARMaterialProperty id="diffuse" color="red" />
                 </ARMaterial>
               </ARBox>
               <ARNode position={{ x: 1, y: 1, z: 1 }}>
