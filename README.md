@@ -605,11 +605,9 @@ A text label to be rendered in a `<ARSKScene />`.
 # App.js sample
 
 ```jsx
-import React, { Component, Children } from "react";
-import { AppRegistry, View, Text, processColor } from "react-native";
+import React, { Component } from "react";
 import {
   ARTouchableMonoView,
-  ARPlane,
   ARNode,
   ARBox,
   ARMaterial,
@@ -637,14 +635,14 @@ export default class ARTest extends Component {
               this.setState({ fatColor: "blue" });
             }}
           >
-            <ARBox width={2} height={0.5} length={2} chamfer={0}>
+            <ARBox width={2} height={0.5} length={2}>
               <ARMaterials roughness={0.5} metalness={0.2}>
                 <ARMaterialProperty id="diffuse" color={this.state.fatColor} />
               </ARMaterials>
             </ARBox>
             <ARNode
-              position={{ x: 0.4, y: 3, z: 0 }}
-              eulerAngles={{ x: 0.5, y: 0.2, z: 0 }}
+              position={{ x: 0.4, y: 3 }}
+              eulerAngles={{ x: 0.5, y: 0.2 }}
               onPress={() => {
                 this.setState(({ tallColor }) => {
                   return {
@@ -653,7 +651,7 @@ export default class ARTest extends Component {
                 });
               }}
             >
-              <ARBox width={0.5} height={2} length={0.5} chamfer={0}>
+              <ARBox width={0.5} height={2} length={0.5}>
                 <ARMaterial index={0}>
                   <ARMaterialProperty
                     id="diffuse"
@@ -663,36 +661,24 @@ export default class ARTest extends Component {
                 <ARMaterial index={1}>
                   <ARMaterialProperty
                     id="diffuse"
-                    color={processColor(this.state.tallColor)}
+                    color={this.state.tallColor}
                   />
                 </ARMaterial>
                 <ARMaterial index={2}>
-                  <ARMaterialProperty
-                    id="diffuse"
-                    color={processColor("green")}
-                  />
+                  <ARMaterialProperty id="diffuse" color={"green"} />
                 </ARMaterial>
                 <ARMaterial index={3}>
-                  <ARMaterialProperty
-                    id="diffuse"
-                    color={processColor("green")}
-                  />
+                  <ARMaterialProperty id="diffuse" color={"green"} />
                 </ARMaterial>
                 <ARMaterial index={4}>
-                  <ARMaterialProperty
-                    id="diffuse"
-                    color={processColor("red")}
-                  />
+                  <ARMaterialProperty id="diffuse" color={"red"} />
                 </ARMaterial>
                 <ARMaterial index={5}>
-                  <ARMaterialProperty
-                    id="diffuse"
-                    color={processColor("red")}
-                  />
+                  <ARMaterialProperty id="diffuse" color={"red"} />
                 </ARMaterial>
               </ARBox>
               <ARNode position={{ x: 1, y: 1, z: 1 }}>
-                <ARText text="hello" font={{ size: 0.5 }} />
+                <ARText text="hello" />
               </ARNode>
             </ARNode>
           </ARNode>
