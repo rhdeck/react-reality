@@ -2,7 +2,6 @@ import Foundation
 import SceneKit
 import SpriteKit
 typealias jsonType = [String:Any]
-typealias SCNTextNode = SCNNode
 @objc extension RCTConvert {
     @objc class func SCNMaterial(_ json:jsonType) -> SCNMaterial {
         let m:SCNMaterial = SceneKit.SCNMaterial()
