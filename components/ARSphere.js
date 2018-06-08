@@ -7,5 +7,8 @@ export default ARGeometry(
   {
     radius: PropTypes.number
   },
-  1
+  1,
+  {
+    radius: 0.5
+  }
 );
