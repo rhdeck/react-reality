@@ -1,6 +1,6 @@
 {
   "name": "react-reality",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "peerDependencies": {
     "react-native-pod": "^1.6.0",
     "react-native-swift": "^0.10.0"
