@@ -18,8 +18,8 @@ class ARPositionProvider extends Component {
   onPositionChange(data) {
     console.log("Updating provider value with ", data);
     this.setState({ providerValue: data });
-    if (typeof this.props.didPositionChange == "function")
-      this.props.didPositionChange(data);
+    if (typeof this.props.onPositionChange == "function")
+      this.props.onPositionChange(data);
   }
   render() {
     return (
@@ -46,7 +46,7 @@ ARPositionProvider.defaultProps = {
   sensitivity: 0.01
 };
 ARPositionProvider.propTypes = {
-  didPositionChange: PropTypes.func,
+  onPositionChange: PropTypes.func,
   sensitivity: PropTypes.number
 };
 export { ARPositionProvider, ARPositionConsumer };
