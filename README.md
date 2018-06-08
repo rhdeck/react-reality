@@ -2,15 +2,16 @@
 
 A React-based, JSX-centric way of interacting with Augmented Reality. Make the world your provider.
 
+Currently IOS-Only, but SceneForm may change that!
+
 ## Key Features
 
 - Primitives to give high control over every aspect. Makes animations so much easier to have nodes not attached to geometries
 - Layout Animations via <ARAnimatedProvider />
-- Provider-based (render prop!) tracking of self `<ARTrackingProvider />`, screen-touch on `<ARTouchableMonoView />` and both images and planes via `<ARTrackingProvider />`
+- Provider-based (render prop!) tracking of self `<ARPositionProvider />`, screen-touch on `<ARTouchableMonoView />` and both images and planes via `<ARTrackingProvider />`
 - Support for touch events at the node level via onPress, onPressIn, and onPressOut events. Registered only if using a touchablemonoview
 - Support for mixing in scenes and models. Import Scenekit-compatible SCN and DAE via `<ARScene />` and add models (like from Google Poly) via `<ARModel />`.
 - Support for mixing in multiple 2-D SpriteKit `<ARSKScene />` with composed primitives and adding them to an `<ARMaterialProperty>`. A great way for rendering images, video and text(!) in space and performantly.
-  Currently IOS-Only, but SceneForm may change that!
 
 ## Installation: `react-native link`
 
@@ -130,7 +131,7 @@ If the immediate child is a function, the provider will wrap it in an `<ARPositi
     console.log("my new lateral position is ", position.x);
   }}
 > {({position, orientation})=>{
-  // ... Nodes that are depdendant on where I am...
+  // ... Nodes that are dependant on where I am...
 }}
 ```
 
@@ -190,7 +191,7 @@ setInterval(()=>{ this.setState({Ypos})=> return { Ypos: Ypos + 1}}, 5000)
         position={{ x: 4}}
         eulerAngles={{x: this.state.Ypos * Math.PI}}>
       >
-        <ARCapsule>
+        <ARCapsule />
       </ARNode>
     </ARAnimatedProvider>
   </ARNode>
@@ -234,9 +235,12 @@ Consumer for the `<ARTrackingProvider />` above. Render prop with the same argum
 
 #### Argument members
 
-- `anchors`: Key-value pairs of anchors detected with names and relevant information.
-
-Note that the anchors can and should be referenced as parents to nodes to anchor a node to a particular reference point.
+- `anchors`: Key-value pairs of anchors detected with names and relevant information. The key will be the name of the node you can specify as a parentNode for mounting any additional nodes. The value will contain information relevant to the anchor:
+  - `type`: `plane` or `image`
+  - `plane`: Size of the plane for the identified anchor (be it an image or a detected surface) as {width, height}
+    Note that the anchors can and should be referenced as parents to nodes to anchor a node to a particular reference point.
+  - `name`: name of the image identified (maps to the key in the images object passed to the `<ARTrackingProvider />`(only provided for image anchors)
+  - `alignment`: Whether the detected plane is horizontal or vertical. This informs what orientation change you might want to apply to mounted nodes. (only provided for plane anchors)
 
 #### Sample
 
@@ -260,7 +264,7 @@ Note that the anchors can and should be referenced as parents to nodes to anchor
 
 ## Nodes
 
-Nodes represent position in space that are relative to their parent. A node need not have anything visible attached to it - in fact, that can be really desirable to manage animations through space, as you set up a node as a reference point and have other nodes position and move in relationship to it.
+A node represents position in space relative to their parent. A node need not have anything visible attached to it - in fact, that can be really desirable to manage animations through space, as you set up a node as a reference point and have other nodes position and move in relationship to it.
 
 ### ARNode
 
@@ -268,12 +272,24 @@ Position in space relative to its identified parent.
 
 #### Props
 
-- `position`: location of the node in meters relative to its parent. object of {x,y,z}
+- `parentNode`: Node to be parent to this node in space. If not provided, assumes the nearest ancestor `<ARNode />`. If there is none, mounts relative to egocentric origin. (Note: this is usually only specified when you are establishing a node tree that is mounting to an exocentric anchor, like provided by the `<ARTrackingConsumer />`)
+- `position`: location of the node in meters relative to its parent. object of {x,y,z} (default: {x: 0, y: 0, z: 0})
+- `scale`: resizing this node and its descendants relative to parent node. A positive value where 1.0 means scale is same as parent. (Default: 1.0)
+- `opacity`: Whether this node and its descendants should be see-through. Values from 0-1.0 inclusive. 0 means invisible and 1 means opaque. (Default: 1.0)
+- `id`: name for the node. Referenced for parentNode publicly. Most of the time you are not setting this. (Default: randomly assigned UUID)
+
+The following all describe the pose of the node. Usually you want to use one but not all three. Orientation is most robust as a quaternion, but rotation and eulerAngles are easier to work with for newcomers.
+
 - `orientation`: pose of the node expressed as a quaternion {x,y,z,w}
-- `eulerAngles`: pose of the node expressed as euler angles {x,y,z}. (_Hint_ these are easier to use for those less versed in 3D programming)
+- `rotation`: pose of the node expressed with three degrees of freedom {x,y,z}
+- `eulerAngles`: pose of the node expressed as euler angles {x,y,z}. (_Hint_ while they can cause rotation lock problems in complex situations, these are easier to use than orientation quaternions for those less versed in 3D programming)
+
+The following props only work when mounted inside a `<ARTouchableMonoView />`:
+
 - `onPress`: event fired with a finger comes down and comes up again over this node on a `<ARTouchableMonoView />`
 - `onPressIn`: event fired when finger is pressed on a `<ARTouchableMonoView />` over this node. (usually requires a geometry mounted on this node for detection to work)
 - `onPressOut`: event fired when the finger is lifted from a `<ARTouchableMonoView />` over this node. (usually requires a geometry mounted on this node for detection to work)
+-
 
 ## Geometries
 
@@ -283,7 +299,7 @@ _Note_: All size measurements are in meters. Chamfer is the concept of rounding 
 
 ### ARBox
 
-Creates a rectangular hexahedron geometry. C'mon. You know what a box is.
+Creates a rectangular hexahedron geometry. C'mon. You know what a box is. Sides: 6
 
 #### Props
 
@@ -294,7 +310,31 @@ Creates a rectangular hexahedron geometry. C'mon. You know what a box is.
 
 ### ARCapsule
 
+A pill shape Sides: 3
+
+#### Props
+
+- `capR`: Radius of the cap on the end of the pill. (default: 0.5)
+- `height`: Length of the cap (basically the "tube" part would be height - (capR \* 2) (default: 1)
+
+### ARCone
+
+Cone or a cropped/partial cone. Sides: 2 if it goes to a point, and 3 if it is cropped (e.g. if `topR` and `bottomR` are greater than 0)
+
+#### Props
+
+- `topR`: Radius exposed at top of cone. Set to 0 for the full dunce-hat (Default: 0)
+- `bottomR`: Radius at bottom of cone. Set to 0 for an upside-down cone. (Default: 0.5)
+- `height`: Height of the cone.
+
 ### ARCylinder
+
+A cylinder. Sides: 3
+
+#### Props
+
+- `radius`: radius of the cylinder. (Default: 0.5)
+- `height`: length of the cylinder. (Default: 1)
 
 ### ARPlane
 
@@ -320,13 +360,35 @@ Creates a rectangular hexahedron geometry. C'mon. You know what a box is.
 
 ### ARMaterial
 
+Control over the material applied to a side of a geometry. Directly calling this element is going to be much less common than just using `<ARMaterials />` for simple application to relevant sides.
+
+#### Props
+
+- `index`: the index number of the side of the geometry that this material will apply to.
+
+The rest of these props are for more advanced/subtle manipulation. Most of your control is in the `<ARMaterialProperty />` component.
+
+@TODO fill in smarter descriptions of these
+
+- `metalness`: Number 0-1
+- `roughness`: Number 0-1
+- `blendMode`:
+- `lightingModel`:
+- `shaders`: Object {Geometry, Surface, LightingModel, Fragment}
+- `writesToDepthBuffer`: Boolean
+- `colorBufferWriteMask`: "All", "None", "Alpha", "Blue", "Red", "Green
+- `doubleSided`: Boolean
+- `litPerPixel`: Boolean
+- `transparency`: 0-1
+- `fillMode`: "Fill" or "Lines"
+
 ### ARMaterials
 
 An affordance that applies all the ARMaterialProperty child components to every face of the material. (so you can make a red cube without having to specify each side)
 
 #### Props
 
-None
+Inherits all props from `<ARMaterial />` except for `index`.
 
 #### Example
 
@@ -340,12 +402,16 @@ None
 
 ### ARMaterialProperty
 
+Material Properties define how a material interacts with light. The most common use is setting a color that will cause it to refract that spectrum. A second common use is setting an image that will be used as texture (e.g. a poster of an image).
+
+`<ARMatierialProperty />` nodes are also where you mount your `<ARSKScene>` for placing dynamic 2-d content
+
 #### Props
 
-- id: Type of material property. (Default, because this is the one you will want to use most often: **diffuse**)
-- color: Color to be applied. Takes a string or a number
-- path: Path to file with texture to apply, as an alternative to setting a flat color
-- intensity: How much to apply this property (basically lower washes out the effect/color/texture) 0.0-1.0
+- `id`: Type of material property. Valid string values include "diffuse", "specular", "normal" (Default, because this is the one you will want to use most often: **diffuse**)
+- `color`: Color to be applied. Takes a string or a number
+- `path`: Path to file with texture to apply, as an alternative to setting a flat color
+- `intensity`: How much to apply this property (basically lower washes out the effect/color/texture) 0.0-1.0
 
 ```xml
 <ARBox>
@@ -355,7 +421,7 @@ None
 <ARBox>
 ```
 
-## Sprites
+## 2-D Content
 
 ### ARSKScene
 
