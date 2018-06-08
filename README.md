@@ -376,14 +376,24 @@ A Pyramid. Sides: 5
 
 A bezier path-based 2D shape defined with SVG and extruded into 3D space. Sides: 1 if there is no extrusion, 3 if there is no chamfer, 4 if chamfer is front or back only, and 5 if there is chamfer both front and back.
 
-Yes, it's complicated, but so are bezier curves.
+This is the most complicated of the basic geometries, and most of the time you won't need to use it anyway, so don't sweat if it looks like a bit much.
 
 #### Props
 
-- `pathSvg`: SVG text representation of the path to be displayed.
+- `pathSvg`: SVG text representation of the path to be displayed. Required throw error if this text is not provided.
 - `extrusion`: depth of the extrusion. (default: 1)
+- `chamferMode`: Whether to apply chamfer to front (1), back, (2) both (3) or neither (0). (Default: 0)
+- `chamferRadius`: Radius of the chamfer if chamferMode is not 0 (default: 0)
+
+_Note_: Setting a custom bezier path for the chamfer is not supported at this time.
 
 ### ARSphere
+
+A ball. Sides: 1
+
+#### Props
+
+`radius`: Radius of the sphere. (Default: 0.5)
 
 ### ARText
 
@@ -452,7 +462,7 @@ Material Properties define how a material interacts with light. The most common 
 - `id`: Type of material property. Valid string values include "diffuse", "specular", "normal" (Default, because this is the one you will want to use most often: **diffuse**)
 - `color`: Color to be applied. Takes a string or a number
 - `path`: Path to file with texture to apply, as an alternative to setting a flat color
-- `intensity`: How much to apply this property (basically lower washes out the effect/color/texture) 0.0-1.0
+- `intensity`: How much to apply this property (basically lower values wash out the effect/color/texture) 0.0-1.0
 
 ```xml
 <ARBox>
