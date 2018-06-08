@@ -1,4 +1,5 @@
 import React, { Component, Children } from "react";
+import { processColor } from "react-native";
 import { removeSKNode, setSKLabelNode } from "../ARSceneManager";
 import PropTypes from "prop-types";
 import pickBy from "lodash/pickBy";
@@ -87,6 +88,7 @@ ARBaseSKLabel.propTypes = {
   fontColor: PropTypes.number, // Note this requires a preprocessed color
   width: PropTypes.number
 };
+
 const SKLabelKeys = Object.keys(ARBaseSKLabel.propTypes);
 const ARSKLabel = props => {
   return (
@@ -97,10 +99,13 @@ const ARSKLabel = props => {
     </ARSKNodeConsumer>
   );
 };
+ARSKLabel.defaultProps = {};
+
 const propFilter = props => {
-  return {
+  const temp = {
     ...pickBy(props, (v, k) => SKLabelKeys.indexOf(k) > -1)
   };
+  if (typeof temp.color == "string") temp.color = processColor(temp.color);
 };
 
 const propDiff = (a, b) => {
