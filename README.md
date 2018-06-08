@@ -338,9 +338,50 @@ A cylinder. Sides: 3
 
 ### ARPlane
 
+A single-sided plane. Note that this is invisible from one side. Sides: 1
+
+_Hint_: This is a great geometry for mounting `<ARSKScene />` content
+
+#### Props
+
+- `width`: width of plane. (Default: 1)
+- `height`: height of plane. (Default: 1)
+- `cornerRadius`: radius of a rounded corner. (Default: 0)
+
+#### Sample
+
+```jsx
+<ARPlane>
+  <ARMaterials>
+    <ARMaterialProperty>
+      <ARSKScene width={100} height={100} color="yellow">
+        <ARSKLabel text="Hi there" />
+      </ARSKScene>
+    </ARMaterialProperty>
+  </ARMaterials>
+</ARPlane>
+```
+
 ### ARPyramid
 
+A Pyramid. Sides: 5
+
+#### Props
+
+- `width`: x axis of the base. (Default: 1)
+- `length`: z axis of the base. (Default: 1)
+- `height`: height (y axis) (Default: 1)
+
 ### ARShape
+
+A bezier path-based 2D shape defined with SVG and extruded into 3D space. Sides: 1 if there is no extrusion, 3 if there is no chamfer, 4 if chamfer is front or back only, and 5 if there is chamfer both front and back.
+
+Yes, it's complicated, but so are bezier curves.
+
+#### Props
+
+- `pathSvg`: SVG text representation of the path to be displayed.
+- `extrusion`: depth of the extrusion. (default: 1)
 
 ### ARSphere
 
