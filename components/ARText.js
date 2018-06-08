@@ -6,11 +6,19 @@ export default ARGeometry(
   setText,
   {
     text: PropTypes.string,
-    name: PropTypes.string,
+    fontName: PropTypes.string,
     // weight: PropTypes.string,
     size: PropTypes.number,
     depth: PropTypes.number,
     chamfer: PropTypes.number
   },
-  6
+  ({ chamfer }) => {
+    if (chamfer) return 4;
+    return 3;
+  },
+  {
+    size: 12,
+    depth: 0.1,
+    chamfer: 0
+  }
 );

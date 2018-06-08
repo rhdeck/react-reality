@@ -9,7 +9,7 @@ export default ARGeometry(
     bottomR: PropTypes.number,
     height: PropTypes.number
   },
-  props => {
+  ({ topR, bottomR }) => {
     if (topR > 0 && bottomR > 0) {
       return 3;
     }

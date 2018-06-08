@@ -9,7 +9,7 @@ export default ARGeometry(
   },
   2,
   {
-    radius: 1,
+    radius: 0.5,
     height: 1
   }
 );

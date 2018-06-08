@@ -6,7 +6,7 @@ export default ARGeometry(
   setShape,
   {
     extrusion: PropTypes.number,
-    pathSvg: PropTypes.string,
+    pathSvg: PropTypes.string.isRequired,
     pathFlatness: PropTypes.number,
     chamferMode: PropTypes.number,
     chamferRadius: PropTypes.number,
@@ -23,5 +23,9 @@ export default ARGeometry(
       temp = 5; // THere is extrusion and double-chamfer - extruded disc with bezeling front and back
     }
     return temp;
+  },
+  {
+    extrusion: 1.0,
+    chamferMode: 0
   }
 );
