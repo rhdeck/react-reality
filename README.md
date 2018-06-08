@@ -615,7 +615,8 @@ import {
   ARMaterial,
   ARMaterials,
   ARMaterialProperty,
-  ARText
+  ARText,
+  ARSessionProvider
 } from "react-reality";
 export default class ARTest extends Component {
   state = {
@@ -625,73 +626,78 @@ export default class ARTest extends Component {
   };
   render() {
     return (
-      <ARTouchableMonoView style={{ flex: 1 }} debug>
-        <ARNode
-          position={{ x: 1, y: 1, z: -5 }}
-          onPressIn={() => {
-            this.setState({ fatColor: "green" });
-          }}
-          onPressOut={() => {
-            this.setState({ fatColor: "blue" });
-          }}
-        >
-          <ARBox width={2} height={0.5} length={2} chamfer={0}>
-            <ARMaterials roughness={0.5} metalness={0.2}>
-              <ARMaterialProperty
-                id="diffuse"
-                color={processColor(this.state.fatColor)}
-              />
-            </ARMaterials>
-          </ARBox>
+      <ARSessionProvider>
+        <ARTouchableMonoView style={{ flex: 1 }} debug>
           <ARNode
-            position={{ x: 0.4, y: 3, z: 0 }}
-            eulerAngles={{ x: 0.5, y: 0.2, z: 0 }}
-            onPress={() => {
-              this.setState(({ tallColor }) => {
-                return {
-                  tallColor: tallColor == "yellow" ? "purple" : "yellow"
-                };
-              });
+            position={{ x: 1, y: 1, z: -5 }}
+            onPressIn={() => {
+              this.setState({ fatColor: "green" });
+            }}
+            onPressOut={() => {
+              this.setState({ fatColor: "blue" });
             }}
           >
-            <ARBox width={0.5} height={2} length={0.5} chamfer={0}>
-              <ARMaterial index={0}>
-                <ARMaterialProperty
-                  id="diffuse"
-                  color={processColor(this.state.tallColor)}
-                />
-              </ARMaterial>
-              <ARMaterial index={1}>
-                <ARMaterialProperty
-                  id="diffuse"
-                  color={processColor(this.state.tallColor)}
-                />
-              </ARMaterial>
-              <ARMaterial index={2}>
-                <ARMaterialProperty
-                  id="diffuse"
-                  color={processColor("green")}
-                />
-              </ARMaterial>
-              <ARMaterial index={3}>
-                <ARMaterialProperty
-                  id="diffuse"
-                  color={processColor("green")}
-                />
-              </ARMaterial>
-              <ARMaterial index={4}>
-                <ARMaterialProperty id="diffuse" color={processColor("red")} />
-              </ARMaterial>
-              <ARMaterial index={5}>
-                <ARMaterialProperty id="diffuse" color={processColor("red")} />
-              </ARMaterial>
+            <ARBox width={2} height={0.5} length={2} chamfer={0}>
+              <ARMaterials roughness={0.5} metalness={0.2}>
+                <ARMaterialProperty id="diffuse" color={this.state.fatColor} />
+              </ARMaterials>
             </ARBox>
-            <ARNode position={{ x: 1, y: 1, z: 1 }}>
-              <ARText text="hello" font={{ size: 0.5 }} />
+            <ARNode
+              position={{ x: 0.4, y: 3, z: 0 }}
+              eulerAngles={{ x: 0.5, y: 0.2, z: 0 }}
+              onPress={() => {
+                this.setState(({ tallColor }) => {
+                  return {
+                    tallColor: tallColor == "yellow" ? "purple" : "yellow"
+                  };
+                });
+              }}
+            >
+              <ARBox width={0.5} height={2} length={0.5} chamfer={0}>
+                <ARMaterial index={0}>
+                  <ARMaterialProperty
+                    id="diffuse"
+                    color={this.state.tallColor}
+                  />
+                </ARMaterial>
+                <ARMaterial index={1}>
+                  <ARMaterialProperty
+                    id="diffuse"
+                    color={processColor(this.state.tallColor)}
+                  />
+                </ARMaterial>
+                <ARMaterial index={2}>
+                  <ARMaterialProperty
+                    id="diffuse"
+                    color={processColor("green")}
+                  />
+                </ARMaterial>
+                <ARMaterial index={3}>
+                  <ARMaterialProperty
+                    id="diffuse"
+                    color={processColor("green")}
+                  />
+                </ARMaterial>
+                <ARMaterial index={4}>
+                  <ARMaterialProperty
+                    id="diffuse"
+                    color={processColor("red")}
+                  />
+                </ARMaterial>
+                <ARMaterial index={5}>
+                  <ARMaterialProperty
+                    id="diffuse"
+                    color={processColor("red")}
+                  />
+                </ARMaterial>
+              </ARBox>
+              <ARNode position={{ x: 1, y: 1, z: 1 }}>
+                <ARText text="hello" font={{ size: 0.5 }} />
+              </ARNode>
             </ARNode>
           </ARNode>
-        </ARNode>
-      </ARTouchableMonoView>
+        </ARTouchableMonoView>
+      </ARSessionProvider>
     );
   }
 }
