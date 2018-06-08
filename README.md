@@ -118,8 +118,8 @@ If the immediate child is a function, the provider will wrap it in an `<ARPositi
 
 #### Props
 
-- sensitivity: the required observed change, in meters, in any direction to trigger either the `onPositionChange` prop or a re-fire of the `<ARPositionConsumer />` render prop.
-- onPositionChange: fires every time the position changes by more the designated sensitivity. Contains one argument with a `position` object (x,y,z) and an `orientation` (x,y,z,w)
+- `sensitivity`: the required observed change, in meters, in any direction to trigger either the `onPositionChange` prop or a re-fire of the `<ARPositionConsumer />` render prop.
+- `onPositionChange`: fires every time the position changes by more the designated sensitivity. Contains one argument with a `position` object (x,y,z) and an `orientation` (x,y,z,w)
 
 #### Sample
 
@@ -140,10 +140,10 @@ Detects and tracks planes and images (markers) in space, providing what's found 
 
 #### Props
 
-- planeDetection: Whether to detect planes and if so what kind., Values: "horizontal", "vertical", "both", "none" (Default: "none")
-- imageDetection: Whether to detect images defined in the images prop. Note that if there are no images in the images prop, this is not helpful. (Default: false)
-- images: Object as key-value store of the name of the image you want to hear about, and the file URL to an ordinary image file. (note that this does not require any of the precompiled referenceImage stuff to work - just pass a PNG or something)
-- onUpdateAnchors: event to fire whenever the provider gets notice of a change, addition or removal of a plane or image, depending on what detection is activated. Basically fires with the same argument and under the same circumstances as the `<ARTrackingConsumer />`.
+- `planeDetection`: Whether to detect planes and if so what kind., Values: "horizontal", "vertical", "both", "none" (Default: "none")
+- `imageDetection`: Whether to detect images defined in the images prop. Note that if there are no images in the images prop, this is not helpful. (Default: false)
+- `images`: Object as key-value store of the name of the image you want to hear about, and the file URL to an ordinary image file. (note that this does not require any of the precompiled referenceImage stuff to work - just pass a PNG or something)
+- `onUpdateAnchors`: event to fire whenever the provider gets notice of a change, addition or removal of a plane or image, depending on what detection is activated. Basically fires with the same argument and under the same circumstances as the `<ARTrackingConsumer />`.
 
 #### Sample
 
@@ -161,6 +161,42 @@ Detects and tracks planes and images (markers) in space, providing what's found 
 
 ### ARAnimatedProvider
 
+Layout animations for AR! Declaratively define a transition time for going from one declared layout state to another. Applies to materials, geometries and nodes descending from this node.
+
+_Note_: A good way to set animation at one point but not for other descendants is to implement another intervening `<ARAnimatedProvider />` below it
+
+#### Properties
+
+- `milliseconds` Transition time in ms.
+- `easing` Easing acceleration curve. String value with four possibilities:
+  - "in": Start slow and speed up in the beginning of the animation. (This usually looks most natural)
+  - "out": Go at normal speed but slow down the animation at the end.
+  - "both": Start slow, speed up, then slow down at the end.
+  - "none": Just move at the same speed the whole time. Has the virtue of being easy to predict where everything will be at any time.
+    (Default: "none")
+
+#### Sample
+
+```jsx
+setInterval(()=>{ this.setState({Ypos})=> return { Ypos: Ypos + 1}}, 5000)
+...
+<ARAnimatedProvider milliseconds={5000}>
+  <ARNode
+    eulerAngles={{y:this.state.Ypos * Math.PI * 2}}
+  >
+    <ARBox />
+    <ARAnimatedProvider milliseconds={1000} >
+      <ARNode
+        position={{ x: 4}}
+        eulerAngles={{x: this.state.Ypos * Math.PI}}>
+      >
+        <ARCapsule>
+      </ARNode>
+    </ARAnimatedProvider>
+  </ARNode>
+<ARAnimatedProvider>
+```
+
 ## Consumers
 
 ### ARPositionConsumer
@@ -169,8 +205,8 @@ Context consumer for an ancestor `<ARPositionProvider />`. A good way to wrap th
 
 #### Argument members
 
-- position: Location of current POV (relative to initial origin)
-- orientation: Orientation of current POV in quaternion format (x,y,z,w)
+- `position`: Location of current POV (relative to initial origin)
+- `orientation`: Orientation of current POV in quaternion format (x,y,z,w)
 
 #### Sample
 
@@ -198,7 +234,7 @@ Consumer for the `<ARTrackingProvider />` above. Render prop with the same argum
 
 #### Argument members
 
-- anchors: Key-value pairs of anchors detected with names and relevant information.
+- `anchors`: Key-value pairs of anchors detected with names and relevant information.
 
 Note that the anchors can and should be referenced as parents to nodes to anchor a node to a particular reference point.
 
@@ -230,16 +266,18 @@ Note that the anchors can and should be referenced as parents to nodes to anchor
 
 Geometries are generally simple shapes that can be attached to nodes. Only one geometry per node.
 
+_Note_: All size measurements are in meters. Chamfer is the concept of rounding a 3-d corner.
+
 ### ARBox
 
 Creates a rectangular hexahedron geometry. C'mon. You know what a box is.
 
 #### Props
 
-- height: Height (y-axis) of the box, in meters (default: 1.0)
-- width: Width (x-axis) of the box, in meters (default: 1.0)
-- length: Length (z-axis) of the box, in meters (default: 1.0)
-- chamfer: How much to round the corners of the box (default: 0)
+- `height`: Height (y-axis) of the box, in meters (default: 1.0)
+- `width`: Width (x-axis) of the box, in meters (default: 1.0)
+- `length`: Length (z-axis) of the box, in meters (default: 1.0)
+- `chamfer`: How much to round the corners of the box (default: 0)
 
 ### ARCapsule
 
