@@ -9,3 +9,5 @@ ios/react_native-arkit-swift/.DS_Store
 .DS_Store
 yarn-error.log
 *.log
+yarn-error.log
+convert.js
