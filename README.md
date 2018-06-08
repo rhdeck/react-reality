@@ -393,13 +393,42 @@ A ball. Sides: 1
 
 #### Props
 
-`radius`: Radius of the sphere. (Default: 0.5)
+- `radius`: Radius of the sphere. (Default: 0.5)
 
 ### ARText
 
+Extruded text in space. Sides: 3 if no chamfer, otherwise 4
+
+#### Props
+
+- `text`: Text to be rendered
+- `fontName`: Name of font to be used (Defaults to system default font)
+- `size`: Size of the font to use (usually effects how geometrically complex the text objects will be) (Default: 12)
+- `depth`: z-axis of the extrusion of the text (default: 0.1)
+- `chamfer`: chamfer/rounding of the edges from font face to the extrusion (Default: 0)
+
+_Note_: This creates complex shapes that are highly computationally expensive to render and maintain. If you want to display diagetic text, the `<SKLabel />` is higher-quality and lower-cost.
+
 ### ARTorus
 
+A donut. Mmm, donuts. Sides: 1
+
+#### Props
+
+- `ringR`: radius of the ring (how wide is the donut sitting on a table?) (Default: 0.5)
+- `pipeR`: radius of the pipe itself (how tall is the donut on the table?) (Default: 0.25)
+
 ### ARTube
+
+A tube. Sides: 4 if there is any thickness to it (e.g. a difference between `innerR` and `outerR`) , otherwise 2
+
+#### Props
+
+- `innerR`: Radius of the inside of the tube. (Default: 0.25)
+- `outerR`: Outer radius of the tube (Default: 0.5)
+- `height`: Height/length of the tube. (Default: 1)
+
+_Note_ As implied by the `height` prop, the default position of a tube is vertical. Reorient by changing orentation/rotation/eulerAngles of the containing node.
 
 ## Models
 
