@@ -506,7 +506,7 @@ An affordance that applies all the ARMaterialProperty child components to every 
 
 Inherits all props from `<ARMaterial />` except for `index`.
 
-#### Example
+#### Sample
 
 ```xml
 <ARBox>
@@ -528,6 +528,8 @@ Material Properties define how a material interacts with light. The most common 
 - `color`: Color to be applied. Takes a string or a number
 - `path`: Path to file with texture to apply, as an alternative to setting a flat color
 - `intensity`: How much to apply this property (basically lower values wash out the effect/color/texture) 0.0-1.0
+
+#### Sample
 
 ```xml
 <ARBox>
