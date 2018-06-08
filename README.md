@@ -6,11 +6,11 @@ A React-based, JSX-centric way of interacting with Augmented Reality. Make the w
 
 - Primitives to give high control over every aspect. Makes animations so much easier to have nodes not attached to geometries
 - Layout Animations via <ARAnimatedProvider />
-- Provider-based (render prop!) tracking of self <ARTrackingProvider />, screen-touch on <ARTouchableMonoView /> and both images and planes via <ARTrackingProvider />
+- Provider-based (render prop!) tracking of self `<ARTrackingProvider />`, screen-touch on `<ARTouchableMonoView />` and both images and planes via `<ARTrackingProvider />`
 - Support for touch events at the node level via onPress, onPressIn, and onPressOut events. Registered only if using a touchablemonoview
-- Support for mixing in scenes and models. Import Scenekit-compatible SCN and DAE via <ARScene /> and add models (like from Google Poly) via <ARModel />.
-
-Currently IOS-Only, but SceneForm may change that!
+- Support for mixing in scenes and models. Import Scenekit-compatible SCN and DAE via `<ARScene />` and add models (like from Google Poly) via `<ARModel />`.
+- Support for mixing in multiple 2-D SpriteKit `<ARSKScene />` with composed primitives and adding them to an `<ARMaterialProperty>`. A great way for rendering images, video and text(!) in space and performantly.
+  Currently IOS-Only, but SceneForm may change that!
 
 ## Installation: `react-native link`
 
@@ -47,7 +47,11 @@ Sample/Template package deployed as RN Template TK
 
 A "magic glass" renderer of both the real and virtual space from your point of view.
 
-Should be instantiated as child of an ARSessionProvider. Spins up a session to display the nodes designated as children/descendants.
+Should be instantiated as descendant of an ARSessionProvider. Spins up a session to display the nodes designated as children/descendants.
+
+#### Props
+
+It's a View. No special (public) props.
 
 #### Sample
 
@@ -63,7 +67,11 @@ Should be instantiated as child of an ARSessionProvider. Spins up a session to d
 
 Like `ARMonoView` but adds touchability, so that descendant nodes can implement touch event handlers.
 
-Should be instantiated as child of an ARSessionProvider. Spins up a session to display the nodes designated as children/descendants.
+Should be instantiated as a descendant of an ARSessionProvider. Spins up a session to display the nodes designated as children/descendants.
+
+#### Props
+
+It's a View. No special props.
 
 #### Sample
 
@@ -103,6 +111,8 @@ Manages the augmented reality session. Note that no nodes are rendered until the
 ```
 
 ### ARPositionProvider
+
+#### Props
 
 ### ARTrackingProvider
 
