@@ -136,6 +136,29 @@ If the immediate child is a function, the provider will wrap it in an `<ARPositi
 
 ### ARTrackingProvider
 
+Detects and tracks planes and images (markers) in space, providing what's found via `<ARTrackingConsumer />`
+
+#### Props
+
+- planeDetection: Whether to detect planes and if so what kind., Values: "horizontal", "vertical", "both", "none" (Default: "none")
+- imageDetection: Whether to detect images defined in the images prop. Note that if there are no images in the images prop, this is not helpful. (Default: false)
+- images: Object as key-value store of the name of the image you want to hear about, and the file URL to an ordinary image file. (note that this does not require any of the precompiled referenceImage stuff to work - just pass a PNG or something)
+- onUpdateAnchors: event to fire whenever the provider gets notice of a change, addition or removal of a plane or image, depending on what detection is activated. Basically fires with the same argument and under the same circumstances as the `<ARTrackingConsumer />`.
+
+#### Sample
+
+```jsx
+<ARTrackingProvider
+  planeDetection= "vertical"
+  images = {true}
+  imageDetection = {"starwars":
+  mystarWarsURL}
+  onUpdateAnchors={({anchors})=> {
+    console.log("my current anchor list is", anchors);
+  }}
+/>
+```
+
 ### ARAnimatedProvider
 
 ## Consumers
@@ -170,6 +193,34 @@ Context consumer for an ancestor `<ARPositionProvider />`. A good way to wrap th
 ```
 
 ### ARTrackingConsumer
+
+Consumer for the `<ARTrackingProvider />` above. Render prop with the same arguments as the `onUpdateAnchors` prop.
+
+#### Argument members
+
+- anchors: Key-value pairs of anchors detected with names and relevant information.
+
+Note that the anchors can and should be referenced as parents to nodes to anchor a node to a particular reference point.
+
+#### Sample
+
+```jsx
+<ARTrackingProvider imageDetection={true} images={{starwars: path_to_starwarspng}}>
+// ... intervening nodes
+  <ARTrackingConsumer>
+    {({anchors})=>{
+      if(anchors.starwars) {
+        //Render a cube two meters above a galaxy far far away
+        return (
+          <ARNode position = {y: 2} parentNode="starwars">
+            <ARBox />
+          </ARNode>
+        )
+      }
+    }}
+  </ARTrackingConsumer>
+</ARTrackingProvider>
+```
 
 ## Nodes
 
