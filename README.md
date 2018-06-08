@@ -129,7 +129,9 @@ If the immediate child is a function, the provider will wrap it in an `<ARPositi
   onPositionChange={({ position, orientation }) => {
     console.log("my new lateral position is ", position.x);
   }}
-/>
+> {({position, orientation})=>{
+  // ... Nodes that are depdendant on where I am...
+}}
 ```
 
 ### ARTrackingProvider
@@ -137,6 +139,35 @@ If the immediate child is a function, the provider will wrap it in an `<ARPositi
 ### ARAnimatedProvider
 
 ## Consumers
+
+### ARPositionConsumer
+
+Context consumer for an ancestor `<ARPositionProvider />`. A good way to wrap the one node you want to act as your buddy.
+
+#### Argument members
+
+- position: Location of current POV (relative to initial origin)
+- orientation: Orientation of current POV in quaternion format (x,y,z,w)
+
+#### Sample
+
+```jsx
+<ARPositionProvider>
+  // ... intervening generations...
+  <ARPositionConsumer>
+    {({ position, orientation }) => {
+      return (
+        <ARNode
+          position={{ ...position, z: position.z - 4 }} // Puts the position four meters in front of your current position
+          orientation={orientation}
+        >
+          <ARCapsule />
+        </ARNode>
+      );
+    }}
+  </ARPositionConsumer>
+</ARPositionProvider>
+```
 
 ### ARTrackingConsumer
 
