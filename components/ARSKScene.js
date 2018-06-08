@@ -1,5 +1,6 @@
 import React, { Component, createContext } from "react";
 import { addSKScene, removeSKScene, updateSKScene } from "../ARSceneManager";
+import { processColor } from "react-native";
 import PropTypes from "prop-types";
 import pickBy from "lodash/pickBy";
 import UUID from "uuid/v4";
@@ -21,6 +22,7 @@ class ARBaseSKScene extends Component {
     if (this.state.updateState == "doMount") {
       this.setState({ updateState: "Mounting" });
       try {
+        const filteredProps = propFilter(this.props);
         const scene = {
           ...propFilter(this.props),
           name: this.state.identifier
@@ -108,10 +110,15 @@ ARBaseSKScene.propTypes = {
   height: PropTypes.number,
   width: PropTypes.number,
   id: PropTypes.string,
-  color: PropTypes.number, // Requires processcolor
+  color: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   parentNode: PropTypes.string,
   index: PropTypes.number,
   materialProperty: PropTypes.string
+};
+
+ARBaseSKScene.defaultProps = {
+  height: 100,
+  width: 100
 };
 const sceneKeys = Object.keys(ARBaseSKScene.propTypes);
 
@@ -132,9 +139,10 @@ export { ARSKScene, ARSKNodeConsumer, ARSKNodeProvider };
 export default ARSKScene;
 
 const propFilter = props => {
-  return {
+  const temp = {
     ...pickBy(props, (v, k) => sceneKeys.indexOf(k) > -1)
   };
+  if (typeof temp.color == "string") temp.color = processColor(temp.color);
 };
 
 const propDiff = (a, b) => {
