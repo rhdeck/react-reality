@@ -124,7 +124,7 @@ typealias jsonType = [String:Any]
         let st = SceneKit.SCNText(string: text, extrusionDepth: (depth / size))
         st.flatness = 0.1
         var f = UIFont.systemFont(ofSize: baseFontSize)
-        if let fontName = json["name"] as? String {
+        if let fontName = json["fontName"] as? String {
             if let tf = UIFont(name: fontName, size: baseFontSize) { f = tf }
         }
         if let cf = json["chamfer"] as? CGFloat { st.chamferRadius = cf / size }
