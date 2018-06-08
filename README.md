@@ -668,7 +668,7 @@ export default class ARTest extends Component {
                   <ARMaterialProperty id="diffuse" color="green" />
                 </ARMaterial>
                 <ARMaterial index={3}>
-                  <ARMaterialProperty id="diffuse" color={"green"} />
+                  <ARMaterialProperty id="diffuse" color="green" />
                 </ARMaterial>
                 <ARMaterial index={4}>
                   <ARMaterialProperty id="diffuse" color="red" />
