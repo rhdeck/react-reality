@@ -260,7 +260,20 @@ Note that the anchors can and should be referenced as parents to nodes to anchor
 
 ## Nodes
 
+Nodes represent position in space that are relative to their parent. A node need not have anything visible attached to it - in fact, that can be really desirable to manage animations through space, as you set up a node as a reference point and have other nodes position and move in relationship to it.
+
 ### ARNode
+
+Position in space relative to its identified parent.
+
+#### Props
+
+- `position`: location of the node in meters relative to its parent. object of {x,y,z}
+- `orientation`: pose of the node expressed as a quaternion {x,y,z,w}
+- `eulerAngles`: pose of the node expressed as euler angles {x,y,z}. (_Hint_ these are easier to use for those less versed in 3D programming)
+- `onPress`: event fired with a finger comes down and comes up again over this node on a `<ARTouchableMonoView />`
+- `onPressIn`: event fired when finger is pressed on a `<ARTouchableMonoView />` over this node. (usually requires a geometry mounted on this node for detection to work)
+- `onPressOut`: event fired when the finger is lifted from a `<ARTouchableMonoView />` over this node. (usually requires a geometry mounted on this node for detection to work)
 
 ## Geometries
 
