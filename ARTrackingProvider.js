@@ -28,8 +28,8 @@ class ARTrackingProvider extends Component {
     };
     if (!skipState)
       this.setState({ providerValue }, () => {
-        if (this.props.didUpdateAnchors)
-          this.props.didUpdateAnchors(this.state.providerValue.anchors);
+        if (this.props.onUpdateAnchors)
+          this.props.onUpdateAnchors(this.state.providerValue.anchors);
       });
     return providerValue;
   }
@@ -174,9 +174,10 @@ class ARTrackingProvider extends Component {
   }
 }
 ARTrackingProvider.propTypes = {
-  planeDetection: PropTypes.bool,
+  planeDetection: PropTypes.string,
   imageDetection: PropTypes.bool,
-  didUpdateAnchors: PropTypes.func
+  onUpdateAnchors: PropTypes.func,
+  images: PropTypes.object
 };
 export { ARTrackingProvider, ARTrackingConsumer };
 export default ARTrackingProvider;
