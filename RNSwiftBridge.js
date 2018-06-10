@@ -52,6 +52,12 @@ const setShape = async (g, forNode) => {
 const setGeometry = async (geometry, forNode) => {
   return await NativeARSceneManager.setGeometry(geometry, forNode);
 };
+const setLight = async (light, forNode) => {
+  return await NativeARSceneManager.setLight(light, forNode);
+};
+const removeLight = async forNode => {
+  return await NativeARSceneManager.removeLight(forNode);
+};
 const setMaterial = async (material, forNode, atPosition) => {
   return await NativeARSceneManager.setMaterial(material, forNode, atPosition);
 };
@@ -201,6 +207,8 @@ export {
   setTube,
   setShape,
   setGeometry,
+  setLight,
+  removeLight,
   setMaterial,
   setMaterialProperty,
   removeGeometry,
