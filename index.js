@@ -23,6 +23,7 @@ import { ARSessionConsumer, ARSessionProvider } from "./ARSessionProvider";
 import { ARPositionProvider, ARPositionConsumer } from "./ARPositionProvider";
 import { ARTrackingConsumer, ARTrackingProvider } from "./ARTrackingProvider";
 import ARShape from "./components/ARShape";
+import ARLight from "./components/ARLight";
 export {
   ARMonoView,
   ARBox,
@@ -51,5 +52,6 @@ export {
   ARTrackingProvider,
   ARScene,
   ARModel,
-  ARShape
+  ARShape,
+  ARLight
 };
