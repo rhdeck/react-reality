@@ -39,6 +39,7 @@ Sample/Template package deployed as RN Template TK
 ## Extensions
 
 - [`react-reality-holokit`](https://github.com/rhdeck/react-reality-holokit): Implementation of headset view to use the holokit by Amber Garage
+- [`react-reality-rnarkit-bridge`](https://github.com/rhdeck/react-reality-rnarkit-bridge): Implementing the `react-native-arkit` API on top of the `react-reality` framework.
 
 # Reference
 
