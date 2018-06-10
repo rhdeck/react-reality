@@ -143,6 +143,7 @@ const propFilter = props => {
     ...pickBy(props, (v, k) => sceneKeys.indexOf(k) > -1)
   };
   if (typeof temp.color == "string") temp.color = processColor(temp.color);
+  return temp;
 };
 
 const propDiff = (a, b) => {
