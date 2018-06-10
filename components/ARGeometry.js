@@ -1,4 +1,4 @@
-import React, { Component, Children, createContext } from "react";
+import React, { Component, createContext } from "react";
 import PropTypes from "prop-types";
 import filter from "lodash/filter";
 import pickBy from "lodash/pickBy";
@@ -58,7 +58,7 @@ const ARGeometry = (mountFunc, geomProps, numSides, defaults) => {
         throw new Error("Cannot mount a Geometry without a parent Node");
       async () => {
         try {
-          await ARSceneManager.removeGeometry(this.props.parentNode);
+          await removeGeometry(this.props.parentNode);
         } catch (e) {}
       };
     }
@@ -157,5 +157,5 @@ const ARGeometry = (mountFunc, geomProps, numSides, defaults) => {
   };
   return ARGeometry;
 };
-export { ARGeometry, ARGeometryConsumer };
+export { ARGeometry, ARGeometryConsumer, Provider as ARGeometryProvider };
 export default ARGeometry;
