@@ -98,9 +98,9 @@ Manages the augmented reality session. Note that no nodes are rendered until the
 
 #### Props
 
-- `alignment`: How the system should think about x/y/z when start up the AR environment. The device will be the origin - the question is whether the other axes are based onL
-  - `gravity` in which case y is up/down to Earth's gravity but x and z are relative to whichever way the phone is pointing at the start of the session,
-  - `compass` in which z is north/south and x is west/east or
+- `alignment`: How the system should think about x/y/z when start up the AR environment. The device will be the origin - the question is whether the other axes are based on:
+  - `gravity` in which case y is down-to-up relative to Earth's gravity but x and z are relative to whichever way the phone is pointing at the start of the session,
+  - `compass` in which z is south-to-north and x is west-to-east or
   - `camera` in which they are all based on the orientation of the device itself.
     (Default: `gravity`)
 
@@ -120,7 +120,7 @@ If the immediate child is a function, the provider will wrap it in an `<ARPositi
 
 #### Props
 
-- `sensitivity`: the required observed change, in meters, in any direction to trigger either the `onPositionChange` prop or a re-fire of the `<ARPositionConsumer />` render prop.
+- `sensitivity`: the required observed change, in meters, in any direction to trigger either the `onPositionChange` prop or a re-fire of the `<ARPositionConsumer />` render prop. (Default: 0.01 - one centimeter)
 - `onPositionChange`: fires every time the position changes by more the designated sensitivity. Contains one argument with a `position` object (x,y,z) and an `orientation` (x,y,z,w)
 
 #### Sample
@@ -151,11 +151,12 @@ Detects and tracks planes and images (markers) in space, providing what's found 
 
 ```jsx
 <ARTrackingProvider
-  planeDetection= "vertical"
-  images = {true}
-  imageDetection = {"starwars":
-  mystarWarsURL}
-  onUpdateAnchors={({anchors})=> {
+  planeDetection="vertical"
+  images={true}
+  imageDetection={{
+    starwars: mystarWarsURL
+  }}
+  onUpdateAnchors={({ anchors }) => {
     console.log("my current anchor list is", anchors);
   }}
 />
@@ -169,13 +170,13 @@ _Note_: A good way to set animation at one point but not for other descendants i
 
 #### Properties
 
-- `milliseconds` Transition time in ms.
+- `milliseconds` Transition time in ms (Default: 250 - a quarter of a second)
 - `easing` Easing acceleration curve. String value with four possibilities:
   - "in": Start slow and speed up in the beginning of the animation. (This usually looks most natural)
   - "out": Go at normal speed but slow down the animation at the end.
   - "both": Start slow, speed up, then slow down at the end.
   - "none": Just move at the same speed the whole time. Has the virtue of being easy to predict where everything will be at any time.
-    (Default: "none")
+    (Default: "inout")
 
 #### Sample
 
@@ -189,7 +190,7 @@ setInterval(()=>{ this.setState({Ypos})=> return { Ypos: Ypos + 1}}, 5000)
     <ARBox />
     <ARAnimatedProvider milliseconds={1000} >
       <ARNode
-        position={{ x: 4}}
+        position={{ x: 4 }}
         eulerAngles={{x: this.state.Ypos * Math.PI}}>
       >
         <ARCapsule />
@@ -232,12 +233,12 @@ Context consumer for an ancestor `<ARPositionProvider />`. A good way to wrap th
 
 ### ARTrackingConsumer
 
-Consumer for the `<ARTrackingProvider />` above. Render prop with the same arguments as the `onUpdateAnchors` prop.
+Consumer for the `<ARTrackingProvider />` above.
 
 #### Argument members
 
 - `anchors`: Key-value pairs of anchors detected with names and relevant information. The key will be the name of the node you can specify as a parentNode for mounting any additional nodes. The value will contain information relevant to the anchor:
-  - `type`: `plane` or `image`
+  - `type`: "plane" or "image"
   - `plane`: Size of the plane for the identified anchor (be it an image or a detected surface) as {width, height}
     Note that the anchors can and should be referenced as parents to nodes to anchor a node to a particular reference point.
   - `name`: name of the image identified (maps to the key in the images object passed to the `<ARTrackingProvider />`(only provided for image anchors)
@@ -311,7 +312,7 @@ Creates a rectangular hexahedron geometry. C'mon. You know what a box is. Sides:
 
 ### ARCapsule
 
-A pill shape Sides: 3
+A pill shape. Sides: 3
 
 #### Props
 
@@ -326,7 +327,7 @@ Cone or a cropped/partial cone. Sides: 2 if it goes to a point, and 3 if it is c
 
 - `topR`: Radius exposed at top of cone. Set to 0 for the full dunce-hat (Default: 0)
 - `bottomR`: Radius at bottom of cone. Set to 0 for an upside-down cone. (Default: 0.5)
-- `height`: Height of the cone.
+- `height`: Height of the cone. (Default: 1)
 
 ### ARCylinder
 
