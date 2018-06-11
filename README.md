@@ -16,6 +16,8 @@ Currently IOS-Only, but SceneForm may change that!
 ## Installation: `react-native link`
 
 ```
+react-native init myreality
+cd myreality
 yarn add \
   rhdeck/react-reality \
   react-native-swift \
