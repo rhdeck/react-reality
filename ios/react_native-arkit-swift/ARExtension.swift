@@ -15,11 +15,10 @@ typealias jsonType = [String:Any]
         return SceneKit.SCNVector3(x, y, z)
     }
     @objc class func SCNVector4(_ json: jsonType) -> SCNVector4 {
-        
-            let x = json["x"] as? Double ?? 0
-            let y = json["y"] as? Double ?? 0
-            let z = json["z"] as? Double ?? 0
-            let w = json["w"] as? Double ?? 0
+        let x = json["x"] as? Double ?? 0
+        let y = json["y"] as? Double ?? 0
+        let z = json["z"] as? Double ?? 0
+        let w = json["w"] as? Double ?? 0
         return SceneKit.SCNVector4(x, y, z, w)
     }
     @objc class func SCNNode(_ json: jsonType) -> SCNNode {
