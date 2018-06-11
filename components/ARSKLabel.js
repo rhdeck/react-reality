@@ -105,7 +105,9 @@ const propFilter = props => {
   const temp = {
     ...pickBy(props, (v, k) => SKLabelKeys.indexOf(k) > -1)
   };
-  if (typeof temp.color == "string") temp.color = processColor(temp.color);
+  if (typeof temp.fontColor == "string")
+    temp.fontColor = processColor(temp.color);
+  return temp;
 };
 
 const propDiff = (a, b) => {
