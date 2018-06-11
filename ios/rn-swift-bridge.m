@@ -7,6 +7,8 @@ RCT_EXPORT_VIEW_PROPERTY(preview, BOOL);
 @end
 @interface RCT_EXTERN_MODULE(ARPrimaryViewManager, RCTViewManager)
 RCT_EXPORT_VIEW_PROPERTY(interPupilaryDistance, float);
+RCT_EXPORT_VIEW_PROPERTY(holoOffsetY, float);
+RCT_EXPORT_VIEW_PROPERTY(holoOffsetZ, float);
 @end
 @interface RCT_EXTERN_MODULE(ARSceneManager, RCTEventEmitter)
 RCT_EXTERN_METHOD(addNode:(SCNNode *)node parentID:(NSString *)parentID resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
