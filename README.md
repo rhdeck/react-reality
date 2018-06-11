@@ -291,7 +291,6 @@ The following props only work when mounted inside a `<ARTouchableMonoView />`:
 - `onPress`: event fired with a finger comes down and comes up again over this node on a `<ARTouchableMonoView />`
 - `onPressIn`: event fired when finger is pressed on a `<ARTouchableMonoView />` over this node. (usually requires a geometry mounted on this node for detection to work)
 - `onPressOut`: event fired when the finger is lifted from a `<ARTouchableMonoView />` over this node. (usually requires a geometry mounted on this node for detection to work)
--
 
 ## Geometries
 
