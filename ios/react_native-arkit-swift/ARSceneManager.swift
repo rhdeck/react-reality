@@ -20,6 +20,12 @@ class ARSceneManager:RCTEventEmitter, ARSessionDelegate {
     }
     var secondaryView:SCNView?
     var scene:SCNScene?
+    func addScene(_ s: SCNScene) {
+        scene = s
+        if let sv = secondaryView {
+            sv.scene = s
+        }
+    }
     var session:ARSession?
     var configuration:ARWorldTrackingConfiguration = ARWorldTrackingConfiguration()
     //MARK:Node Management
