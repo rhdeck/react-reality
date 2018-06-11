@@ -15,16 +15,21 @@ class ARPrimaryView: UIView, ARSCNViewDelegate {
             let p = SCNView()
             pview = p
             p.scene = a.scene
+            p.isPlaying = true
+            p.autoenablesDefaultLighting = true
             arview = a
             a.delegate = self
             guard let sm = ARSceneManager.sharedInstance else { return self }
             a.session.delegate = sm
-            sm.scene = a.scene
+            sm.addScene(a.scene)
             sm.session = a.session
-            a.scene.background.contents = UIColor.black
+            p.backgroundColor = UIColor.yellow
+            p.scene?.background.contents = UIColor.black
             a.autoenablesDefaultLighting = true
+            addSubview(a)
             addSubview(p)
             sm.doResume()
+            self.clipsToBounds = true
         } else {
             DispatchQueue.main.async(){
                 let _ = self.start();
@@ -36,6 +41,7 @@ class ARPrimaryView: UIView, ARSCNViewDelegate {
         super.layoutSubviews()
         pview?.frame = self.bounds
         arview?.frame = self.bounds
+        arview?.isHidden = true
     }
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
         DispatchQueue.main.async() {
@@ -46,30 +52,17 @@ class ARPrimaryView: UIView, ARSCNViewDelegate {
                 let pv = self.arview,
                 let PVpointOfView = pv.pointOfView?.clone()
             else { return }
-            // Determine Adjusted Position for Right Eye
+           
             let orientation : SCNQuaternion = PVpointOfView.orientation
             let YPos = SCNQToSCN3(orientation, v:SCNVector3Make( 0, 1, 0))
             PVpointOfView.position = applyOffset(v: PVpointOfView.position, withV: YPos, byScalar: self.holoOffsetY)
             let ZPos = SCNQToSCN3(orientation, v: SCNVector3Make(0,0,1))
             PVpointOfView.position = applyOffset(v: PVpointOfView.position, withV: ZPos , byScalar: self.holoOffsetZ)
             ppv.pointOfView = PVpointOfView
+             // Determine Adjusted Position for Right Eye
             let SVPointOfView = PVpointOfView.clone()
             let XPos = SCNQToSCN3(orientation, v:SCNVector3Make( 1,  0,  0))
-            SVPointOfView.position = applyOffset(v: SVPointOfView.position, withV: XPos, byScalar:self.interPupilaryDistance)
-//            let orientationQuaternion : GLKQuaternion = GLKQuaternionMake(orientation.x, orientation.y, orientation.z, orientation.w)
-//            let primaryEyeYPos : GLKVector3 = GLKVector3Make(0,1.0,0)
-//            let primaryEyeZPos : GLKVector3 = GLKVector3Make(0, 0, 1.0)
-//            let rotatedEyeYPos: GLKVector3 = GLKQuaternionRotateVector3(orientationQuaternion, primaryEyePos)
-//            let rotatedEyeYPosSCNV: SCNVector3 = SCNVector3Make(rotated)
-//            PVPointOfView.position
-//
-//            let eyePos : GLKVector3 = GLKVector3Make(1.0, 0.0, 0.0)
-//            let rotatedEyePos : GLKVector3 = GLKQuaternionRotateVector3(orientationQuaternion, eyePos)
-//            let rotatedEyePosSCNV : SCNVector3 = SCNVector3Make(rotatedEyePos.x, rotatedEyePos.y, rotatedEyePos.z)
-//            SVpointOfView.position.x += rotatedEyePosSCNV.x * self.interPupilaryDistance
-//            SVpointOfView.position.y += rotatedEyePosSCNV.y * self.interPupilaryDistance
-//            SVpointOfView.position.z += rotatedEyePosSCNV.z * self.interPupilaryDistance
-            // Set PointOfView for SecondView
+            SVPointOfView.position = applyOffset(v: SVPointOfView.position, withV: XPos, byScalar:1.0 * self.interPupilaryDistance)
             sv.pointOfView = SVPointOfView
             if let pov = renderer.pointOfView { sm.updatePOV(pov) }
         }
@@ -110,5 +103,5 @@ func applyOffset(v: SCNVector3, withV:SCNVector3, byScalar: Float) -> SCNVector3
     v2.x += withV.x * byScalar
     v2.y += withV.y * byScalar
     v2.z += withV.z * byScalar
-    return v
+    return v2
 }
