@@ -1,20 +1,46 @@
 import { requireNativeComponent } from "react-native";
 import PropTypes from "prop-types";
 import React, { Component } from "react";
-import { ARSessionConsumer } from "./ARSessionProvider";
+import { ARSessionConsumer, ARSessionProvider } from "./ARSessionProvider";
 class ARBaseMonoView extends Component {
   render() {
     return [
       <NativeMV {...this.props} children={null} key="ARMonoViewNative" />,
-      typeof this.props.children == "function" ? (
-        <ARSessionConsumer key="ARMonoViewConsumer">
-          {value => {
-            return this.props.children(value);
-          }}
-        </ARSessionConsumer>
-      ) : this.props.children ? (
-        this.props.children
-      ) : null
+      <ARSessionConsumer key="ARMonoViewConsumer">
+        {({ isStarted }) => {
+          if (typeof isStarted === "undefined") {
+            return (
+              <ARSessionProvider
+                alignment={
+                  this.props.alignment
+                    ? this.props.alignment
+                    : ARSessionProvider.defaultProps.alignment
+                }
+              >
+                {typeof this.props.children == "function" ? (
+                  <ARSessionConsumer>
+                    {value => {
+                      return this.props.children(value);
+                    }}
+                  </ARSessionConsumer>
+                ) : this.props.children ? (
+                  this.props.children
+                ) : null}
+              </ARSessionProvider>
+            );
+          } else {
+            return typeof this.props.children == "function" ? (
+              <ARSessionConsumer>
+                {value => {
+                  return this.props.children(value);
+                }}
+              </ARSessionConsumer>
+            ) : this.props.children ? (
+              this.props.children
+            ) : null;
+          }
+        }}
+      </ARSessionConsumer>
     ];
   }
   componentDidMount() {
