@@ -9,6 +9,7 @@ class ARPrimaryView: UIView, ARSCNViewDelegate {
     @objc var interPupilaryDistance:Float = 0.066
     @objc var holoOffsetY: Float = -0.08
     @objc var holoOffsetZ: Float = 0.08
+    @objc var holoOffsetX: Float = 0.033
     func start() -> ARPrimaryView {
         if Thread.isMainThread {
             let a = ARSCNView()
@@ -58,10 +59,11 @@ class ARPrimaryView: UIView, ARSCNViewDelegate {
             PVpointOfView.position = applyOffset(v: PVpointOfView.position, withV: YPos, byScalar: self.holoOffsetY)
             let ZPos = SCNQToSCN3(orientation, v: SCNVector3Make(0,0,1))
             PVpointOfView.position = applyOffset(v: PVpointOfView.position, withV: ZPos , byScalar: self.holoOffsetZ)
+            let XPos = SCNQToSCN3(orientation, v:SCNVector3Make( 1,  0,  0))
+            PVpointOfView.position = applyOffset(v: PVpointOfView.position, withV: XPos, byScalar: self.holoOffsetX)
             ppv.pointOfView = PVpointOfView
              // Determine Adjusted Position for Right Eye
             let SVPointOfView = PVpointOfView.clone()
-            let XPos = SCNQToSCN3(orientation, v:SCNVector3Make( 1,  0,  0))
             SVPointOfView.position = applyOffset(v: SVPointOfView.position, withV: XPos, byScalar:1.0 * self.interPupilaryDistance)
             sv.pointOfView = SVPointOfView
             if let pov = renderer.pointOfView { sm.updatePOV(pov) }
