@@ -14,9 +14,23 @@ class ARBaseSKScene extends Component {
     identifier: UUID(),
     updateState: "doMount" // "doMount", "Mounting", "donext", "do", "doing", "done"
   };
+  updateProviderValue() {
+    this.setState({
+      providerValue: {
+        SKNodeID: this.state.identifier,
+        height: this.props.height,
+        width: this.props.width
+      },
+      todos: {}
+    });
+  }
   constructor(props) {
     super(props);
-    this.state.providerValue = { SKNodeID: this.state.identifier };
+    this.state.providerValue = {
+      SKNodeID: this.state.identifier,
+      height: this.props.height,
+      width: this.props.width
+    };
   }
   async nativeUpdate() {
     if (this.state.updateState == "doMount") {
@@ -79,13 +93,29 @@ class ARBaseSKScene extends Component {
             ? "do"
             : "donext";
     }
+    if (
+      nextProps.height != prevState.providerValue.height ||
+      nextProps.width != prevState.providerValue.height
+    ) {
+      ret.todos["updateProviderValue"] = true;
+    }
     return ret;
   }
   componentDidMount() {
+    this.manageTodos();
     this.nativeUpdate();
   }
   componentDidUpdate() {
+    this.manageTodos();
     this.nativeUpdate();
+  }
+  manageTodos() {
+    if (this.state.todos) {
+      Object.keys(this.state.todos).forEach(k => {
+        if (typeof this[k] == "function") this[k](this.state.todos[k]);
+      });
+      this.setState({ todos: {} });
+    }
   }
   render() {
     if (!this.props.children) return null;
@@ -93,7 +123,15 @@ class ARBaseSKScene extends Component {
       return null;
     return (
       <ARSKNodeProvider value={this.state.providerValue}>
-        {this.props.children}
+        {typeof this.props.children == "function" ? (
+          <ARSKNodeConsumer>
+            {value => {
+              return this.props.children(value);
+            }}
+          </ARSKNodeConsumer>
+        ) : (
+          this.props.children
+        )}
       </ARSKNodeProvider>
     );
   }
