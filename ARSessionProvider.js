@@ -5,7 +5,8 @@ const { Provider, Consumer: ARSessionConsumer } = createContext({});
 class ARSessionProvider extends Component {
   state = {
     providerValue: this.setProviderValue(true),
-    alignment: "gravity"
+    alignment: "gravity",
+    isStarted: false
   };
   constructor(props) {
     super(props);
@@ -29,14 +30,14 @@ class ARSessionProvider extends Component {
   }
   setProviderValue(skipState) {
     const providerValue = {
-      isStarted: this.state && this.state.isStarted,
+      isStarted: !!(this.state && this.state.isStarted),
       start: this.start.bind(this),
       stop: this.stop.bind(this)
     };
     if (!skipState) this.setState({ providerValue });
     return providerValue;
   }
-  static setDerivedStateFromProps(nextProps, prevState) {
+  static getDerivedStateFromProps(nextProps, prevState) {
     var ret = prevState;
     if (nextProps.alignment && nextProps.alignment != prevState.alignment) {
       if (prevState.isStarted) {
