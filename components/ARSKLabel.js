@@ -88,7 +88,10 @@ ARBaseSKLabel.propTypes = {
   fontColor: PropTypes.oneOfType([PropTypes.number, PropTypes.string]), // Note this requires a preprocessed color
   width: PropTypes.number,
   horizontalAlignment: PropTypes.string,
-  verticalAlignment: PropTypes.string
+  verticalAlignment: PropTypes.string,
+  allowScaling: PropTypes.bool,
+  lineBreak: PropTypes.string,
+  lines: PropTypes.number
 };
 
 const SKLabelKeys = Object.keys(ARBaseSKLabel.propTypes);
@@ -108,7 +111,9 @@ const ARSKLabel = props => {
     </ARSKNodeConsumer>
   );
 };
-ARSKLabel.defaultProps = {};
+ARSKLabel.defaultProps = {
+  allowScaling: true
+};
 
 const propFilter = props => {
   const temp = {

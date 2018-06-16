@@ -180,7 +180,14 @@ func doUpdateSKScene(_ scene:SKScene, json:jsonType) {
 }
 func doUpdateSKLabelNode(_ skln:SKLabelNode, json: jsonType) {
     if let s = json["text"] as? String { skln.text = s }
-    skln.numberOfLines = 3
+    skln.numberOfLines = json["lines"] as? Int ?? 1
+    switch json["lineBreak"] as? String {
+        case "char": skln.lineBreakMode = .byCharWrapping
+        case "ellipsis": skln.lineBreakMode = .byTruncatingTail
+        case "word": skln.lineBreakMode = .byWordWrapping
+        case nil: skln.lineBreakMode = skln.numberOfLines == 1 ? .byTruncatingTail : .byWordWrapping
+        default:skln.lineBreakMode = skln.numberOfLines == 1 ? .byTruncatingTail : .byWordWrapping
+    }
     skln.lineBreakMode = .byWordWrapping
     if let s = json["fontName"] as? String { skln.fontName = s }
     if let d = json["fontSize"] as? Double { skln.fontSize = CGFloat(d) }
@@ -220,6 +227,12 @@ func doUpdateSKLabelNode(_ skln:SKLabelNode, json: jsonType) {
         skln.position = CGPoint(x: x, y: y)
     }
     if let d = json["width"] as? Double { skln.preferredMaxLayoutWidth = CGFloat(d) }
+    if json["allowScaling"] as? Bool ?? true {
+        let scalingFactor = skln.preferredMaxLayoutWidth / skln.frame.width
+        if(scalingFactor < 1) {
+            skln.fontSize = skln.fontSize * scalingFactor
+        }
+    }
 }
 func addMaterials(_ g:SCNGeometry, json: jsonType, sides:Int) {
     guard let mj = json["material"] as? jsonType else { return }

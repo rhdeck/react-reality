@@ -608,6 +608,9 @@ A text label to be rendered in a `<ARSKScene />`.
 - `fontSize`: Size of font to use. Number, not string. (Default: system default)
 - `fontColor`: Color to draw with
 - `width`: Pixel width to allocate to the text (will wrap within this pixel constraint)
+- `lines`: Number of lines to display in the text label (default: 1)
+- `lineBreak`: How to handle wrapping between lines. One of `word`, `ellipsis`, `char`. (Default: `word` for multiple-line labels and `ellipsis` when it is one line)
+- `allowScaling`: Whether to allow the text to scale when it is too big for the space. Basically means you can apply an arbitrarily big `fontSize` and have it fit. Boolean. (Default: true)
 
 #### Sample
 
