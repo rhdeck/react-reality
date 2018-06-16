@@ -214,7 +214,11 @@ func doUpdateSKLabelNode(_ skln:SKLabelNode, json: jsonType) {
         }
     }
     if let s = json["name"] as? String { skln.name = s }
-    if let j = json["position"] as? jsonType, let x = j["x"] as? Double, let y = j["y"] as? Double { skln.position = CGPoint(x: x, y: y) }
+    if let j = json["position"] as? jsonType {
+        let x = j["x"] as? Double ?? 0
+        let y = j["y"] as? Double ?? 0
+        skln.position = CGPoint(x: x, y: y)
+    }
     if let d = json["width"] as? Double { skln.preferredMaxLayoutWidth = CGFloat(d) }
 }
 func addMaterials(_ g:SCNGeometry, json: jsonType, sides:Int) {
