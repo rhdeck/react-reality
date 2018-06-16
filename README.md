@@ -79,12 +79,10 @@ Otherwise, it's a View. No special (public) props.
 
 #### Sample
 
-```xml
-<ARSessionProvider>
-  <ARMonoView>
+```javascript
+  <ARMonoView alignment="compass">
     <ARNode ... />
   </ARMonoView>
-</ARSessionProvider>
 ```
 
 ### ARTouchableMonoView
