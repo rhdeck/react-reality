@@ -4,10 +4,10 @@ import React, { Component } from "react";
 import { ARSessionConsumer, ARSessionProvider } from "./ARSessionProvider";
 class ARBaseMonoView extends Component {
   render() {
-    return [
-      <NativeMV {...this.props} children={null} key="ARMonoViewNative" />,
-      <ARSessionConsumer key="ARMonoViewConsumer">
-        {({ isStarted }) => {
+    return (
+      <ARSessionConsumer>
+        {value => {
+          const { isStarted } = value;
           if (typeof isStarted === "undefined") {
             return (
               <ARSessionProvider
@@ -17,31 +17,29 @@ class ARBaseMonoView extends Component {
                     : ARSessionProvider.defaultProps.alignment
                 }
               >
-                {typeof this.props.children == "function" ? (
-                  <ARSessionConsumer>
-                    {value => {
-                      return this.props.children(value);
-                    }}
-                  </ARSessionConsumer>
-                ) : this.props.children ? (
-                  this.props.children
-                ) : null}
+                <ARMonoView {...this.props} />
               </ARSessionProvider>
             );
-          } else {
-            return typeof this.props.children == "function" ? (
-              <ARSessionConsumer>
-                {value => {
-                  return this.props.children(value);
-                }}
-              </ARSessionConsumer>
-            ) : this.props.children ? (
-              this.props.children
-            ) : null;
-          }
+          } else
+            return [
+              <NativeMV
+                {...this.props}
+                children={null}
+                key="ARMonoViewNative"
+              />,
+              typeof this.props.children == "function" ? (
+                <ARSessionConsumer key="ARMonoViewConsumer">
+                  {value => {
+                    return this.props.children(value);
+                  }}
+                </ARSessionConsumer>
+              ) : this.props.children ? (
+                this.props.children
+              ) : null
+            ];
         }}
       </ARSessionConsumer>
-    ];
+    );
   }
   componentDidMount() {
     if (typeof this.props.start == "function") this.props.start();
