@@ -145,7 +145,7 @@ If the immediate child is a function, the provider will wrap it in an `<ARPositi
 
 #### Sample
 
-```jsx
+```javascript
 <ARPositionProvider
   sensitivity={0.05} //Fires with 5cm of movement
   onPositionChange={({ position, orientation }) => {
@@ -169,7 +169,7 @@ Detects and tracks planes and images (markers) in space, providing what's found 
 
 #### Sample
 
-```jsx
+```javascript
 <ARTrackingProvider
   planeDetection="vertical"
   images={true}
@@ -233,7 +233,7 @@ Context consumer for an ancestor `<ARPositionProvider />`. A good way to wrap th
 
 #### Sample
 
-```jsx
+```javascript
 <ARPositionProvider>
   // ... intervening generations...
   <ARPositionConsumer>
@@ -266,7 +266,7 @@ Consumer for the `<ARTrackingProvider />` above.
 
 #### Sample
 
-```jsx
+```javascript
 <ARTrackingProvider imageDetection={true} images={{starwars: path_to_starwarspng}}>
 // ... intervening nodes
   <ARTrackingConsumer>
@@ -371,7 +371,7 @@ _Hint_: This is a great geometry for mounting `<ARSKScene />` content
 
 #### Sample
 
-```jsx
+```javascript
 <ARPlane>
   <ARMaterials>
     <ARMaterialProperty>
@@ -471,7 +471,7 @@ Comes with animations running right from the point of mount.
 
 #### Sample
 
-```jsx
+```javascript
 <ARNode>
   <ARScene path={localpath_to_scn_file} />
 <ARNode>
@@ -487,7 +487,7 @@ A wrapper for downloaded OBJ models, such as those you can get from Google Poly.
 
 #### Sample
 
-```jsx
+```javascript
 <ARNode>
   <ARModel path={localpath_to_obj_file} />
 </ARNode>
@@ -580,7 +580,7 @@ Must be mounted to a `<ARMaterialProperty />` See sample.
 
 #### Sample
 
-```jsx
+```javascript
 <ARNode>
   <ARPlane>
     <ARMaterials>
@@ -609,7 +609,7 @@ A text label to be rendered in a `<ARSKScene />`.
 
 #### Sample
 
-```jsx
+```javascript
 <ARNode>
   <ARPlane>
     <ARMaterials>
@@ -625,7 +625,7 @@ A text label to be rendered in a `<ARSKScene />`.
 
 # App.js sample
 
-```jsx
+```javascript
 import React, { Component } from "react";
 import {
   ARTouchableMonoView,
