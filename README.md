@@ -16,7 +16,7 @@ Currently IOS-Only, but SceneForm may change that!
 ## 15-second installation: `react-reality`
 
 ```bash
-yarn global add react-reality-cli # or npm i g react-reality-cli
+yarn global add rhdeck/react-reality-cli # or npm i g react-reality-cli
 react-reality init myreality # of course, replace myreality with your preferred name
 cd myreality
 react-reality run-ios --device # react-reality acts like react-native inside a RR/RN project
