@@ -6,9 +6,18 @@ import {
   setPOVSensitivity
 } from "./ARSceneManager";
 import PropTypes from "prop-types";
-const { Provider, Consumer: ARPositionConsumer } = createContext({});
+const { Provider, Consumer: ARPositionConsumer } = createContext({
+  position: { x: 0, y: 0, z: 0 },
+  orientation: {}
+});
 class ARPositionProvider extends Component {
-  state = { providerValue: null, sensitivity: 0.01 };
+  state = {
+    providerValue: {
+      position: { x: 0, y: 0, z: 0 },
+      orientation: {}
+    },
+    sensitivity: 0.01
+  };
   componentDidMount() {
     detectPositionChange(this.onPositionChange.bind(this));
   }
@@ -16,7 +25,6 @@ class ARPositionProvider extends Component {
     stopDetectPositionChange();
   }
   onPositionChange(data) {
-    console.log("Updating provider value with ", data);
     this.setState({ providerValue: data });
     if (typeof this.props.onPositionChange == "function")
       this.props.onPositionChange(data);
@@ -25,7 +33,11 @@ class ARPositionProvider extends Component {
     return (
       <Provider value={this.state.providerValue}>
         {typeof this.props.children == "function" ? (
-          <ARPositionConsumer>{this.props.children}</ARPositionConsumer>
+          <ARPositionConsumer>
+            {value => {
+              return this.props.children(value);
+            }}
+          </ARPositionConsumer>
         ) : (
           this.props.children
         )}
