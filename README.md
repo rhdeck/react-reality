@@ -69,11 +69,13 @@ Copy the sample code at the bottom of this file to your App.js to try it out. Bu
 
 A "magic glass" renderer of both the real and virtual space from your point of view.
 
-Should be instantiated as descendant of an ARSessionProvider. Spins up a session to display the nodes designated as children/descendants.
+Will auto-create a `<ARSessionProvider />` if it is not already the child of one.
 
 #### Props
 
-It's a View. No special (public) props.
+If implemented without a wrapping `<ARSessionProvider />` it takes the props of `<ARSessionProvider />` most importantly `alignment`.
+
+Otherwise, it's a View. No special (public) props.
 
 #### Sample
 
@@ -89,11 +91,13 @@ It's a View. No special (public) props.
 
 Like `ARMonoView` but adds touchability, so that descendant nodes can implement touch event handlers.
 
-Should be instantiated as a descendant of an ARSessionProvider. Spins up a session to display the nodes designated as children/descendants.
+Will auto-create a `<ARSessionProvider />` if it is not already the child of one.
 
 #### Props
 
-It's a View. No special props.
+If implemented without a wrapping `<ARSessionProvider />` it takes the props of `<ARSessionProvider />` most importantly `alignment`.
+
+Otherwise, it's a View. No special (public) props.
 
 #### Sample
 
