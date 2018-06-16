@@ -85,16 +85,25 @@ ARBaseSKLabel.propTypes = {
   id: PropTypes.string,
   fontName: PropTypes.string,
   fontSize: PropTypes.number,
-  fontColor: PropTypes.number, // Note this requires a preprocessed color
-  width: PropTypes.number
+  fontColor: PropTypes.oneOfType([PropTypes.number, PropTypes.string]), // Note this requires a preprocessed color
+  width: PropTypes.number,
+  horizontalAlignment: PropTypes.string,
+  verticalAlignment: PropTypes.string
 };
 
 const SKLabelKeys = Object.keys(ARBaseSKLabel.propTypes);
 const ARSKLabel = props => {
   return (
     <ARSKNodeConsumer>
-      {({ SKNodeID }) => {
-        return <ARBaseSKLabel {...props} parentSKNode={SKNodeID} />;
+      {({ SKNodeID, height, width }) => {
+        return (
+          <ARBaseSKLabel
+            height={height}
+            width={width}
+            {...props}
+            parentSKNode={SKNodeID}
+          />
+        );
       }}
     </ARSKNodeConsumer>
   );
@@ -106,31 +115,43 @@ const propFilter = props => {
     ...pickBy(props, (v, k) => SKLabelKeys.indexOf(k) > -1)
   };
   if (typeof temp.fontColor == "string")
-    temp.fontColor = processColor(temp.color);
+    temp.fontColor = processColor(temp.fontColor);
   return temp;
 };
 
 const propDiff = (a, b) => {
   if (a === b) return false;
-  if (a & !b || !a & b) return true;
+  if (a & !b || !a & b) {
+    return true;
+  }
   const af = propFilter(a);
   const bf = propFilter(b);
 
   const afk = Object.keys(af);
   const bfk = Object.keys(bf);
-  if (afk.length != bfk.length) return true;
+  if (afk.length != bfk.length) {
+    return true;
+  }
   if (
     afk.filter(k => {
       return bfk.indexOf(k) === -1;
     }).length
-  )
+  ) {
     return true;
+  }
   if (
     afk.filter(k => {
-      return bf[k] != af[k];
+      const t1 = bf[k] == af[k];
+      if (t1) return false;
+      if (typeof bf[k] === "object") {
+        return JSON.stringify(bf[k]) != JSON.stringify(af[k]);
+      } else {
+        return true;
+      }
     }).length
-  )
+  ) {
     return true;
+  }
 };
 
 ARSKLabel.propTypes = { ...ARBaseSKLabel.propTypes };
