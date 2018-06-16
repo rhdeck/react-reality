@@ -13,7 +13,23 @@ Currently IOS-Only, but SceneForm may change that!
 - Support for mixing in scenes and models. Import Scenekit-compatible SCN and DAE via `<ARScene />` and add models (like from Google Poly) via `<ARModel />`.
 - Support for mixing in multiple 2-D SpriteKit `<ARSKScene />` with composed primitives and adding them to an `<ARMaterialProperty>`. A great way for rendering images, video and text(!) in space and performantly.
 
-## Installation: `react-native link`
+## 15-second installation: `react-reality`
+
+```bash
+yarn global add react-reality-cli # or npm i g react-reality-cli
+react-reality init myreality # of course, replace myreality with your preferred name
+cd myreality
+react-reality run-ios --device # react-reality acts like react-native inside a RR/RN project
+code .
+```
+
+_Note_ This installer utilizes [react-native-setdevteam](https://npmjs.com/package/react-native-setdevteam). If you have not used it before, it will ask you either to input your developer team ID or to give permission to find it for you in another project. This is necessary to sign your app and test on the phone.
+
+_Another Note_ This installer utilizes [react-native-bundlebase](https://npmjs.com/pacakge/react-native-bundlebase). If you have not used this package before, it will ask you for the base name you want to use for your app bundles. Your bundle then becomes [projectname].[bundle base]. This maintains uniqueness that allows you to more easily deploy to your device.
+
+Happy AR coding.
+
+## 1-minute Installation: `react-native link`
 
 ```
 react-native init myreality
@@ -36,10 +52,12 @@ react-native setdevteam
 react-native link
 ```
 
-Sample/Template package deployed as RN Template TK
+Copy the sample code at the bottom of this file to your App.js to try it out. But the `react-reality-cli` approach is a lot cleaner.
 
 ## Extensions
 
+- [`react-reality-components`](https://github.com/rhdeck/react-reality-components) Higher-order components to allow terser construction of augmented reality experiences
+- [`react-reality-cli`](https://github.com/rhdeck/react-reality-cli): Command line interface for rapidly spinning up and managing react-reality projects
 - [`react-reality-holokit`](https://github.com/rhdeck/react-reality-holokit): Implementation of headset view to use the holokit by Amber Garage
 - [`react-reality-rnarkit-bridge`](https://github.com/rhdeck/react-reality-rnarkit-bridge): Implementing the `react-native-arkit` API on top of the `react-reality` framework.
 
