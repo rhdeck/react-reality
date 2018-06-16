@@ -200,8 +200,7 @@ _Note_: A good way to set animation at one point but not for other descendants i
 
 #### Sample
 
-```jsx
-{% raw %}
+```javascript
 setInterval(()=>{ this.setState({Ypos})=> return { Ypos: Ypos + 1}}, 5000)
 ...
 <ARAnimatedProvider milliseconds={5000}>
@@ -219,7 +218,6 @@ setInterval(()=>{ this.setState({Ypos})=> return { Ypos: Ypos + 1}}, 5000)
     </ARAnimatedProvider>
   </ARNode>
 <ARAnimatedProvider>
-{% endraw %}
 ```
 
 ## Consumers
