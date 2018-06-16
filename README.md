@@ -13,7 +13,7 @@ Currently IOS-Only, but SceneForm may change that!
 - Support for mixing in scenes and models. Import Scenekit-compatible SCN and DAE via `<ARScene />` and add models (like from Google Poly) via `<ARModel />`.
 - Support for mixing in multiple 2-D SpriteKit `<ARSKScene />` with composed primitives and adding them to an `<ARMaterialProperty>`. A great way for rendering images, video and text(!) in space and performantly.
 
-## 15-second installation: `react-reality`
+## 15-second installation: `react-reality-cli`
 
 ```bash
 yarn global add rhdeck/react-reality-cli # or npm i g react-reality-cli
