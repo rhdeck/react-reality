@@ -630,7 +630,7 @@ A text label to be rendered in a `<ARSKScene />`.
 
 ### ARSKVideo
 
-Play a local video. Rendered in a `<ARSKScene />`
+Play a local video. Rendered in a `<ARSKScene />`. Not super-powerful as yet, but cool to have floating TV effect!
 
 #### Props
 
