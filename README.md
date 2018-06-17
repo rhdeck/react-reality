@@ -603,7 +603,7 @@ A text label to be rendered in a `<ARSKScene />`.
 #### Props
 
 - `text`: Text to be rendered as a string
-- `position`: Offset of top-left from parent SK element {x, y}
+- `position`: Offset of the center of the text box from parent SK element {x, y}
 - `fontName`: Font to use (Default: system default)
 - `fontSize`: Size of font to use. Number, not string. (Default: system default)
 - `fontColor`: Color to draw with
@@ -621,6 +621,40 @@ A text label to be rendered in a `<ARSKScene />`.
       <ARMaterialProperty>
         <ARSKScene color="yellow">
           <ARSKLabel text="hi there" fontColor="purple" fontSize={25} />
+        </ARSKScene>
+      </ARMaterialProperty>
+    </ARMaterials>
+  </ARPlane>
+</ARNode>
+```
+
+### ARSKVideo
+
+Play a local video. Rendered in a `<ARSKScene />`
+
+#### Props
+
+- `url`: Source of the video or stream
+- `path`: Path to a locally stored video (handy if managing with RNFS) (overridden by `url` if the other is specified)
+- `isPlaying` whether the video should be playing or not
+- `height` target height of the video in pixels
+- `width` target width of the video
+- `position` Offset of the center of the vide from the parent SK element {x, y}
+
+#### Sample
+
+```javascript
+<ARNode>
+  <ARPlane>
+    <ARMaterials>
+      <ARMaterialProperty>
+        <ARSKScene color="yellow">
+          <ARSKVideo
+            path={"local/path/to/my/video"}
+            isPlaying={true}
+            height={1080}
+            width={1920}
+          />
         </ARSKScene>
       </ARMaterialProperty>
     </ARMaterials>
