@@ -5,7 +5,6 @@
 	};
 	objectVersion = 48;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		712815C32026480B00C460CB /* ARExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712815C22026480B00C460CB /* ARExtension.swift */; };
 		714545D92034E50D00E44E8D /* ARSceneManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714545D82034E50D00E44E8D /* ARSceneManager.swift */; };

@@ -43,7 +43,9 @@ import {
   updateSKScene,
   getPOV,
   setPOVSensitivity,
-  setWorldTracking
+  setWorldTracking,
+  setSKVideoNode,
+  updateSKVideoNode
 } from "./RNSwiftBridge";
 const NativeObj = NativeModules.ARSceneManager;
 //const { ARSceneManager } = NativeModules;
@@ -169,5 +171,8 @@ export {
   stopDetectPositionChange,
   getPOV,
   setPOVSensitivity,
-  setWorldTracking
+  setWorldTracking,
+  setSKVideoNode,
+  updateSKVideoNode,
+  updateSKLabelNode
 };

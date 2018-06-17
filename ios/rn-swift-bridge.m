@@ -9,6 +9,8 @@ RCT_EXPORT_VIEW_PROPERTY(preview, BOOL);
 RCT_EXPORT_VIEW_PROPERTY(interPupilaryDistance, float);
 RCT_EXPORT_VIEW_PROPERTY(holoOffsetY, float);
 RCT_EXPORT_VIEW_PROPERTY(holoOffsetZ, float);
+RCT_EXPORT_VIEW_PROPERTY(holoOffsetX, float);
+RCT_EXPORT_VIEW_PROPERTY(fieldOfView, float);
 @end
 @interface RCT_EXTERN_MODULE(ARSceneManager, RCTEventEmitter)
 RCT_EXTERN_METHOD(addNode:(SCNNode *)node parentID:(NSString *)parentID resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
@@ -40,6 +42,8 @@ RCT_EXTERN_METHOD(addSKScene:(SKScene *)scene forNode:(NSString *)forNode atPosi
 RCT_EXTERN_METHOD(updateSKScene:(NSDictionary *)scene forNode:(NSString *)forNode atPosition:(NSInteger)atPosition withType:(NSString *)withType resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(setSKLabelNode:(SKLabelNode *)node toParent:(NSString *)toParent resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(updateSKLabelNode:(NSDictionary *)json resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
+RCT_EXTERN_METHOD(setSKVideoNode:(SKVideoNode *)node toParent:(NSString *)toParent resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
+RCT_EXTERN_METHOD(updateSKVideoNode:(NSDictionary *)json resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(setSKNode:(SKNode *)node toParent:(NSString *)toParent resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(removeSKNode:(NSString *)name resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(removeSKScene:(NSString *)forNode atPosition:(NSInteger)atPosition withType:(NSString *)withType resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);

@@ -124,6 +124,12 @@ const setSKLabelNode = async (node, toParent) => {
 const updateSKLabelNode = async json => {
   return await NativeARSceneManager.updateSKLabelNode(json);
 };
+const setSKVideoNode = async (node, toParent) => {
+  return await NativeARSceneManager.setSKVideoNode(node, toParent);
+};
+const updateSKVideoNode = async json => {
+  return await NativeARSceneManager.updateSKVideoNode(json);
+};
 const setSKNode = async (node, toParent) => {
   return await NativeARSceneManager.setSKNode(node, toParent);
 };
@@ -221,6 +227,8 @@ export {
   updateSKScene,
   setSKLabelNode,
   updateSKLabelNode,
+  setSKVideoNode,
+  updateSKVideoNode,
   setSKNode,
   removeSKNode,
   removeSKScene,

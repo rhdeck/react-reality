@@ -14,7 +14,7 @@ import ARMaterial from "./components/ARMaterial";
 import ARMaterialProperty from "./components/ARMaterialProperty";
 import ARMaterials from "./components/ARMaterials";
 import ARTouchableMonoView from "./ARTouchableMonoView";
-import ARSKScene from "./components/ARSKScene";
+import ARSKScene, { ARSKNodeConsumer } from "./components/ARSKScene";
 import ARSKLabel from "./components/ARSKLabel";
 import ARAnimatedProvider from "./ARAnimatedProvider";
 import ARScene from "./components/ARScene";
@@ -24,6 +24,7 @@ import { ARPositionProvider, ARPositionConsumer } from "./ARPositionProvider";
 import { ARTrackingConsumer, ARTrackingProvider } from "./ARTrackingProvider";
 import ARShape from "./components/ARShape";
 import ARLight from "./components/ARLight";
+import ARSKVideo from "./components/ARSKVideo";
 export {
   ARMonoView,
   ARBox,
@@ -53,5 +54,7 @@ export {
   ARScene,
   ARModel,
   ARShape,
-  ARLight
+  ARLight,
+  ARSKVideo,
+  ARSKNodeConsumer
 };

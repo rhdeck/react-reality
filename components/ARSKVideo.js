@@ -2,14 +2,14 @@ import React, { Component, Children } from "react";
 import { processColor } from "react-native";
 import {
   removeSKNode,
-  setSKLabelNode,
-  updateSKLabelNode
+  setSKVideoNode,
+  updateSKVideoNode
 } from "../ARSceneManager";
 import PropTypes from "prop-types";
 import pickBy from "lodash/pickBy";
 import UUID from "uuid/v4";
 import { ARSKNodeProvider, ARSKNodeConsumer } from "./ARSKScene";
-class ARBaseSKLabel extends Component {
+class ARBaseSKVideo extends Component {
   state = {
     identifier: UUID(),
     updateState: "doMount"
@@ -26,7 +26,7 @@ class ARBaseSKLabel extends Component {
           ...propFilter(this.props),
           name: this.state.identifier
         };
-        const result = await setSKLabelNode(label, this.props.parentSKNode);
+        const result = await setSKVideoNode(label, this.props.parentSKNode);
         this.setState(({ updateState }) => {
           return { updateState: updateState == "donext" ? "do" : "done" };
         });
@@ -40,7 +40,7 @@ class ARBaseSKLabel extends Component {
           ...propFilter(this.props),
           name: this.state.identifier
         };
-        const result = await updateSKLabelNode(label);
+        const result = await updateSKVideoNode(label);
         this.setState(({ updateState }) => {
           return { updateState: updateState == "donext" ? "do" : "done" };
         });
@@ -79,7 +79,8 @@ class ARBaseSKLabel extends Component {
     return ret;
   }
 }
-ARBaseSKLabel.propTypes = {
+ARBaseSKVideo.propTypes = {
+  //General to Nodes
   position: PropTypes.shape({
     x: PropTypes.number,
     y: PropTypes.number
@@ -87,24 +88,21 @@ ARBaseSKLabel.propTypes = {
   parentSKNode: PropTypes.string,
   text: PropTypes.string,
   id: PropTypes.string,
-  fontName: PropTypes.string,
-  fontSize: PropTypes.number,
-  fontColor: PropTypes.oneOfType([PropTypes.number, PropTypes.string]), // Note this requires a preprocessed color
+  //Specific to video node
   width: PropTypes.number,
-  horizontalAlignment: PropTypes.string,
-  verticalAlignment: PropTypes.string,
-  allowScaling: PropTypes.bool,
-  lineBreak: PropTypes.string,
-  lines: PropTypes.number
+  height: PropTypes.number,
+  url: PropTypes.string,
+  path: PropTypes.string,
+  isPlaying: PropTypes.bool
 };
 
-const SKLabelKeys = Object.keys(ARBaseSKLabel.propTypes);
-const ARSKLabel = props => {
+const SKVideoKeys = Object.keys(ARBaseSKVideo.propTypes);
+const ARSKVideo = props => {
   return (
     <ARSKNodeConsumer>
       {({ SKNodeID, height, width }) => {
         return (
-          <ARBaseSKLabel
+          <ARBaseSKVideo
             height={height}
             width={width}
             {...props}
@@ -115,20 +113,19 @@ const ARSKLabel = props => {
     </ARSKNodeConsumer>
   );
 };
-ARSKLabel.defaultProps = {
-  allowScaling: true
+ARSKVideo.defaultProps = {
+  isPlaying: true
 };
 
 const propFilter = props => {
   const temp = {
-    ...pickBy(props, (v, k) => SKLabelKeys.indexOf(k) > -1)
+    ...pickBy(props, (v, k) => SKVideoKeys.indexOf(k) > -1)
   };
-  if (typeof temp.fontColor == "string")
-    temp.fontColor = processColor(temp.fontColor);
   return temp;
 };
 
 const propDiff = (a, b) => {
+  console.log("Diffing a and b", { ...a }, { ...b });
   if (a === b) return false;
   if (a & !b || !a & b) {
     return true;
@@ -163,6 +160,6 @@ const propDiff = (a, b) => {
   }
 };
 
-ARSKLabel.propTypes = { ...ARBaseSKLabel.propTypes };
-export { ARSKLabel, ARSKNodeConsumer };
-export default ARSKLabel;
+ARSKVideo.propTypes = { ...ARBaseSKVideo.propTypes };
+export { ARSKVideo, ARSKNodeConsumer };
+export default ARSKVideo;

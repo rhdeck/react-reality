@@ -168,17 +168,56 @@ typealias jsonType = [String:Any]
         doUpdateSKScene(s, json: json)
         return s
     }
+    @objc class func SKVideoNode(_ json: jsonType) -> SKVideoNode {
+        var svn: SpriteKit.SKVideoNode?
+        if let s = json["url"] as? String {
+            if let u = URL(string: s) {
+                svn = SpriteKit.SKVideoNode(url: u)
+            }
+        } else if let s = json["path"] as? String {
+            let u = URL(fileURLWithPath: s)
+            NSLog("Loading video from path " + s)
+            svn = SpriteKit.SKVideoNode(url: u)
+        }
+        if svn == nil { svn = SpriteKit.SKVideoNode() ; return svn! }
+        doUpdateSKVideoNode(svn!, json: json)
+        return svn!
+    }
+}
+func doUpdateSKVideoNode(_ node:SKVideoNode, json: jsonType) {
+    doUpdateSKNode(node, json: json)
+    let w = json["height"] as? Double ?? 100
+    let h = json["width"] as? Double ?? 100
+    NSLog("Updating SKVideo to height " + String(h) + " and width " + String(w))
+    node.size = CGSize(width: CGFloat(w), height: CGFloat(h))
+    if json["isPlaying"] as? Bool ?? false {
+        NSLog("Starting video...")
+        DispatchQueue.main.async() {
+            node.play()
+        }
+    } else {
+        DispatchQueue.main.async() {
+            node.pause()
+        }
+    }
+}
+func doUpdateSKNode(_ node: SKNode, json: jsonType) {
+    if let s = json["name"] as? String { node.name = s }
+    if let j = json["position"] as? jsonType {
+        let x = j["x"] as? Double ?? 0
+        let y = j["y"] as? Double ?? 0
+        node.position = CGPoint(x: x, y: y)
+    }
 }
 func doUpdateSKScene(_ scene:SKScene, json:jsonType) {
-    if
-        let w = json["height"] as? Double,
-        let h = json["width"] as? Double {
-        scene.size = CGSize(width: CGFloat(w), height: CGFloat(h))
-    }
-    if let x = json["name"] as? String { scene.name = x }
+    doUpdateSKNode(scene, json: json)
     if let i = json["color"] { scene.backgroundColor = RCTConvert.uiColor(i) }
+    let w = json["height"] as? Double ?? 100
+    let h = json["width"] as? Double ?? 100
+    scene.size = CGSize(width: CGFloat(w), height: CGFloat(h))
 }
 func doUpdateSKLabelNode(_ skln:SKLabelNode, json: jsonType) {
+    doUpdateSKNode(skln, json: json)
     if let s = json["text"] as? String { skln.text = s }
     skln.numberOfLines = json["lines"] as? Int ?? 1
     switch json["lineBreak"] as? String {
@@ -220,12 +259,6 @@ func doUpdateSKLabelNode(_ skln:SKLabelNode, json: jsonType) {
             print("Invalid horizontalalignmentmode passed " + s)
         }
     }
-    if let s = json["name"] as? String { skln.name = s }
-    if let j = json["position"] as? jsonType {
-        let x = j["x"] as? Double ?? 0
-        let y = j["y"] as? Double ?? 0
-        skln.position = CGPoint(x: x, y: y)
-    }
     if let d = json["width"] as? Double { skln.preferredMaxLayoutWidth = CGFloat(d) }
     if json["allowScaling"] as? Bool ?? true {
         let scalingFactor = skln.preferredMaxLayoutWidth / skln.frame.width
@@ -254,8 +287,8 @@ func setMaterialProperties(_ material:SCNMaterial, properties: jsonType) {
     if let b = properties["writesToDepthBuffer"] as? Bool { material.writesToDepthBuffer = b }
     if let i = properties["colorBufferWriteMask"] as? SCNColorMask { material.colorBufferWriteMask = i}
     if let i = properties["fillMode"] as? SCNFillMode { material.fillMode = i}
-    if let b = properties["doubleSided"] as? Bool { material.isDoubleSided = b}
     if let b = properties["litPerPixel"] as? Bool { material.isLitPerPixel = b}
+    material.transparencyMode = .aOne
 }
 func setNodeProperties(_ node:SCNNode, properties: jsonType) {
     if let i = properties["categoryBitMask"] as? Int { node.categoryBitMask = i }

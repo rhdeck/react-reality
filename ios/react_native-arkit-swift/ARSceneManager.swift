@@ -400,15 +400,23 @@ class ARSceneManager:RCTEventEmitter, ARSessionDelegate {
             reject("no_scene", "Did not find scene", nil)
         }
     }
-        
     @objc func setSKLabelNode(_ node: SKLabelNode, toParent: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         setSKNode(node, toParent: toParent, resolve: resolve, reject: reject)
     }
     @objc func updateSKLabelNode(_ json: jsonType, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        guard  let s = json["name"] as? String, let n = SKNodes[s] as? SKLabelNode else { reject("no_node", "No node with this name", nil); return }
+        guard let s = json["name"] as? String else { reject("no_name", "No Name specified for node", nil); return }
+        guard let n = SKNodes[s] as? SKLabelNode else { reject("no_node", "No label node with this name " + s, nil); return }
         doUpdateSKLabelNode(n, json: json)
         resolve(true)
-        
+    }
+    @objc func setSKVideoNode(_ node: SKVideoNode, toParent: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        setSKNode(node, toParent: toParent, resolve:resolve, reject:reject)
+    }
+    @objc func updateSKVideoNode(_ json: jsonType, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        guard let s = json["name"] as? String else { reject("no_name", "No Name specified for node", nil); return }
+        guard let n = SKNodes[s] as? SKVideoNode else { reject("no_node", "No video node with this name " + s, nil); return }
+        doUpdateSKVideoNode(n, json: json)
+        resolve(true)
     }
     @objc func setSKNode(_ node: SKNode, toParent: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         if let s = node.name, let o = SKNodes[s], let os = o.name {

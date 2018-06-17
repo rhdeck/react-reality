@@ -77,6 +77,7 @@ class ARBaseSKScene extends Component {
   }
   static getDerivedStateFromProps(nextProps, prevState) {
     var ret = prevState;
+    ret.todos = {};
     if (nextProps.id && prevState.identifier != nextProps.id) {
       ret.identifier = nextProps.id;
       if (["doMount", "Mounting"].indexOf(ret.updateState) == -1)
@@ -95,7 +96,7 @@ class ARBaseSKScene extends Component {
     }
     if (
       nextProps.height != prevState.providerValue.height ||
-      nextProps.width != prevState.providerValue.height
+      nextProps.width != prevState.providerValue.width
     ) {
       ret.todos["updateProviderValue"] = true;
     }
@@ -110,7 +111,7 @@ class ARBaseSKScene extends Component {
     this.nativeUpdate();
   }
   manageTodos() {
-    if (this.state.todos) {
+    if (this.state.todos && Object.keys(this.state.todos).length) {
       Object.keys(this.state.todos).forEach(k => {
         if (typeof this[k] == "function") this[k](this.state.todos[k]);
       });

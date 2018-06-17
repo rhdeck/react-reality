@@ -46,6 +46,7 @@ class ARBaseMaterialProperty extends Component {
           return { updateState: updateState == "doNext" ? "do" : "done" };
         });
       } catch (e) {
+        console.log("Hit error mounting property", this.state.filteredProps, e);
         this.setState({ updateState: "doMount" });
       }
     }
@@ -64,6 +65,7 @@ class ARBaseMaterialProperty extends Component {
           return { updateState: updateState == "doNext" ? "do" : "done" };
         });
       } catch (e) {
+        console.log("hit error updating property", e);
         this.setState({ updateState: "do" });
       }
     }
