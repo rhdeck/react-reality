@@ -14,6 +14,7 @@ typealias jsonType = [String:Any]
         let z = json["z"] as? Double ?? 0
         return SceneKit.SCNVector3(x, y, z)
     }
+    
     @objc class func SCNVector4(_ json: jsonType) -> SCNVector4 {
         let x = json["x"] as? Double ?? 0
         let y = json["y"] as? Double ?? 0
@@ -186,8 +187,8 @@ typealias jsonType = [String:Any]
 }
 func doUpdateSKVideoNode(_ node:SKVideoNode, json: jsonType) {
     doUpdateSKNode(node, json: json)
-    let w = json["height"] as? Double ?? 100
-    let h = json["width"] as? Double ?? 100
+    let h = json["height"] as? Double ?? 100
+    let w = json["width"] as? Double ?? 100
     NSLog("Updating SKVideo to height " + String(h) + " and width " + String(w))
     node.size = CGSize(width: CGFloat(w), height: CGFloat(h))
     if json["isPlaying"] as? Bool ?? false {
@@ -210,10 +211,12 @@ func doUpdateSKNode(_ node: SKNode, json: jsonType) {
     }
 }
 func doUpdateSKScene(_ scene:SKScene, json:jsonType) {
-    doUpdateSKNode(scene, json: json)
+    if let s = json["name"] as? String { scene.name = s }
     if let i = json["color"] { scene.backgroundColor = RCTConvert.uiColor(i) }
-    let w = json["height"] as? Double ?? 100
-    let h = json["width"] as? Double ?? 100
+    let h = json["height"] as? Double ?? 100
+    let w = json["width"] as? Double ?? 100
+    NSLog("Updating scene to height of " + String(h) + " and width of " + String(w) )
+    print(json)
     scene.size = CGSize(width: CGFloat(w), height: CGFloat(h))
 }
 func doUpdateSKLabelNode(_ skln:SKLabelNode, json: jsonType) {
