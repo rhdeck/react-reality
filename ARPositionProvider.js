@@ -14,7 +14,7 @@ class ARPositionProvider extends Component {
   state = {
     providerValue: {
       position: { x: 0, y: 0, z: 0 },
-      orientation: {}
+      orientation: { x: 0 }
     },
     sensitivity: 0.01
   };
