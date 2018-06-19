@@ -125,7 +125,6 @@ const propFilter = props => {
 };
 
 const propDiff = (a, b) => {
-  console.log("Diffing a and b", { ...a }, { ...b });
   if (a === b) return false;
   if (a & !b || !a & b) {
     return true;
