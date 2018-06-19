@@ -14,7 +14,7 @@ import ARMaterial from "./components/ARMaterial";
 import ARMaterialProperty from "./components/ARMaterialProperty";
 import ARMaterials from "./components/ARMaterials";
 import ARTouchableMonoView from "./ARTouchableMonoView";
-import ARSKScene, { ARSKNodeConsumer } from "./components/ARSKScene";
+import { ARSKScene, ARSKNodeConsumer } from "./components/ARSKScene";
 import ARSKLabel from "./components/ARSKLabel";
 import ARAnimatedProvider from "./ARAnimatedProvider";
 import ARScene from "./components/ARScene";
