@@ -75,7 +75,7 @@ class ARBaseNode extends Component {
         if (typeof this.props.willNativeUpdate == "function")
           await this.props.willNativeUpdate();
         await addNode(np, parentNode);
-        if (typeof this.props.willNativeUpdate == "function")
+        if (typeof this.props.didNativeUpdate == "function")
           await this.props.didNativeUpdate();
         this.setState(({ updateState }) => {
           return { updateState: updateState == "donext" ? "do" : "done" };
@@ -89,7 +89,7 @@ class ARBaseNode extends Component {
         if (typeof this.props.willNativeUpdate == "function")
           await this.props.willNativeUpdate();
         await updateNode(this.state.identifier, this.state.nodeProps);
-        if (typeof this.props.willNativeUpdate == "function")
+        if (typeof this.props.didNativeUpdate == "function")
           await this.props.didNativeUpdate();
         this.setState(({ updateState }) => {
           return { updateState: updateState == "donext" ? "do" : "done" };
