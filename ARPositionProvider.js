@@ -56,11 +56,9 @@ class ARPositionProvider extends Component {
       setPOVOrientationSensitivity(nextProps.orientationSensitivity);
       ret.orientationSensitivity = nextProps.orientationSensitivity;
     }
-
     return ret;
   }
 }
-
 ARPositionProvider.defaultProps = {
   positionSensitivity: 0.01,
   orientationSensitivity: 0.05
