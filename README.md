@@ -91,6 +91,28 @@ Like `ARMonoView` but adds touchability, so that descendant nodes can implement 
 
 Will auto-create a `<ARSessionProvider />` if it is not already the child of one.
 
+### ARProjectedView
+
+Mount to a node in the 3D space, it will show a view with the origin tied to that point. So if you turn away from that direction it will hide, and otherwise it floats on top where you want it.
+
+_Note_ that it sets the origin and does not clip boundaries, so if you want to "center" on the target point in space, set your "top" and "left" of the view to be negative, as in the sample.
+
+_Also Note_ Any view will show **on top** of virtual 3-d objects, even when the node the view is mounted on is "behind" them. For diagetic fidelity, use a plane mounted in space instead, such as the `<ARSign />` from `react-reality-components`
+
+#### Props
+
+- `parentNode`: ID of the node to which it should attach. Note that just putting the component as child/descendant of an `<ARNode />` will take care of this.
+
+#### Sample
+
+````javascript
+  <ARNode position={{z: -5}}>
+    <ARProjectedView>
+      <View style={{height: 100, width: 100, top: -50, left: -50}}>
+        <Text>See me over here, but not anywhere else</Text>
+      </View>
+    </ARProjectedView>
+
 #### Props
 
 If implemented without a wrapping `<ARSessionProvider />` it takes the props of `<ARSessionProvider />` most importantly `alignment`.
@@ -108,7 +130,7 @@ Otherwise, it's a View. No special (public) props.
     </ARNode>
   </ARTouchableMonoView>
 </ARSessionProvider>
-```
+````
 
 ## Providers
 
