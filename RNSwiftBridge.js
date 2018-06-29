@@ -185,8 +185,19 @@ const removeRecognizerImage = async name => {
 const setImageDetection = async doDetect => {
   return await NativeARSceneManager.setImageDetection(doDetect);
 };
+const projectNode = async nodeID => {
+  return await NativeARSceneManager.projectNode(nodeID);
+};
+const projectWorldPoint = async v => {
+  return await NativeARSceneManager.projectWorldPoint(v);
+};
 const setPOVSensitivity = async newSensitivity => {
   return await NativeARSceneManager.setPOVSensitivity(newSensitivity);
+};
+const setPOVOrientationSensitivity = async newSensitivity => {
+  return await NativeARSceneManager.setPOVOrientationSensitivity(
+    newSensitivity
+  );
 };
 const getPOV = async () => {
   return await NativeARSceneManager.getPOV();
@@ -246,7 +257,10 @@ export {
   addRecognizerImage,
   removeRecognizerImage,
   setImageDetection,
+  projectNode,
+  projectWorldPoint,
   setPOVSensitivity,
+  setPOVOrientationSensitivity,
   getPOV,
   setWorldTracking
 };

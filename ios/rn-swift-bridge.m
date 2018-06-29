@@ -12,6 +12,9 @@ RCT_EXPORT_VIEW_PROPERTY(holoOffsetZ, float);
 RCT_EXPORT_VIEW_PROPERTY(holoOffsetX, float);
 RCT_EXPORT_VIEW_PROPERTY(fieldOfView, float);
 @end
+@interface RCT_EXTERN_MODULE(ARProjectedViewManager, RCTViewManager)
+RCT_EXPORT_VIEW_PROPERTY(parentNode, NSString *);
+@end
 @interface RCT_EXTERN_MODULE(ARSceneManager, RCTEventEmitter)
 RCT_EXTERN_METHOD(addNode:(SCNNode *)node parentID:(NSString *)parentID resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(removeNode:(NSString *)id resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
@@ -61,7 +64,10 @@ RCT_EXTERN_METHOD(removeAnchor:(NSString *)id resolve:(RCTPromiseResolveBlock)re
 RCT_EXTERN_METHOD(addRecognizerImage:(NSString *)url name:(NSString *)name width:(double)width resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(removeRecognizerImage:(NSString *)name resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(setImageDetection:(BOOL)doDetect resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
+RCT_EXTERN_METHOD(projectNode:(NSString *)nodeID resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
+RCT_EXTERN_METHOD(projectWorldPoint:(SCNVector3 *)v resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(setPOVSensitivity:(double)newSensitivity resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
+RCT_EXTERN_METHOD(setPOVOrientationSensitivity:(double)newSensitivity resolve:(RCTPromiseResolveBlock)resolve recject:(RCTPromiseRejectBlock)recject);
 RCT_EXTERN_METHOD(getPOV:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(setWorldTracking:(NSString *)trackingMode resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 @end

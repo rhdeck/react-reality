@@ -798,16 +798,41 @@ class ARSceneManager:RCTEventEmitter, ARSessionDelegate {
     //MARK: Point of View methods
     var lastPosition:SCNVector3 = SCNVector3()
     var lastOrientation:SCNVector4 = SCNVector4()
-    var sensitivity:Float = 0.05
+    var sensitivity:Float = 0.005
+    var orientationSensitivity: Float = 0.0005
+    @objc func projectNode(_ nodeID: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        guard let n = nodes[nodeID] else { reject("no_node", "No node named " + nodeID, nil); return }
+        let v = n.worldPosition
+        projectWorldPoint(v, resolve: resolve, reject: reject)
+    }
+    @objc func projectWorldPoint(_ v: SCNVector3, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        guard let av = pv else { reject("no_renderer", "No renderer for the scene", nil); return }
+        let p = av.projectPoint(v)
+        resolve(vector3ToJson(p))
+    }
+    
     func updatePOV(_ pointOfView: SCNNode) {
         
-        if abs(lastPosition.x - pointOfView.position.x) > sensitivity || abs(lastPosition.y - pointOfView.position.y) > sensitivity || abs(lastPosition.z - pointOfView.position.z) > sensitivity {
+        if
+            abs(lastPosition.x - pointOfView.position.x) > sensitivity ||
+            abs(lastPosition.y - pointOfView.position.y) > sensitivity ||
+            abs(lastPosition.z - pointOfView.position.z) > sensitivity ||
+            abs(lastOrientation.x - pointOfView.orientation.x) > orientationSensitivity ||
+            abs(lastOrientation.y - pointOfView.orientation.y) > orientationSensitivity ||
+            abs(lastOrientation.z - pointOfView.orientation.z) > orientationSensitivity ||
+            abs(lastOrientation.w - pointOfView.orientation.w) > orientationSensitivity
+        {
             doSendEvent("AREvent", message: ["key": "positionChanged", "data": ["position": vector3ToJson(pointOfView.position), "orientation": vector4ToJson(pointOfView.orientation)]])
             lastPosition = pointOfView.position
+            lastOrientation = pointOfView.orientation
         }
     }
     @objc func setPOVSensitivity(_ newSensitivity:Double , resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         sensitivity = Float(newSensitivity)
+        resolve(true)
+    }
+    @objc func setPOVOrientationSensitivity(_ newSensitivity: Double, resolve: RCTPromiseResolveBlock, recject: RCTPromiseRejectBlock) {
+        orientationSensitivity = Float(newSensitivity)
         resolve(true)
     }
     @objc func getPOV(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
@@ -827,6 +852,42 @@ class ARSceneManager:RCTEventEmitter, ARSessionDelegate {
         if(temp != configuration.worldAlignment) {
             configuration.worldAlignment = temp
             doResume()
+        }
+    }
+    //MARK: ARProjectedView Management
+    var nodeViewRegistry: [String: [UIView]] = [:]
+    func registerView(_ forNode: String?, view: UIView) {
+        guard let n =  forNode else { removePView(view); return }
+        
+        var rs = nodeViewRegistry[n] ?? []
+        guard !rs.contains(view) else { return }//Our work here is done
+        removePView(view) // Remove from all other views
+        rs.append(view)
+        nodeViewRegistry[n] = rs
+    }
+    func removePView(_ view: UIView) {
+        nodeViewRegistry.forEach() {k, vs in
+            if vs.contains(view) {
+                nodeViewRegistry[k] = vs.filter(){ v in
+                    return v != view
+                }
+            }
+        }
+    }
+    func updateRegisteredViews() {
+        nodeViewRegistry.forEach() { n, vs in
+            guard let node = nodes[n] else { return }
+            let p = node.worldPosition
+            let xy = self.pv!.projectPoint(p)
+            if xy.z > 1 {
+                vs.forEach() { v in
+                    v.frame.origin = CGPoint(x: 10000, y: 10000)
+                }
+            } else {
+                vs.forEach() { v in
+                    v.frame.origin = CGPoint(x: CGFloat(xy.x), y: CGFloat(xy.y))
+                }
+            }
         }
     }
 }

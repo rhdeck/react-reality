@@ -5,6 +5,7 @@ import {
   detectPositionChange,
   setPOVSensitivity
 } from "./ARSceneManager";
+import { setPOVOrientationSensitivity } from "./RNSwiftBridge";
 import PropTypes from "prop-types";
 const { Provider, Consumer: ARPositionConsumer } = createContext({
   position: { x: 0, y: 0, z: 0 },
@@ -16,7 +17,8 @@ class ARPositionProvider extends Component {
       position: { x: 0, y: 0, z: 0 },
       orientation: { x: 0 }
     },
-    sensitivity: 0.01
+    positionSensitivity: -1,
+    orientationSensitivity: -1
   };
   componentDidMount() {
     detectPositionChange(this.onPositionChange.bind(this));
@@ -46,20 +48,27 @@ class ARPositionProvider extends Component {
   }
   static getDerivedStateFromProps(nextProps, prevState) {
     var ret = prevState;
-    if (prevState.sensitivity != nextProps.sensitivity) {
-      setPOVSensitivity(nextProps.sensitivity);
-      ret.sensitivity = nextProps.sensitivity;
+    if (prevState.positionSensitivity != nextProps.positionSensitivity) {
+      setPOVSensitivity(nextProps.positionSensitivity);
+      ret.positionSensitivity = nextProps.positionSensitivity;
     }
+    if (prevState.orientationSensitivity != nextProps.orientationSensitivity) {
+      setPOVOrientationSensitivity(nextProps.orientationSensitivity);
+      ret.orientationSensitivity = nextProps.orientationSensitivity;
+    }
+
     return ret;
   }
 }
 
 ARPositionProvider.defaultProps = {
-  sensitivity: 0.01
+  positionSensitivity: 0.01,
+  orientationSensitivity: 0.05
 };
 ARPositionProvider.propTypes = {
   onPositionChange: PropTypes.func,
-  sensitivity: PropTypes.number
+  positionSensitivity: PropTypes.number,
+  orientationSensitivity: PropTypes.number
 };
 export { ARPositionProvider, ARPositionConsumer };
 export default ARPositionProvider;
