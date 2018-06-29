@@ -91,6 +91,25 @@ Like `ARMonoView` but adds touchability, so that descendant nodes can implement 
 
 Will auto-create a `<ARSessionProvider />` if it is not already the child of one.
 
+#### Props
+
+If implemented without a wrapping `<ARSessionProvider />` it takes the props of `<ARSessionProvider />` most importantly `alignment`.
+
+Otherwise, it's a View. No special (public) props.
+
+#### Sample
+
+```xml
+<ARSessionProvider>
+  <ARTouchableMonoView>
+    ...Other nodes rendered
+    <ARNode onPress={()=>{console.log("I got pressed"}>
+      ...Geometries, etc
+    </ARNode>
+  </ARTouchableMonoView>
+</ARSessionProvider>
+```
+
 ### ARProjectedView
 
 Mount to a node in the 3D space, it will show a view with the origin tied to that point. So if you turn away from that direction it will hide, and otherwise it floats on top where you want it.
@@ -112,25 +131,6 @@ _Also Note_ Any view will show **on top** of virtual 3-d objects, even when the 
         <Text>See me over here, but not anywhere else</Text>
       </View>
     </ARProjectedView>
-```
-
-#### Props
-
-If implemented without a wrapping `<ARSessionProvider />` it takes the props of `<ARSessionProvider />` most importantly `alignment`.
-
-Otherwise, it's a View. No special (public) props.
-
-#### Sample
-
-```xml
-<ARSessionProvider>
-  <ARTouchableMonoView>
-    ...Other nodes rendered
-    <ARNode onPress={()=>{console.log("I got pressed"}>
-      ...Geometries, etc
-    </ARNode>
-  </ARTouchableMonoView>
-</ARSessionProvider>
 ```
 
 ## Providers
