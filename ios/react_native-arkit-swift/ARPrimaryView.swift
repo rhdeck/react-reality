@@ -70,6 +70,7 @@ class ARPrimaryView: UIView, ARSCNViewDelegate {
             SVPointOfView.camera?.fieldOfView = CGFloat(self.fieldOfView)
             sv.pointOfView = SVPointOfView
             if let pov = renderer.pointOfView { sm.updatePOV(pov) }
+            sm.updateRegisteredViews()
         }
     }
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {

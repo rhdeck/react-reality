@@ -25,6 +25,11 @@ import { ARTrackingConsumer, ARTrackingProvider } from "./ARTrackingProvider";
 import ARShape from "./components/ARShape";
 import ARLight from "./components/ARLight";
 import ARSKVideo from "./components/ARSKVideo";
+import {
+  ARProjectedPointProvider,
+  ARProjectedPointConsumer
+} from "./components/ARProjectedPointProvider";
+import ARProjectedView from "./ARProjectedView";
 export {
   ARMonoView,
   ARBox,
@@ -56,5 +61,8 @@ export {
   ARShape,
   ARLight,
   ARSKVideo,
-  ARSKNodeConsumer
+  ARSKNodeConsumer,
+  ARProjectedPointConsumer,
+  ARProjectedPointProvider,
+  ARProjectedView
 };

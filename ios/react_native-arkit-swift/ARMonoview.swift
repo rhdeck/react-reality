@@ -31,6 +31,7 @@ class ARMonoview: UIView, ARSCNViewDelegate {
             a.session.delegate = sm
             sm.scene = a.scene
             sm.session = a.session
+            sm.pv = a
             a.automaticallyUpdatesLighting = true
             a.autoenablesDefaultLighting = true
             addSubview(a)
@@ -62,6 +63,8 @@ class ARMonoview: UIView, ARSCNViewDelegate {
     func renderer(_ renderer: SCNSceneRenderer, didRenderScene scene: SCNScene, atTime time: TimeInterval) {
         guard let scene = ARSceneManager.sharedInstance else { return }
         if let pov = renderer.pointOfView { scene.updatePOV(pov) }
+        scene.updateRegisteredViews()
+
     }
     
     

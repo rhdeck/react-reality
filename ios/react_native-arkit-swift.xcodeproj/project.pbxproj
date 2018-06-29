@@ -5,6 +5,7 @@
 	};
 	objectVersion = 48;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		712815C32026480B00C460CB /* ARExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712815C22026480B00C460CB /* ARExtension.swift */; };
 		714545D92034E50D00E44E8D /* ARSceneManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714545D82034E50D00E44E8D /* ARSceneManager.swift */; };
@@ -14,6 +15,8 @@
 		714DC6E32050C56500BACAE8 /* ARSecondaryViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714DC6E22050C56400BACAE8 /* ARSecondaryViewManager.swift */; };
 		719D02A3204DCC020096F3C1 /* ARSecondaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 719D02A2204DCC020096F3C1 /* ARSecondaryView.swift */; };
 		719D02A5204DD2E90096F3C1 /* ARPrimaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 719D02A4204DD2E90096F3C1 /* ARPrimaryView.swift */; };
+		71A4399620E654B50071F29C /* ARProjectedViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71A4399520E654B50071F29C /* ARProjectedViewManager.swift */; };
+		71A4399820E654C80071F29C /* ARProjectedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71A4399720E654C80071F29C /* ARProjectedView.swift */; };
 		AAD78BA0AC6447529D3057BE /* rn-swift-bridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E00DCA45E7447438EF2917A /* rn-swift-bridge.m */; };
 /* End PBXBuildFile section */
 
@@ -38,6 +41,8 @@
 		714DC6E22050C56400BACAE8 /* ARSecondaryViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARSecondaryViewManager.swift; sourceTree = "<group>"; };
 		719D02A2204DCC020096F3C1 /* ARSecondaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARSecondaryView.swift; sourceTree = "<group>"; };
 		719D02A4204DD2E90096F3C1 /* ARPrimaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARPrimaryView.swift; sourceTree = "<group>"; };
+		71A4399520E654B50071F29C /* ARProjectedViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARProjectedViewManager.swift; sourceTree = "<group>"; };
+		71A4399720E654C80071F29C /* ARProjectedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARProjectedView.swift; sourceTree = "<group>"; };
 		71D8F37C1FB7A97B0000973C /* libreact_native-arkit-swift.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libreact_native-arkit-swift.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		71D8F3881FB7AA9D0000973C /* react_native-arkit-swift-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "react_native-arkit-swift-Bridging-Header.h"; sourceTree = "<group>"; };
 		8E00DCA45E7447438EF2917A /* rn-swift-bridge.m */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.objc; path = "rn-swift-bridge.m"; sourceTree = "<group>"; };
@@ -91,6 +96,8 @@
 				714545D82034E50D00E44E8D /* ARSceneManager.swift */,
 				719D02A2204DCC020096F3C1 /* ARSecondaryView.swift */,
 				714DC6E22050C56400BACAE8 /* ARSecondaryViewManager.swift */,
+				71A4399520E654B50071F29C /* ARProjectedViewManager.swift */,
+				71A4399720E654C80071F29C /* ARProjectedView.swift */,
 			);
 			path = "react_native-arkit-swift";
 			sourceTree = "<group>";
@@ -153,11 +160,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				71A4399620E654B50071F29C /* ARProjectedViewManager.swift in Sources */,
 				712815C32026480B00C460CB /* ARExtension.swift in Sources */,
 				714DC6E12050C55100BACAE8 /* ARPrimaryViewManager.swift in Sources */,
 				719D02A5204DD2E90096F3C1 /* ARPrimaryView.swift in Sources */,
 				719D02A3204DCC020096F3C1 /* ARSecondaryView.swift in Sources */,
 				714545DB2034EA9000E44E8D /* ARMonoview.swift in Sources */,
+				71A4399820E654C80071F29C /* ARProjectedView.swift in Sources */,
 				714545D92034E50D00E44E8D /* ARSceneManager.swift in Sources */,
 				714DC6E32050C56500BACAE8 /* ARSecondaryViewManager.swift in Sources */,
 				AAD78BA0AC6447529D3057BE /* rn-swift-bridge.m in Sources */,
