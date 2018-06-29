@@ -105,13 +105,14 @@ _Also Note_ Any view will show **on top** of virtual 3-d objects, even when the 
 
 #### Sample
 
-````javascript
+```javascript
   <ARNode position={{z: -5}}>
     <ARProjectedView>
       <View style={{height: 100, width: 100, top: -50, left: -50}}>
         <Text>See me over here, but not anywhere else</Text>
       </View>
     </ARProjectedView>
+```
 
 #### Props
 
@@ -130,7 +131,7 @@ Otherwise, it's a View. No special (public) props.
     </ARNode>
   </ARTouchableMonoView>
 </ARSessionProvider>
-````
+```
 
 ## Providers
 
