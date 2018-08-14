@@ -78,7 +78,7 @@ const Adoptee = adopt({
   position: <ARPositionConsumer />,
   node: <ARNodeConsumer />
 });
-export default (ARProjectedPointProvider = props => {
+const ARProjectedPointProvider = props => {
   return (
     <Adoptee>
       {({
@@ -99,6 +99,7 @@ export default (ARProjectedPointProvider = props => {
       }}
     </Adoptee>
   );
-});
+};
 //#endregion
+export default ARProjectedPointProvider;
 export { ARProjectedPointProvider, Consumer as ARProjectedPointConsumer };
