@@ -189,7 +189,7 @@ Detects and tracks planes and images (markers) in space, providing what's found 
 
 - `planeDetection`: Whether to detect planes and if so what kind., Values: "horizontal", "vertical", "both", "none" (Default: "none")
 - `imageDetection`: Whether to detect images defined in the images prop. Note that if there are no images in the images prop, this is not helpful. (Default: false)
-- `images`: Object as key-value store of the name of the image you want to hear about, and the file URL to an ordinary image file. (note that this does not require any of the precompiled referenceImage stuff to work - just pass a PNG or something)
+- `images`: Object as key-value store of the name of the image you want to hear about, and the an object with members `{url, width}`. `url` is URL to an ordinary image file. `width` is the width of the image in the real world, in meters. (it figures out height from the size ratio of the image itself). Note that this does not require any of the precompiled referenceImage stuff to work - just pass a PNG or something.
 - `onUpdateAnchors`: event to fire whenever the provider gets notice of a change, addition or removal of a plane or image, depending on what detection is activated. Basically fires with the same argument and under the same circumstances as the `<ARTrackingConsumer />`.
 
 #### Sample
@@ -197,9 +197,12 @@ Detects and tracks planes and images (markers) in space, providing what's found 
 ```javascript
 <ARTrackingProvider
   planeDetection="vertical"
-  images={true}
-  imageDetection={{
-    starwars: mystarWarsURL
+  imageDetection={true}
+  images={{
+    starwars: {
+      url: mystarWarsURL,
+      width: 0.3
+    }
   }}
   onUpdateAnchors={({ anchors }) => {
     console.log("my current anchor list is", anchors);
