@@ -880,12 +880,17 @@ class ARSceneManager:RCTEventEmitter, ARSessionDelegate {
             let p = node.worldPosition
             let xy = self.pv!.projectPoint(p)
             if xy.z > 1 {
-                vs.forEach() { v in
-                    v.frame.origin = CGPoint(x: 10000, y: 10000)
+                DispatchQueue.main.async() {
+                    vs.forEach() { v in
+                        v.frame.origin = CGPoint(x: 10000, y: 10000)
+                    }
                 }
             } else {
+                DispatchQueue.main.async() {
+
                 vs.forEach() { v in
-                    v.frame.origin = CGPoint(x: CGFloat(xy.x), y: CGFloat(xy.y))
+                        v.frame.origin = CGPoint(x: CGFloat(xy.x), y: CGFloat(xy.y))
+                    }
                 }
             }
         }
