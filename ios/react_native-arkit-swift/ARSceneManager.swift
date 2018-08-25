@@ -689,10 +689,13 @@ class ARSceneManager:RCTEventEmitter, ARSessionDelegate {
     func addPlaneAnchor(_ anchor: ARPlaneAnchor, withNode: SCNNode) {
         let id = anchor.identifier.uuidString
         let width = CGFloat(anchor.extent.x)
-        let height = CGFloat(anchor.extent.z)
+        let height = CGFloat(anchor.extent.z)        
+        let position = vector3ToJson(withNode.position)
+        let eulerAngles = vector3ToJson(withNode.eulerAngles)
+
         baseNodes[id] = withNode
         let alignment:String = anchor.alignment == .horizontal ? "horizontal": "vertical"
-        anchors[id] = ["type": "plane",  "plane": ["width": width, "height":height,"alignment": alignment ]];
+        anchors[id] = ["type": "plane",  "plane": ["width": width, "height":height,"alignment": alignment, "position": position, "eulerAngles": eulerAngles ]];
         doSendEvent("ARPlaneEvent", message: ["key": "planeAnchorAdded", "data": ["id": id, "action":"add", "anchor": anchors[id]]])
         fixOrphans()
     }
@@ -700,8 +703,10 @@ class ARSceneManager:RCTEventEmitter, ARSessionDelegate {
         let id = anchor.identifier.uuidString
         let width = CGFloat(anchor.extent.x)
         let height = CGFloat(anchor.extent.z)
+        let position = vector3ToJson(withNode.position)
+        let eulerAngles = vector3ToJson(withNode.eulerAngles)
         let alignment:String = anchor.alignment == .horizontal ? "horizontal": "vertical"
-        anchors[id] = ["type": "plane",  "plane": ["width": width, "height":height,"alignment": alignment ]];
+        anchors[id] = ["type": "plane",  "plane": ["width": width, "height":height,"alignment": alignment, "position": position, "eulerAngles": eulerAngles ]];
         doSendEvent("ARPlaneEvent", message: ["key": "planeAnchorChanged", "data": ["id": id, "action": "update", "anchor": anchors[id]]])
         fixOrphans()
     }
