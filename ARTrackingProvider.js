@@ -129,7 +129,8 @@ class ARTrackingProvider extends Component {
       }
     })();
   }
-  async updatePlanes(data) {
+  async updatePlanes(planeData) {
+    const data = planeData && planeData.data;
     if (!data) {
       const anchors = cleanAnchors(await getAnchors(data));
       this.setState({ anchors: anchors }, () => {
