@@ -690,9 +690,15 @@ class ARSceneManager:RCTEventEmitter, ARSessionDelegate {
         let id = anchor.identifier.uuidString
         let width = CGFloat(anchor.extent.x)
         let height = CGFloat(anchor.extent.z)
+        let position = vector3ToJson(withNode.position)
+        let eulerAngles = vector3ToJson(withNode.eulerAngles)
+        let orientation = vector4ToJson(withNode.orientation)
+        let worldPosition = vector3ToJson(withNode.worldPosition)
+        let worldOrientation = vector4ToJson(withNode.worldOrientation)
+        
         baseNodes[id] = withNode
         let alignment:String = anchor.alignment == .horizontal ? "horizontal": "vertical"
-        anchors[id] = ["type": "plane",  "plane": ["width": width, "height":height,"alignment": alignment ]];
+        anchors[id] = ["type": "plane",  "plane": ["width": width, "height":height,"alignment": alignment, "position": position, "eulerAngles": eulerAngles, "orientation": orientation, "worldPosition": worldPosition, "worldOrientation": worldOrientation ]];
         doSendEvent("ARPlaneEvent", message: ["key": "planeAnchorAdded", "data": ["id": id, "action":"add", "anchor": anchors[id]]])
         fixOrphans()
     }
@@ -700,8 +706,14 @@ class ARSceneManager:RCTEventEmitter, ARSessionDelegate {
         let id = anchor.identifier.uuidString
         let width = CGFloat(anchor.extent.x)
         let height = CGFloat(anchor.extent.z)
+        let position = vector3ToJson(withNode.position)
+        let eulerAngles = vector3ToJson(withNode.eulerAngles)
+        let orientation = vector4ToJson(withNode.orientation)
+        let worldPosition = vector3ToJson(withNode.worldPosition)
+        let worldOrientation = vector4ToJson(withNode.worldOrientation)
+        
         let alignment:String = anchor.alignment == .horizontal ? "horizontal": "vertical"
-        anchors[id] = ["type": "plane",  "plane": ["width": width, "height":height,"alignment": alignment ]];
+        anchors[id] = ["type": "plane",  "plane": ["width": width, "height":height,"alignment": alignment, "position": position, "eulerAngles": eulerAngles, "orientation": orientation, "worldPosition": worldPosition, "worldOrientation": worldOrientation ]];
         doSendEvent("ARPlaneEvent", message: ["key": "planeAnchorChanged", "data": ["id": id, "action": "update", "anchor": anchors[id]]])
         fixOrphans()
     }
