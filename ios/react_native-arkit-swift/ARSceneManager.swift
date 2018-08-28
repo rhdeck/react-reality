@@ -866,6 +866,65 @@ class ARSceneManager:RCTEventEmitter, ARSessionDelegate {
             doResume()
         }
     }
+    @objc func hitTestPlane(_ point: CGPoint, detectType: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        let detectTypes : ARHitTestResult.ResultType
+        
+        switch(detectType) {
+        case "featurePoint":
+            detectTypes = ARHitTestResult.ResultType.featurePoint
+        case "existingPlane":
+            detectTypes = ARHitTestResult.ResultType.existingPlane
+        case "existingPlaneUsingExtent":
+            detectTypes = ARHitTestResult.ResultType.existingPlaneUsingExtent
+        case "existingPlaneUsingGeometry":
+            detectTypes = ARHitTestResult.ResultType.existingPlaneUsingGeometry
+        case "estimatedHorizontalPlane":
+            detectTypes = ARHitTestResult.ResultType.estimatedHorizontalPlane
+        case "estimatedVerticalPlane":
+            detectTypes = ARHitTestResult.ResultType.estimatedVerticalPlane
+        default:
+            detectTypes = ARHitTestResult.ResultType.featurePoint
+        }
+        
+        guard let av = pv else { reject("no_renderer", "No renderer for the scene", nil); return }
+        let hitTestResults = av.hitTest(point, types: detectTypes)
+        
+        if let result = hitTestResults.first {
+            var type : NSString
+            let anchor : ARAnchor? = result.anchor
+            let anchorUuid = anchor != nil ? anchor?.identifier.uuidString : ""
+            let distance = result.distance
+            
+            let worldTransformPositionVector = result.worldTransform.columns.3
+            let localTransformPositionVector = result.localTransform.columns.3
+            
+            let positionAbsolute = SCNVector3Make(worldTransformPositionVector.x, worldTransformPositionVector.y, worldTransformPositionVector.z)
+            let position = SCNVector3Make(localTransformPositionVector.x, localTransformPositionVector.y, localTransformPositionVector.z)
+            
+            switch(result.type) {
+            case ARHitTestResult.ResultType.featurePoint:
+                type = "featurePoint"
+            case ARHitTestResult.ResultType.existingPlane:
+                type = "existingPlane"
+            case ARHitTestResult.ResultType.existingPlaneUsingExtent:
+                type = "existingPlaneUsingExtent"
+            case ARHitTestResult.ResultType.existingPlaneUsingGeometry:
+                type = "existingPlaneUsingGeometry"
+            case ARHitTestResult.ResultType.estimatedHorizontalPlane:
+                type = "estimateHorizontalPlane"
+            case ARHitTestResult.ResultType.estimatedVerticalPlane:
+                type = "estimateVerticalPlane"
+            default:
+                type = "featurePoint"
+            }
+            
+            resolve(["anchor": anchorUuid, "type": type, "distance": distance, "positionAbsolute": vector3ToJson(positionAbsolute), "position": vector3ToJson(position)])
+        }
+        else {
+            resolve(false)
+        }
+        
+    }
     //MARK: ARProjectedView Management
     var nodeViewRegistry: [String: [UIView]] = [:]
     func registerView(_ forNode: String?, view: UIView) {

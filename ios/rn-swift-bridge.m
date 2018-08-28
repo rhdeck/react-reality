@@ -70,6 +70,7 @@ RCT_EXTERN_METHOD(setPOVSensitivity:(double)newSensitivity resolve:(RCTPromiseRe
 RCT_EXTERN_METHOD(setPOVOrientationSensitivity:(double)newSensitivity resolve:(RCTPromiseResolveBlock)resolve recject:(RCTPromiseRejectBlock)recject);
 RCT_EXTERN_METHOD(getPOV:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(setWorldTracking:(NSString *)trackingMode resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
+RCT_EXTERN_METHOD(hitTestPlane:(NSDictionary *)point detectType:(NSString *)detectType resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 @end
 @interface RCT_EXTERN_MODULE(ARSecondaryViewManager, RCTViewManager)
 @end
