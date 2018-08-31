@@ -205,6 +205,9 @@ const getPOV = async () => {
 const setWorldTracking = async trackingMode => {
   return await NativeARSceneManager.setWorldTracking(trackingMode);
 };
+const hitTestPlane = async (point, types) => {
+  return await NativeARSceneManager.hitTestPlane(point, types);
+}
 //#endregion
 //#region Exports
 export {
@@ -262,6 +265,7 @@ export {
   setPOVSensitivity,
   setPOVOrientationSensitivity,
   getPOV,
-  setWorldTracking
+  setWorldTracking,
+  hitTestPlane
 };
 //#endregion
