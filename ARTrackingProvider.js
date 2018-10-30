@@ -83,7 +83,6 @@ class ARTrackingProvider extends Component {
     }
   }
   setPlaneDetection(newValue) {
-    console.log("Adding plane detection");
     if (["horizontal", "vertical", "both"].indexOf(newValue) > -1)
       addPlaneDetection(newValue, this.updatePlanes.bind(this));
     else removePlaneDetection();
@@ -166,8 +165,6 @@ class ARTrackingProvider extends Component {
   }
 
   async updateImages(data) {
-    console.log("Got updateImaged notification", data);
-
     const anchors = await getAnchors(data);
     this.setState({ anchors: anchors }, () => {
       this.setProviderValue();
@@ -194,7 +191,6 @@ const cleanAnchors = o => {
 const cleanAnchor = v => {
   var out = {};
   if (!v) return out;
-  console.log(v);
   if (v.plane) {
     if (v.plane.width)
       v.plane.width = parseFloat(parseFloat(v.plane.width).toFixed(1));
