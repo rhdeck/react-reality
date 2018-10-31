@@ -1,21 +1,16 @@
-import { requireNativeComponent } from "react-native";
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { ARSessionConsumer } from "./ARSessionProvider";
 import { ARNodeConsumer } from "./components/ARNode";
 import { adopt } from "react-adopt";
-const NativeMV = requireNativeComponent("ARProjectedView", ARBaseProjectedView);
+import { SwiftARProjectedView } from "./RNSwiftBridge";
 
-class ARBaseProjectedView extends Component {
-  render() {
-    return (
-      <NativeMV
-        {...this.props}
-        style={[this.props.style, { position: "absolute" }]}
-      />
-    );
-  }
-}
+const ARBaseProjectedView = props => (
+  <SwiftARProjectedView
+    {...props}
+    style={[props.style, { position: "absolute" }]}
+  />
+);
 const Adoptee = adopt({
   session: <ARSessionConsumer />,
   node: <ARNodeConsumer />
