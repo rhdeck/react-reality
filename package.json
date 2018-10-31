@@ -15,7 +15,7 @@
     "lodash": "^4.17.5",
     "prop-types": "^15.6.0",
     "react-adopt": "^0.6.0",
-    "react-native-swift-bridge": "^2.2.0",
+    "react-native-swift-bridge": "^2.4.2",
     "uuid": "^3.2.1"
   },
   "pods": {
