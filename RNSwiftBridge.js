@@ -1,10 +1,57 @@
-import { NativeModules } from "react-native";
+import { PropTypes } from "prop-types";
+import React, { Component } from "react";
+import {
+  NativeModules,
+  requireNativeComponent,
+  ViewPropTypes
+} from "react-native";
 //#region Code for object ARMonoViewManager
 const NativeARMonoViewManager = NativeModules.ARMonoViewManager;
 const doTap = async (x, y) => {
   return await NativeARMonoViewManager.doTap(x, y);
 };
 //#endregion
+const NativeARMonoView = requireNativeComponent("ARMonoView", SwiftARMonoView);
+class SwiftARMonoView extends Component {
+  render() {
+    return <NativeARMonoView {...props} />;
+  }
+}
+SwiftARMonoView.propTypes = {
+  preview: PropTypes.boolean,
+  debugMode: PropTypes.boolean,
+  ...ViewPropTypes
+};
+const NativeARPrimaryView = requireNativeComponent(
+  "ARPrimaryView",
+  SwiftARPrimaryView
+);
+class SwiftARPrimaryView extends Component {
+  render() {
+    return <NativeARPrimaryView {...props} />;
+  }
+}
+SwiftARPrimaryView.propTypes = {
+  interPupilaryDistance: PropTypes.number,
+  holoOffsetY: PropTypes.number,
+  holoOffsetZ: PropTypes.number,
+  holoOffsetX: PropTypes.number,
+  fieldOfView: PropTypes.number,
+  ...ViewPropTypes
+};
+const NativeARProjectedView = requireNativeComponent(
+  "ARProjectedView",
+  SwiftARProjectedView
+);
+class SwiftARProjectedView extends Component {
+  render() {
+    return <NativeARProjectedView {...props} />;
+  }
+}
+SwiftARProjectedView.propTypes = {
+  parentNode: PropTypes.string,
+  ...ViewPropTypes
+};
 //#region Code for object ARSceneManager
 const NativeARSceneManager = NativeModules.ARSceneManager;
 const addNode = async (node, parentID) => {
@@ -205,13 +252,28 @@ const getPOV = async () => {
 const setWorldTracking = async trackingMode => {
   return await NativeARSceneManager.setWorldTracking(trackingMode);
 };
-const hitTestPlane = async (point, types) => {
-  return await NativeARSceneManager.hitTestPlane(point, types);
-}
+const hitTestPlane = async (point, detectType) => {
+  return await NativeARSceneManager.hitTestPlane(point, detectType);
+};
 //#endregion
+const NativeARSecondaryView = requireNativeComponent(
+  "ARSecondaryView",
+  SwiftARSecondaryView
+);
+class SwiftARSecondaryView extends Component {
+  render() {
+    return <NativeARSecondaryView {...props} />;
+  }
+}
+SwiftARSecondaryView.propTypes = {
+  ...ViewPropTypes
+};
 //#region Exports
 export {
   doTap,
+  SwiftARMonoView,
+  SwiftARPrimaryView,
+  SwiftARProjectedView,
   addNode,
   removeNode,
   updateNode,
@@ -266,6 +328,7 @@ export {
   setPOVOrientationSensitivity,
   getPOV,
   setWorldTracking,
-  hitTestPlane
+  hitTestPlane,
+  SwiftARSecondaryView
 };
 //#endregion
