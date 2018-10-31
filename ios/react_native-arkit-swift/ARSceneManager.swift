@@ -36,7 +36,6 @@ class ARSceneManager:RCTEventEmitter, ARSessionDelegate {
         //Must have names or else we ditch
         guard
             let name = node.name
-        
         else { return }
         nodes[name] = node
         NSLog("Added node with name: " + name)
@@ -155,15 +154,6 @@ class ARSceneManager:RCTEventEmitter, ARSessionDelegate {
     @objc func setGeometry(_ geometry: SCNGeometry, forNode: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         guard let n = nodes[forNode] else { reject("no_node", "setGeometry:No Node with name " + forNode, nil); return }
         n.geometry = geometry;
-//        if let g = n.geometry {
-//            if type(of: g) == type(of: geometry) {
-//
-//            } else {
-//                n.geometry = geometry // New Mount
-//            }
-//        } else {
-//            n.geometry = geometry;
-//        }
         resolve(true)
     }
     @objc func setLight(_ light: SCNLight, forNode: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
@@ -641,13 +631,26 @@ class ARSceneManager:RCTEventEmitter, ARSessionDelegate {
         //Is there someone paying attention to this?
         doSendEvent("ARSessionError", message: RCTJSErrorFromNSError(error))
     }
+    func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
+        doSendEvent("ARCameraState", message: { (tr: ARCamera.TrackingState) -> String in
+            switch tr {
+            case .limited:
+                return "limited"
+            case .normal:
+                return "normal"
+            case .notAvailable:
+                return "notAvailable"
+            }
+        }(camera.trackingState))
+    }
     //MARK:RCTEventEmitter Methods
     override func supportedEvents() -> [String]! {
         return [
         "ARSessionError",
         "AREvent",
         "ARPlaneEvent",
-        "ARImageEvent"
+        "ARImageEvent",
+        "ARCameraState"
         ]
     }
     func doSendEvent(_ key: String, message:Any?) {
@@ -742,23 +745,24 @@ class ARSceneManager:RCTEventEmitter, ARSessionDelegate {
         let id = anchor.identifier.uuidString
         let w = anchor.referenceImage.physicalSize.width
         let h = anchor.referenceImage.physicalSize.height
-        anchors[id] = ["type": "image", "name": name, "plane": ["width": w, "height":h]]
-        baseNodes[id] = withNode
-        doSendEvent("ARImageEvent", message: ["key": "imageAnchorAdded", "data":["id":id, "action": "add", "anchor": anchors[id]!]])
+        anchors[name] = ["type": "image", "name": name, "plane": ["width": w, "height":h]]
+        baseNodes[name] = withNode
+        doSendEvent("ARImageEvent", message: ["key": "imageAnchorAdded", "data":["id":id, "action": "add", "anchor": anchors[name]!]])
     }
     
     func updateImageAnchor(_ anchor: ARImageAnchor, withNode: SCNNode) {
         let id = anchor.identifier.uuidString
-        guard let name = anchors[id]?["image"] else { return }
+        guard let name = anchors[id]?["name"] as? String else { return }
         let w = anchor.referenceImage.physicalSize.width
         let h = anchor.referenceImage.physicalSize.height
-        anchors[id] = ["type": "image", "name": name, "plane": ["width": w, "height":h]]
-        doSendEvent("ARImageEvent", message: ["key": "imageAnchorChanged", "data":["id":id, "action": "update", "anchor": anchors[id]!]])
+        anchors[name] = ["type": "image", "name": name, "plane": ["width": w, "height":h]]
+        doSendEvent("ARImageEvent", message: ["key": "imageAnchorChanged", "data":["id":id, "action": "update", "anchor": anchors[name]!]])
     }
     func removeImageAnchor(_ anchor: ARImageAnchor, withNode: SCNNode) {
         let id = anchor.identifier.uuidString
-        anchors.removeValue(forKey: id)
-        baseNodes.removeValue(forKey: id)
+        guard let name = anchors[id]?["name"] as? String else { return }
+        anchors.removeValue(forKey: name)
+        baseNodes.removeValue(forKey: name)
         doSendEvent("ARImageEvent", message: ["key": "imageAnchorRemoved", "data": ["id": id]])
 
     }
