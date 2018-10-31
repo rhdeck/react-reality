@@ -5,9 +5,10 @@ class ARMonoview: UIView, ARSCNViewDelegate {
     var arview: ARSCNView?
     var _preview:Bool = true
     var cachedPreview: Any?
+    var _debugMode: Bool = false
     @objc var preview:Bool {
         get {
-            return _preview
+            return _preview 
         }
         set(newVal) {
             if cachedPreview == nil {
@@ -20,6 +21,15 @@ class ARMonoview: UIView, ARSCNViewDelegate {
             } else {
                 arview?.scene.background.contents = UIColor.black
             }
+        }
+    }
+    @objc var debugMode: Bool {
+        get {
+            return _debugMode
+        }
+        set(newVal) {
+            _debugMode = newVal
+            arview?.debugOptions = .showFeaturePoints
         }
     }
     func start() -> ARMonoview {
