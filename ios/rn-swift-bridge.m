@@ -4,6 +4,7 @@
 @interface RCT_EXTERN_MODULE(ARMonoViewManager, RCTViewManager)
 RCT_EXTERN_METHOD(doTap:(double)x y:(double)y resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXPORT_VIEW_PROPERTY(preview, BOOL);
+RCT_EXPORT_VIEW_PROPERTY(debugMode, BOOL);
 @end
 @interface RCT_EXTERN_MODULE(ARPrimaryViewManager, RCTViewManager)
 RCT_EXPORT_VIEW_PROPERTY(interPupilaryDistance, float);
@@ -70,7 +71,7 @@ RCT_EXTERN_METHOD(setPOVSensitivity:(double)newSensitivity resolve:(RCTPromiseRe
 RCT_EXTERN_METHOD(setPOVOrientationSensitivity:(double)newSensitivity resolve:(RCTPromiseResolveBlock)resolve recject:(RCTPromiseRejectBlock)recject);
 RCT_EXTERN_METHOD(getPOV:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(setWorldTracking:(NSString *)trackingMode resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
-RCT_EXTERN_METHOD(hitTestPlane:(NSDictionary *)point detectType:(NSString *)detectType resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
+RCT_EXTERN_METHOD(hitTestPlane:(CGPoint *)point detectType:(NSString *)detectType resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject);
 @end
 @interface RCT_EXTERN_MODULE(ARSecondaryViewManager, RCTViewManager)
 @end
