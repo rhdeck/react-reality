@@ -1,4 +1,4 @@
-import { requireNativeComponent } from "react-native";
+import { SwiftARMonoView } from "./RNSwiftBridge";
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { ARSessionConsumer, ARSessionProvider } from "./ARSessionProvider";
@@ -17,12 +17,12 @@ class ARBaseMonoView extends Component {
                     : ARSessionProvider.defaultProps.alignment
                 }
               >
-                <ARMonoView {...this.props} />
+                <SwiftARMonoView {...this.props} />
               </ARSessionProvider>
             );
           } else
             return [
-              <NativeMV
+              <SwiftARMonoView
                 {...this.props}
                 children={null}
                 key="ARMonoViewNative"
@@ -53,7 +53,6 @@ ARBaseMonoView.propTypes = {
   start: PropTypes.func,
   stop: PropTypes.func
 };
-const NativeMV = requireNativeComponent("ARMonoView", ARBaseMonoView);
 
 const ARMonoView = props => {
   return (
