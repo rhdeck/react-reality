@@ -1,6 +1,6 @@
 import React, { createContext, Component } from "react";
 import PropTypes from "prop-types";
-import { setAnimation, removeAnimation } from "./ARSceneManager";
+import { setAnimation } from "./RNSwiftBridge";
 const { Provider, Consumer } = createContext({});
 class ARAnimatedProvider extends Component {
   providerValue = {
