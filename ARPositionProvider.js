@@ -1,11 +1,9 @@
 import React, { Component, createContext } from "react";
 import {
-  getPOV,
-  stopDetectPositionChange,
-  detectPositionChange,
-  setPOVSensitivity
-} from "./ARSceneManager";
-import { setPOVOrientationSensitivity } from "./RNSwiftBridge";
+  subscribeToARPositionChange,
+  setPOVSensitivity,
+  setPOVOrientationSensitivity
+} from "./RNSwiftBridge";
 import PropTypes from "prop-types";
 const { Provider, Consumer: ARPositionConsumer } = createContext({
   position: { x: 0, y: 0, z: 0 },
@@ -20,11 +18,14 @@ class ARPositionProvider extends Component {
     positionSensitivity: -1,
     orientationSensitivity: -1
   };
+  positionChange = null;
   componentDidMount() {
-    detectPositionChange(this.onPositionChange.bind(this));
+    this.positionChange = subscribeToARPositionChange(
+      this.onPositionChange.bind(this)
+    );
   }
   componentWillUnmount() {
-    stopDetectPositionChange();
+    if (this.positionChange) this.positionChange.remove();
   }
   onPositionChange(data) {
     this.setState({ providerValue: data });
