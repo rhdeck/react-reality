@@ -54,6 +54,10 @@ ARBaseMonoView.propTypes = {
   stop: PropTypes.func,
   debugMode: PropTypes.bool
 };
+ARBaseMonoView.defaultProps = {
+  preview: true,
+  debugMode: false
+};
 const ARMonoView = props => (
   <ARSessionConsumer>
     {({ start, stop }) => (
