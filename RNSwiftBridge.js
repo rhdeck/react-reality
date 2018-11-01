@@ -2,6 +2,7 @@ import { PropTypes } from "prop-types";
 import React, { Component } from "react";
 import {
   NativeModules,
+  NativeEventEmitter,
   requireNativeComponent,
   ViewPropTypes
 } from "react-native";
@@ -11,27 +12,27 @@ const doTap = async (x, y) => {
   return await NativeARMonoViewManager.doTap(x, y);
 };
 //#endregion
-const NativeARMonoView = requireNativeComponent("ARMonoView", SwiftARMonoView);
-class SwiftARMonoView extends Component {
+const NativeARMonoView = requireNativeComponent("ARMonoView", ARMonoView);
+class ARMonoView extends Component {
   render() {
-    return <NativeARMonoView {...props} />;
+    return <NativeARMonoView {...this.props} />;
   }
 }
-SwiftARMonoView.propTypes = {
-  preview: PropTypes.boolean,
-  debugMode: PropTypes.boolean,
+ARMonoView.propTypes = {
+  preview: PropTypes.bool,
+  debugMode: PropTypes.bool,
   ...ViewPropTypes
 };
 const NativeARPrimaryView = requireNativeComponent(
   "ARPrimaryView",
-  SwiftARPrimaryView
+  ARPrimaryView
 );
-class SwiftARPrimaryView extends Component {
+class ARPrimaryView extends Component {
   render() {
-    return <NativeARPrimaryView {...props} />;
+    return <NativeARPrimaryView {...this.props} />;
   }
 }
-SwiftARPrimaryView.propTypes = {
+ARPrimaryView.propTypes = {
   interPupilaryDistance: PropTypes.number,
   holoOffsetY: PropTypes.number,
   holoOffsetZ: PropTypes.number,
@@ -41,14 +42,14 @@ SwiftARPrimaryView.propTypes = {
 };
 const NativeARProjectedView = requireNativeComponent(
   "ARProjectedView",
-  SwiftARProjectedView
+  ARProjectedView
 );
-class SwiftARProjectedView extends Component {
+class ARProjectedView extends Component {
   render() {
-    return <NativeARProjectedView {...props} />;
+    return <NativeARProjectedView {...this.props} />;
   }
 }
-SwiftARProjectedView.propTypes = {
+ARProjectedView.propTypes = {
   parentNode: PropTypes.string,
   ...ViewPropTypes
 };
@@ -256,24 +257,68 @@ const hitTestPlane = async (point, detectType) => {
   return await NativeARSceneManager.hitTestPlane(point, detectType);
 };
 //#endregion
+//#region events for object ARSceneManager
+var _getNativeARSceneManagerEventEmitter = null;
+const getNativeARSceneManagerEventEmitter = () => {
+  if (!_getNativeARSceneManagerEventEmitter)
+    _getNativeARSceneManagerEventEmitter = new NativeEventEmitter(
+      NativeARSceneManager
+    );
+  return _getNativeARSceneManagerEventEmitter;
+};
+const subscribeToARSessionError = cb => {
+  return getNativeARSceneManagerEventEmitter().addListener(
+    "ARSessionError",
+    cb
+  );
+};
+const subscribeToAREvent = cb => {
+  return getNativeARSceneManagerEventEmitter().addListener("AREvent", cb);
+};
+const subscribeToARPlaneEvent = cb => {
+  return getNativeARSceneManagerEventEmitter().addListener("ARPlaneEvent", cb);
+};
+const subscribeToARImageEvent = cb => {
+  return getNativeARSceneManagerEventEmitter().addListener("ARImageEvent", cb);
+};
+const subscribeToARCameraState = cb => {
+  return getNativeARSceneManagerEventEmitter().addListener("ARCameraState", cb);
+};
+const subscribeToARPositionChange = cb => {
+  return getNativeARSceneManagerEventEmitter().addListener(
+    "ARPositionChange",
+    cb
+  );
+};
+//#endregion
 const NativeARSecondaryView = requireNativeComponent(
   "ARSecondaryView",
-  SwiftARSecondaryView
+  ARSecondaryView
 );
-class SwiftARSecondaryView extends Component {
+class ARSecondaryView extends Component {
   render() {
-    return <NativeARSecondaryView {...props} />;
+    return <NativeARSecondaryView {...this.props} />;
   }
 }
-SwiftARSecondaryView.propTypes = {
+ARSecondaryView.propTypes = {
   ...ViewPropTypes
 };
+//#region Event marshalling object
+const RNSEvents = {
+  ARSessionError: subscribeToARSessionError,
+  AREvent: subscribeToAREvent,
+  ARPlaneEvent: subscribeToARPlaneEvent,
+  ARImageEvent: subscribeToARImageEvent,
+  ARCameraState: subscribeToARCameraState,
+  ARPositionChange: subscribeToARPositionChange
+};
+//#endregion
 //#region Exports
 export {
   doTap,
-  SwiftARMonoView,
-  SwiftARPrimaryView,
-  SwiftARProjectedView,
+  ARMonoView,
+  ARPrimaryView,
+  ARProjectedView,
   addNode,
   removeNode,
   updateNode,
@@ -329,6 +374,13 @@ export {
   getPOV,
   setWorldTracking,
   hitTestPlane,
-  SwiftARSecondaryView
+  subscribeToARSessionError,
+  subscribeToAREvent,
+  subscribeToARPlaneEvent,
+  subscribeToARImageEvent,
+  subscribeToARCameraState,
+  subscribeToARPositionChange,
+  ARSecondaryView,
+  RNSEvents
 };
 //#endregion
