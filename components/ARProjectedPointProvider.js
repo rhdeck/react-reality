@@ -78,28 +78,26 @@ const Adoptee = adopt({
   position: <ARPositionConsumer />,
   node: <ARNodeConsumer />
 });
-const ARProjectedPointProvider = props => {
-  return (
-    <Adoptee>
-      {({
-        session: { isStarted },
-        position: { position, orientation },
-        node: { nodeID }
-      }) => {
-        if (!isStarted) return null;
-        if (!nodeID) return null;
-        return (
-          <ARBaseProjectedPointProvider
-            {...props}
-            nodeID={nodeID}
-            newPosition={position}
-            newOrientation={orientation}
-          />
-        );
-      }}
-    </Adoptee>
-  );
-};
+const ARProjectedPointProvider = props => (
+  <Adoptee>
+    {({
+      session: { isStarted },
+      position: { position, orientation },
+      node: { nodeID }
+    }) => {
+      if (!isStarted) return null;
+      if (!nodeID) return null;
+      return (
+        <ARBaseProjectedPointProvider
+          {...props}
+          nodeID={nodeID}
+          newPosition={position}
+          newOrientation={orientation}
+        />
+      );
+    }}
+  </Adoptee>
+);
 //#endregion
 export default ARProjectedPointProvider;
 export { ARProjectedPointProvider, Consumer as ARProjectedPointConsumer };
