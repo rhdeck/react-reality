@@ -1,9 +1,9 @@
 import PropTypes from "prop-types";
-import React, { Component } from "react";
+import React from "react";
 import { ARSessionConsumer } from "./ARSessionProvider";
 import { ARNodeConsumer } from "./components/ARNode";
 import { adopt } from "react-adopt";
-import { SwiftARProjectedView } from "./RNSwiftBridge";
+import { ARProjectedView as SwiftARProjectedView } from "./RNSwiftBridge";
 
 const ARBaseProjectedView = props => (
   <SwiftARProjectedView
@@ -25,7 +25,6 @@ const ARProjectedView = props => {
     </Adoptee>
   );
 };
-
 ARProjectedView.propTypes = {
   parentNode: PropTypes.string
 };
