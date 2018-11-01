@@ -644,10 +644,11 @@ class ARSceneManager:RCTEventEmitter, ARSessionDelegate {
         }(camera.trackingState))
     }
     //MARK:RCTEventEmitter Methods
+    //@RNSEvent ARSessionError AREvent ARPlaneEvent ARImageEvent ARCameraState, ARPositionChange
     override func supportedEvents() -> [String]! {
         return [
         "ARSessionError",
-        "AREvent",
+        "ARPositionChange",
         "ARPlaneEvent",
         "ARImageEvent",
         "ARCameraState"
@@ -838,7 +839,7 @@ class ARSceneManager:RCTEventEmitter, ARSessionDelegate {
             abs(lastOrientation.z - pointOfView.orientation.z) > orientationSensitivity ||
             abs(lastOrientation.w - pointOfView.orientation.w) > orientationSensitivity
         {
-            doSendEvent("AREvent", message: ["key": "positionChanged", "data": ["position": vector3ToJson(pointOfView.position), "orientation": vector4ToJson(pointOfView.orientation)]])
+            doSendEvent("ARPositionChange", message: ["key": "positionChanged", "data": ["position": vector3ToJson(pointOfView.position), "orientation": vector4ToJson(pointOfView.orientation)]])
             lastPosition = pointOfView.position
             lastOrientation = pointOfView.orientation
         }
