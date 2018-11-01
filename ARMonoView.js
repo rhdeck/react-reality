@@ -1,4 +1,4 @@
-import { SwiftARMonoView } from "./RNSwiftBridge";
+import { ARMonoView as NativeMonoView } from "./RNSwiftBridge";
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { ARSessionConsumer, ARSessionProvider } from "./ARSessionProvider";
@@ -17,12 +17,12 @@ class ARBaseMonoView extends Component {
                     : ARSessionProvider.defaultProps.alignment
                 }
               >
-                <SwiftARMonoView {...this.props} />
+                <ARMonoView {...this.props} />
               </ARSessionProvider>
             );
           } else
             return [
-              <SwiftARMonoView
+              <NativeMonoView
                 {...this.props}
                 children={null}
                 key="ARMonoViewNative"
@@ -51,19 +51,15 @@ class ARBaseMonoView extends Component {
 ARBaseMonoView.propTypes = {
   preview: PropTypes.bool,
   start: PropTypes.func,
-  stop: PropTypes.func
+  stop: PropTypes.func,
+  debugMode: PropTypes.bool
 };
-
-const ARMonoView = props => {
-  return (
-    <ARSessionConsumer>
-      {({ start, stop }) => {
-        return <ARBaseMonoView {...props} start={start} stop={stop} />;
-      }}
-    </ARSessionConsumer>
-  );
-};
-
+const ARMonoView = props => (
+  <ARSessionConsumer>
+    {({ start, stop }) => (
+      <ARBaseMonoView {...props} start={start} stop={stop} />
+    )}
+  </ARSessionConsumer>
+);
 ARMonoView.propTypes = { ...ARBaseMonoView.propTypes };
-
 export default ARMonoView;
