@@ -1,6 +1,6 @@
 import Foundation
 @objc(ARMonoViewManager)
-class ARMonoviewManager:RCTViewManager {
+class ARMonoViewManager:RCTViewManager {
     var v: ARMonoview?
     override func view() -> ARMonoview {
         v = (ARMonoview()).start()
