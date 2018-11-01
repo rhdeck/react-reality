@@ -1,6 +1,5 @@
 import React, { Component, createContext } from "react";
-import PropTypes from "prop-types";
-import { doTap } from "./ARSceneManager";
+import { doTap } from "./RNSwiftBridge";
 const { Provider, Consumer: ARTouchConsumer } = createContext({});
 class ARTouchProvider extends Component {
   registeredNodes = {};

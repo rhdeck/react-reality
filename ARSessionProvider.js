@@ -1,6 +1,6 @@
 import React, { Component, createContext } from "react";
 import PropTypes from "prop-types";
-import { clear, pause, resume, setWorldTracking } from "./ARSceneManager";
+import { clear, pause, resume, setWorldTracking } from "./RNSwiftBridge";
 const { Provider, Consumer: ARSessionConsumer } = createContext({});
 class ARSessionProvider extends Component {
   state = {

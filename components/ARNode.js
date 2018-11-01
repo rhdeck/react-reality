@@ -15,7 +15,7 @@ import {
   renderingOrder
 } from "./propTypes";
 import UUID from "uuid/v4";
-import { addNode, removeNode, updateNode } from "../ARSceneManager";
+import { addNode, removeNode, updateNode } from "../RNSwiftBridge";
 const { Provider, Consumer: ARNodeConsumer } = createContext({});
 //#region BaseNode
 class ARBaseNode extends Component {

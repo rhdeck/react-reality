@@ -1,5 +1,5 @@
 import React, { Component, createContext } from "react";
-import { addSKScene, removeSKScene, updateSKScene } from "../ARSceneManager";
+import { addSKScene, removeSKScene, updateSKScene } from "../RNSwiftBridge";
 import { processColor } from "react-native";
 import PropTypes from "prop-types";
 import pickBy from "lodash/pickBy";

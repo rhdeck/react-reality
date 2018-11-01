@@ -5,7 +5,7 @@ import {
   setMaterial,
   setMaterialProperty,
   removeMaterial
-} from "../ARSceneManager";
+} from "../RNSwiftBridge";
 import PropTypes from "prop-types";
 import {
   blendMode,

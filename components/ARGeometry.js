@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import filter from "lodash/filter";
 import pickBy from "lodash/pickBy";
 import { adopt } from "react-adopt";
-import { removeGeometry } from "../ARSceneManager";
+import { removeGeometry } from "../RNSwiftBridge";
 import { ARNodeConsumer } from "./ARNode";
 import { ARAnimatedConsumer } from "../ARAnimatedProvider";
 const { Provider, Consumer: ARGeometryConsumer } = createContext({});

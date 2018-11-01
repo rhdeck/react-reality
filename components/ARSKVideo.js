@@ -4,7 +4,7 @@ import {
   removeSKNode,
   setSKVideoNode,
   updateSKVideoNode
-} from "../ARSceneManager";
+} from "../RNSwiftBridge";
 import PropTypes from "prop-types";
 import pickBy from "lodash/pickBy";
 import UUID from "uuid/v4";
