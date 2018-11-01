@@ -839,7 +839,7 @@ class ARSceneManager:RCTEventEmitter, ARSessionDelegate {
             abs(lastOrientation.z - pointOfView.orientation.z) > orientationSensitivity ||
             abs(lastOrientation.w - pointOfView.orientation.w) > orientationSensitivity
         {
-            doSendEvent("ARPositionChange", message: ["key": "positionChanged", "data": ["position": vector3ToJson(pointOfView.position), "orientation": vector4ToJson(pointOfView.orientation)]])
+            doSendEvent("ARPositionChange", message: ["position": vector3ToJson(pointOfView.position), "orientation": vector4ToJson(pointOfView.orientation)])
             lastPosition = pointOfView.position
             lastOrientation = pointOfView.orientation
         }
