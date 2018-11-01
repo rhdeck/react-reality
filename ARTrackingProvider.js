@@ -1,14 +1,14 @@
 import React, { Component, createContext } from "react";
 import PropTypes from "prop-types";
 import {
-  addPlaneDetection,
-  removePlaneDetection,
   getAnchors,
-  addImageDetection,
-  removeImageDetection,
+  setImageDetection,
+  subscribeToARImageEvent,
+  subscribeToARPlaneEvent,
+  setPlaneDetection,
   addRecognizerImage,
   removeRecognizerImage
-} from "./ARSceneManager";
+} from "./RNSwiftBridge";
 const { Provider, Consumer: ARTrackingConsumer } = createContext();
 class ARTrackingProvider extends Component {
   state = {
@@ -82,14 +82,32 @@ class ARTrackingProvider extends Component {
       });
     }
   }
-  setPlaneDetection(newValue) {
-    if (["horizontal", "vertical", "both"].indexOf(newValue) > -1)
-      addPlaneDetection(newValue, this.updatePlanes.bind(this));
-    else removePlaneDetection();
+  planeDetection = null;
+  async setPlaneDetection(newValue) {
+    if (["horizontal", "vertical", "both"].indexOf(newValue) > -1) {
+      await setPlaneDetection(newValue);
+      this.planeDetection = subscribeToARPlaneEvent(
+        this.updatePlanes.bind(this)
+      );
+    } else if (this.planeDetection) {
+      await setPlaneDetection("none");
+      this.planeDetection.remove();
+      this.planeDetection = null;
+    }
   }
-  setImageDetection(newValue) {
+  imageDetection = null;
+  async setImageDetection(newValue) {
+    await setImageDetection(newValue);
+    if (newValue) {
+      this.imageDetection = subscribeToARImageEvent(
+        this.updateImages.bind(this)
+      );
+    }
     if (newValue) addImageDetection(this.updateImages.bind(this));
-    else removeImageDetection();
+    else if (this.imageDetection) {
+      this.imageDetection.remove();
+      this.imageDetection = null;
+    }
   }
   registeredImages = {};
   setImages() {
@@ -163,7 +181,6 @@ class ARTrackingProvider extends Component {
           });
       }
   }
-
   async updateImages(data) {
     const anchors = await getAnchors(data);
     this.setState({ anchors: anchors }, () => {
