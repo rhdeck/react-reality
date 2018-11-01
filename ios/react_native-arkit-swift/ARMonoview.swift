@@ -1,7 +1,7 @@
 import Foundation
 import ARKit
 @objc(ARMonoView)
-class ARMonoview: UIView, ARSCNViewDelegate {
+class ARMonoView: UIView, ARSCNViewDelegate {
     var arview: ARSCNView?
     var _preview:Bool = true
     var cachedPreview: Any?
@@ -32,7 +32,7 @@ class ARMonoview: UIView, ARSCNViewDelegate {
             arview?.debugOptions = .showFeaturePoints
         }
     }
-    func start() -> ARMonoview {
+    func start() -> ARMonoView {
         if Thread.isMainThread {
             let a = ARSCNView()
             arview = a
