@@ -7,7 +7,8 @@ import {
   subscribeToARPlaneEvent,
   setPlaneDetection,
   addRecognizerImage,
-  removeRecognizerImage
+  removeRecognizerImage,
+  subscribeToARCameraState
 } from "./RNSwiftBridge";
 const { Provider, Consumer: ARTrackingConsumer } = createContext();
 class ARTrackingProvider extends Component {
@@ -16,7 +17,8 @@ class ARTrackingProvider extends Component {
     imageDetection: false,
     transition: 0,
     anchors: {},
-    providerValue: this.setProviderValue(true)
+    providerValue: this.setProviderValue(true),
+    trackingLevel: "notAvailable"
   };
   constructor(props) {
     super(props);
@@ -24,7 +26,8 @@ class ARTrackingProvider extends Component {
   }
   setProviderValue(skipState) {
     const providerValue = {
-      anchors: this.state ? this.state.anchors : {}
+      anchors: this.state ? this.state.anchors : {},
+      trackingLevel: this.state ? this.state.trackingLevel : "notAvailable"
     };
     if (!skipState)
       this.setState({ providerValue }, () => {
@@ -64,11 +67,17 @@ class ARTrackingProvider extends Component {
     }
     return ret;
   }
+  cameraStateDetection = null;
   componentDidUpdate() {
     this.manageTodos();
+    this.cameraStateDetection = subscribeToARCameraState(
+      this.updateCameraState.bind(this)
+    );
   }
   componentDidMount() {
     this.manageTodos();
+    if (this.cameraStateDetection) this.cameraStateDetection.remove();
+    this.cameraStateDetection = null;
   }
   manageTodos() {
     if (this.state.todos) {
@@ -97,7 +106,7 @@ class ARTrackingProvider extends Component {
   }
   imageDetection = null;
   async setImageDetection(newValue) {
-    await setImageDetection(newValue);
+    await setImageDetection(!!newValue);
     if (newValue) {
       this.imageDetection = subscribeToARImageEvent(
         this.updateImages.bind(this)
@@ -184,6 +193,11 @@ class ARTrackingProvider extends Component {
   async updateImages(data) {
     const anchors = await getAnchors(data);
     this.setState({ anchors: anchors }, () => {
+      this.setProviderValue();
+    });
+  }
+  async updateCameraState(data) {
+    this.setState({ trackingLevel: data }, () => {
       this.setProviderValue();
     });
   }
