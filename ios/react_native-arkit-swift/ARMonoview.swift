@@ -29,7 +29,7 @@ class ARMonoView: UIView, ARSCNViewDelegate {
         }
         set(newVal) {
             _debugMode = newVal
-            arview?.debugOptions = .showFeaturePoints
+            arview?.debugOptions = newVal ? .showFeaturePoints : .init(rawValue: 0)
         }
     }
     func start() -> ARMonoView {
