@@ -8,20 +8,14 @@ import { useDoing, DO, DOING, DONE } from "../utils";
 const ARNodeContext = createContext({});
 const { Provider, Consumer: ARNodeConsumer } = ARNodeContext;
 //#region ARNode
-const ARNode = ({
-  id,
-  children,
-  registerNode,
-  removeNode: onUnmount,
-  ...nodeProps
-}) => {
+const ARNode = ({ id, children, removeNode: onUnmount, ...nodeProps }) => {
   const { isStarted } = useContext(ARSessionContext);
   const { registerNode, removeNode: touchOnUnmount } = useContext(
     ARTouchContext
   );
   const { nodeID: parentNode = "" } = useContext(ARNodeContext);
   const { willNativeUpdate, didNativeUpdate } = useContext(ARAnimatedContext);
-  const [updateState, setUpdateState] = useDoing("DONE");
+  const [updateState, setUpdateState] = useDoing(DONE);
   const [isMounted, setIsMounted] = useState(false);
   const nodeID = useRef(id);
   if (!nodeID.current) nodeID.current = UUID();
