@@ -1,69 +1,28 @@
 import { ARMonoView as NativeMonoView } from "./RNSwiftBridge";
-import PropTypes from "prop-types";
-import React, { Component } from "react";
-import { ARSessionConsumer, ARSessionProvider } from "./ARSessionProvider";
-class ARBaseMonoView extends Component {
-  render() {
+import React, { useEffect, useContext } from "react";
+import { ARSessionProvider } from "./ARSessionProvider";
+const ARMonoView = ({
+  preview = true,
+  debugMode = false,
+  start,
+  stop,
+  children
+}) => {
+  useEffect(() => {
+    if (start) start();
+    return () => stop && stop();
+  }, []);
+  const { isStarted } = useContext(ARSessionContext);
+  if (typeof isStarted === "undefined")
     return (
-      <ARSessionConsumer>
-        {value => {
-          const { isStarted } = value;
-          if (typeof isStarted === "undefined") {
-            return (
-              <ARSessionProvider
-                alignment={
-                  this.props.alignment
-                    ? this.props.alignment
-                    : ARSessionProvider.defaultProps.alignment
-                }
-              >
-                <ARMonoView {...this.props} />
-              </ARSessionProvider>
-            );
-          } else
-            return [
-              <NativeMonoView
-                {...this.props}
-                children={null}
-                key="ARMonoViewNative"
-              />,
-              typeof this.props.children == "function" ? (
-                <ARSessionConsumer key="ARMonoViewConsumer">
-                  {value => {
-                    return this.props.children(value);
-                  }}
-                </ARSessionConsumer>
-              ) : this.props.children ? (
-                this.props.children
-              ) : null
-            ];
-        }}
-      </ARSessionConsumer>
+      <ARSessionProvider>
+        <ARMonoView {...{ preview, debugMode, start, stop, children }} />
+      </ARSessionProvider>
     );
-  }
-  componentDidMount() {
-    if (typeof this.props.start == "function") this.props.start();
-  }
-  componentWillUnmount() {
-    if (typeof this.props.stop == "function") this.props.stop();
-  }
-}
-ARBaseMonoView.propTypes = {
-  preview: PropTypes.bool,
-  start: PropTypes.func,
-  stop: PropTypes.func,
-  debugMode: PropTypes.bool
+  else
+    return [
+      <NativeMonoView {...{ preview, debugMode }} key="ARMonoViewNative" />,
+      children
+    ];
 };
-ARBaseMonoView.defaultProps = {
-  preview: true,
-  debugMode: false
-};
-const ARMonoView = props => (
-  <ARSessionConsumer>
-    {({ start, stop }) => (
-      <ARBaseMonoView {...props} start={start} stop={stop} />
-    )}
-  </ARSessionConsumer>
-);
-ARMonoView.propTypes = { ...ARBaseMonoView.propTypes };
 export default ARMonoView;

@@ -1,32 +1,27 @@
-import React, { createContext, Component } from "react";
-import PropTypes from "prop-types";
+import React, { createContext, useState, useEffect } from "react";
 import { setAnimation } from "./RNSwiftBridge";
-const { Provider, Consumer } = createContext({});
-class ARAnimatedProvider extends Component {
-  providerValue = {
-    willNativeUpdate: this.willNativeUpdate.bind(this),
-    didNativeUpdate: this.didNativeUpdate.bind(this)
-  };
-  render() {
-    return <Provider {...this.props} value={this.providerValue} />;
-  }
-  async willNativeUpdate() {
-    await setAnimation(
-      parseFloat(this.props.milliseconds) / 1000.0,
-      this.props.easing
-    );
-  }
-  async didNativeUpdate() {
-    //Do nothing
-  }
-}
-ARAnimatedProvider.defaultProps = {
-  milliseconds: 250,
-  easing: "inout"
+const context = createContext({});
+const { Provider, Consumer } = context;
+const ARAnimatedProvider = ({
+  milliseconds = 250,
+  easing = "inout",
+  children
+}) => {
+  const [providerValue, setProviderValue] = useState();
+  useEffect(() => {
+    const willNativeUpdate = () =>
+      setAnimation(parseFloat(milliseconds) / 1000.0, easing);
+    const didNativeUpdate = () => {};
+    setProviderValue({
+      willNativeUpdate,
+      didNativeUpdate
+    });
+  }, [milliseconds, easing]);
+  return <Provider value={providerValue}>{children}</Provider>;
 };
-ARAnimatedProvider.propTypes = {
-  milliseconds: PropTypes.number,
-  easing: PropTypes.string
+export {
+  ARAnimatedProvider,
+  Consumer as ARAnimatedConsumer,
+  context as ARAnimatedContext
 };
-export { ARAnimatedProvider, Consumer as ARAnimatedConsumer };
 export default ARAnimatedProvider;

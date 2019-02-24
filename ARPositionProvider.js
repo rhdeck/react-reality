@@ -1,73 +1,44 @@
-import React, { Component, createContext } from "react";
+import React, { createContext, useState, useRef, useEffect } from "react";
 import {
   subscribeToARPositionChange,
   setPOVSensitivity,
   setPOVOrientationSensitivity
 } from "./RNSwiftBridge";
-import PropTypes from "prop-types";
-const { Provider, Consumer: ARPositionConsumer } = createContext({
+const context = createContext({
   position: { x: 0, y: 0, z: 0 },
   orientation: {}
 });
-class ARPositionProvider extends Component {
-  state = {
-    providerValue: {
-      position: { x: 0, y: 0, z: 0 },
-      orientation: { x: 0 }
-    },
-    positionSensitivity: -1,
-    orientationSensitivity: -1
-  };
-  positionChange = null;
-  componentDidMount() {
-    this.positionChange = subscribeToARPositionChange(
-      this.onPositionChange.bind(this)
-    );
-  }
-  componentWillUnmount() {
-    if (this.positionChange) this.positionChange.remove();
-  }
-  onPositionChange(data) {
-    this.setState({ providerValue: data });
-    if (typeof this.props.onPositionChange == "function")
-      this.props.onPositionChange(data);
-  }
-  render() {
-    return (
-      <Provider value={this.state.providerValue}>
-        {typeof this.props.children == "function" ? (
-          <ARPositionConsumer>
-            {value => {
-              return this.props.children(value);
-            }}
-          </ARPositionConsumer>
-        ) : (
-          this.props.children
-        )}
-      </Provider>
-    );
-  }
-  static getDerivedStateFromProps(nextProps, prevState) {
-    var ret = prevState;
-    if (prevState.positionSensitivity != nextProps.positionSensitivity) {
-      setPOVSensitivity(nextProps.positionSensitivity);
-      ret.positionSensitivity = nextProps.positionSensitivity;
-    }
-    if (prevState.orientationSensitivity != nextProps.orientationSensitivity) {
-      setPOVOrientationSensitivity(nextProps.orientationSensitivity);
-      ret.orientationSensitivity = nextProps.orientationSensitivity;
-    }
-    return ret;
-  }
-}
-ARPositionProvider.defaultProps = {
-  positionSensitivity: 0.01,
-  orientationSensitivity: 0.05
+const { Provider, Consumer: ARPositionConsumer } = context;
+import consumerIf from "consumerif";
+const ARPositionProvider = ({
+  positionSensitivity = 0.1,
+  orientationSensitivity = 0.05,
+  onPositionChange,
+  children
+}) => {
+  const [providerValue, setProviderValue] = useState({
+    position: { x: 0, y: 0, z: 0 },
+    orientation: { x: 0 }
+  });
+  const positionChange = useRef(null);
+  useEffect(() => {
+    positionChange.current = subscribeToARPositionChange(data => {
+      setProviderValue(data);
+      if (onPositionChange) onPositionChange(data);
+    });
+    () => positionChange.current && positionChange.current.remove();
+  }, []);
+  useEffect(() => {
+    setPOVSensitivity(positionSensitivity);
+  }, [positionSensitivity]);
+  useEffect(() => {
+    setPOVOrientationSensitivity(orientationSensitivity);
+  }, [orientationSensitivity]);
+  return (
+    <Provider value={providerValue}>
+      {consumerIf(children, ARPositionConsumer)}
+    </Provider>
+  );
 };
-ARPositionProvider.propTypes = {
-  onPositionChange: PropTypes.func,
-  positionSensitivity: PropTypes.number,
-  orientationSensitivity: PropTypes.number
-};
-export { ARPositionProvider, ARPositionConsumer };
+export { ARPositionProvider, ARPositionConsumer, context as ARPositionContext };
 export default ARPositionProvider;

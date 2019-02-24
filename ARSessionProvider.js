@@ -1,69 +1,32 @@
-import React, { Component, createContext } from "react";
-import PropTypes from "prop-types";
+import React, { createContext, useState, useEffect } from "react";
 import { clear, pause, resume, setWorldTracking } from "./RNSwiftBridge";
-const { Provider, Consumer: ARSessionConsumer } = createContext({});
-class ARSessionProvider extends Component {
-  state = {
-    providerValue: this.setProviderValue(true),
-    alignment: "gravity",
-    isStarted: false
-  };
-  constructor(props) {
-    super(props);
-    this.state.providerValue = this.setProviderValue(true);
-  }
-  start() {
-    (async () => {
+import consumerIf from "consumerif";
+const context = createContext({});
+const { Provider, Consumer: ARSessionConsumer } = context;
+const ARSessionProvider = ({ alignment = "gravity", children }) => {
+  const [isStarted, setIsStarted] = useState(false);
+  const [providerValue, setProviderValue] = useState();
+  useEffect(() => {
+    const start = async () => {
       try {
         await resume();
       } catch (e) {}
       try {
         await clear();
       } catch (e) {}
-      this.setState({ isStarted: true }, () => {
-        this.setProviderValue();
-      });
-    })();
-  }
-  stop() {
-    pause();
-  }
-  setProviderValue(skipState) {
-    const providerValue = {
-      isStarted: !!(this.state && this.state.isStarted),
-      start: this.start.bind(this),
-      stop: this.stop.bind(this)
+      setIsStarted(true);
     };
-    if (!skipState) this.setState({ providerValue });
-    return providerValue;
-  }
-  static getDerivedStateFromProps(nextProps, prevState) {
-    var ret = prevState;
-    if (nextProps.alignment && nextProps.alignment != prevState.alignment) {
-      if (prevState.isStarted) {
-        ret.alignment = nextProps.alignment;
-        setWorldTracking(ret.alignment);
-      }
-    }
-    return ret;
-  }
-  render() {
-    return (
-      <Provider value={this.state.providerValue}>
-        {typeof this.props.children == "function" ? (
-          <ARSessionConsumer>{this.props.children}</ARSessionConsumer>
-        ) : (
-          this.props.children
-        )}
-      </Provider>
-    );
-  }
-}
-ARSessionProvider.propTypes = {
-  alignment: PropTypes.string
+    const stop = () => pause();
+    setProviderValue({ isStarted, start, stop });
+  }, [isStarted, alignment]);
+  useEffect(() => {
+    setWorldTracking(alignment);
+  }, [alignment]);
+  return (
+    <Provider value={providerValue}>
+      {consumerIf(children, ARSessionConsumer)}
+    </Provider>
+  );
 };
-ARSessionProvider.defaultProps = {
-  alignment: "gravity"
-};
-export { ARSessionProvider, ARSessionConsumer };
+export { ARSessionProvider, ARSessionConsumer, context as ARSessionContext };
 export default ARSessionProvider;

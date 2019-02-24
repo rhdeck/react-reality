@@ -66,54 +66,40 @@ export {
   ARProjectedPointProvider,
   ARProjectedView
 };
-import React, { Component } from "react";
+import React, { useContext, useState } from "react";
 import PropTypes from "prop-types";
 //#region Materials
-export const ARColor = ({ color, index }) => {
-  if (typeof index == "undefined") {
-    return (
-      <ARMaterials>
-        <ARMaterialProperty color={color} />
-      </ARMaterials>
-    );
-  } else {
-    return (
-      <ARMaterial index={index}>
-        <ARMaterialProperty color={color} />
-      </ARMaterial>
-    );
-  }
-};
-export const ARTexture = ({ path, index }) => {
-  if (typeof index == "undefined") {
-    return (
-      <ARMaterials>
-        <ARMaterialProperty path={path} />
-      </ARMaterials>
-    );
-  } else {
-    return (
-      <ARMaterial>
-        <ARMaterialProperty path={path} />
-      </ARMaterial>
-    );
-  }
-};
+export const ARColor = ({ color, index }) =>
+  typeof index == "undefined" ? (
+    <ARMaterials>
+      <ARMaterialProperty color={color} />
+    </ARMaterials>
+  ) : (
+    <ARMaterial index={index}>
+      <ARMaterialProperty color={color} />
+    </ARMaterial>
+  );
+export const ARTexture = ({ path, index }) =>
+  typeof index == "undefined" ? (
+    <ARMaterials>
+      <ARMaterialProperty path={path} />
+    </ARMaterials>
+  ) : (
+    <ARMaterial index={index}>
+      <ARMaterialProperty path={path} />
+    </ARMaterial>
+  );
 //#endregion
-const ARColoredGeometry = G => props => {
-  return (
-    <G {...props}>
-      <ARColor color={props.color} />
-    </G>
-  );
-};
-const ARTexturedGeometry = G => props => {
-  return (
-    <G {...props}>
-      <ARTexture path={props.path} />
-    </G>
-  );
-};
+const ARColoredGeometry = G => props => (
+  <G {...props}>
+    <ARColor color={props.color} />
+  </G>
+);
+const ARTexturedGeometry = G => props => (
+  <G {...props}>
+    <ARTexture path={props.path} />
+  </G>
+);
 //#region Geometries
 export const ARColoredBox = ARColoredGeometry(ARBox);
 export const ARColoredCylinder = ARColoredGeometry(ARCylinder);
@@ -126,7 +112,6 @@ export const ARColoredSphere = ARColoredGeometry(ARSphere);
 export const ARColoredText = ARColoredGeometry(ARText);
 export const ARColoredTorus = ARColoredGeometry(ARTorus);
 export const ARColoredTube = ARColoredGeometry(ARTube);
-
 export const ARTexturedBox = ARTexturedGeometry(ARBox);
 export const ARTexturedCylinder = ARTexturedGeometry(ARCylinder);
 export const ARTexturedCone = ARTexturedGeometry(ARCone);
@@ -140,14 +125,11 @@ export const ARTexturedTorus = ARTexturedGeometry(ARTorus);
 export const ARTexturedTube = ARTexturedGeometry(ARTube);
 //#endregion
 //#region adding geometries to nodes
-const GeoNode = G => props => {
-  return (
-    <ARNode {...props}>
-      <G {...props} />
-    </ARNode>
-  );
-};
-
+const GeoNode = G => props => (
+  <ARNode {...props}>
+    <G {...props} />
+  </ARNode>
+);
 export const ARBoxNode = GeoNode(ARBox);
 export const ARCapsuleNode = GeoNode(ARCapsule);
 export const ARConeNode = GeoNode(ARCone);
@@ -182,50 +164,41 @@ export const ARTexturedTorusNode = GeoNode(ARTexturedTorus);
 export const ARTexturedTubeNode = GeoNode(ARTexturedTube);
 export const ARTexturedTextNode = GeoNode(ARTexturedText);
 //#endregion
-
-export const ARPlaneScene = props => {
-  return (
-    <ARPlane {...props}>
-      <ARMaterials>
-        <ARMaterialProperty color="yellow">
-          <ARSKScene
-            {...props}
-            height={props.height * props.ppm}
-            width={props.width * props.ppm}
-          />
-        </ARMaterialProperty>
-      </ARMaterials>
-    </ARPlane>
-  );
-};
+export const ARPlaneScene = props => (
+  <ARPlane {...props}>
+    <ARMaterials>
+      <ARMaterialProperty color="yellow">
+        <ARSKScene
+          {...props}
+          height={props.height * props.ppm}
+          width={props.width * props.ppm}
+        />
+      </ARMaterialProperty>
+    </ARMaterials>
+  </ARPlane>
+);
 //#sign
-
-export const ARCenteredSKLabel = props => {
-  return (
-    <ARSKNodeConsumer>
-      {({ height, width }) => {
-        return (
-          <ARSKLabel
-            height={height}
-            width={width}
-            horizontalAlignment="center"
-            verticalAlignment="center"
-            {...props}
-            position={{ x: parseInt(width / 2.0), y: parseInt(height / 2.0) }}
-          />
-        );
-      }}
-    </ARSKNodeConsumer>
-  );
-};
-export const ARSign = props => {
-  const { height, width, ...labelProps } = props;
-  return (
-    <ARPlaneScene {...props}>
-      <ARCenteredSKLabel {...labelProps} />
-    </ARPlaneScene>
-  );
-};
+export const ARCenteredSKLabel = props => (
+  <ARSKNodeConsumer>
+    {({ height, width }) => {
+      return (
+        <ARSKLabel
+          height={height}
+          width={width}
+          horizontalAlignment="center"
+          verticalAlignment="center"
+          {...props}
+          position={{ x: parseInt(width / 2.0), y: parseInt(height / 2.0) }}
+        />
+      );
+    }}
+  </ARSKNodeConsumer>
+);
+export const ARSign = ({ height, width, ...labelProps }) => (
+  <ARPlaneScene {...props}>
+    <ARCenteredSKLabel {...labelProps} />
+  </ARPlaneScene>
+);
 ARPlaneScene.defaultProps = {
   ppm: 10 * 38, // 10 dpi,
   height: 1,
@@ -245,125 +218,72 @@ ARSign.defaultProps = {
 };
 export const ARSignNode = GeoNode(ARSign);
 export const ARPlaneSceneNode = GeoNode(ARPlaneSceneNode);
-
-export const ARNoSession = props => {
-  return (
-    <ARSessionConsumer>
-      {({ isStarted }) => {
-        if (typeof isStarted == undefined)
-          throw new Error(
-            "ARNoSession must be a descendent of ARSessionProvider"
-          );
-        if (!isStarted) {
-          return props.children;
-        }
-        return null;
-      }}
-    </ARSessionConsumer>
-  );
+export const ARNoSession = ({ children }) => {
+  const { isStarted } = useContext(ARSessionContext);
+  return !isStarted && children;
 };
-export const ARIsSession = props => {
-  return (
-    <ARSessionConsumer>
-      {({ isStarted }) => {
-        if (typeof isStarted == undefined)
-          throw new Error(
-            "ARNoSession must be a descendent of ARSessionProvider"
-          );
-        if (isStarted) {
-          return props.children;
-        }
-        return null;
-      }}
-    </ARSessionConsumer>
-  );
+export const ARIsSession = ({ children }) => {
+  const { isStarted } = useContext(ARSessionContext);
+  return isStarted && children;
 };
-export const ARNoTracking = props => {
-  return (
-    <ARTrackingConsumer>
-      {({ anchors }) => {
-        if (!anchors || !Object.keys(anchors).length) {
-          return props.children;
-        }
-      }}
-    </ARTrackingConsumer>
-  );
+export const ARNoTracking = ({ children }) => {
+  const { anchors } = useContext(ARTrackingContext);
+  return !anchors && children;
 };
-export const ARIsTracking = props => {
-  return (
-    <ARTrackingConsumer>
-      {({ anchors }) => {
-        if (anchors && Object.keys(anchors).length) {
-          return props.children;
-        }
-      }}
-    </ARTrackingConsumer>
-  );
+export const ARIsTracking = ({ children }) => {
+  const { anchors } = useContext(ARTrackingContext);
+  return anchors && children;
 };
-
 export const ARMeNode = props => {
-  return (
-    <ARPositionConsumer>
-      {({ position, orientation }) => {
-        if (typeof orientation.x === "undefined") {
-          return (
-            <ARPositionProvider>
-              <ARMeNode {...props} />
-            </ARPositionProvider>
-          );
-        }
-        return <ARNode {...props} position={position} />;
-      }}
-    </ARPositionConsumer>
+  const { position, orientation } = useContext(ARPositionContext);
+  return typeof orientation.x === "undefined" ? (
+    <ARPostionProvider>
+      <ARMeNode {...props} />
+    </ARPostionProvider>
+  ) : (
+    <ARNode {...props} position={position} />
   );
 };
-
-export class ARButton extends Component {
-  state = {
-    zPos: 0,
-    color: "red"
-  };
-  componentWillMount() {
-    this.setState({ color: this.props.color && "blue" });
-  }
-  render() {
-    return (
-      <ARAnimatedProvider milliseconds={250}>
-        <ARNode
-          position={{ z: this.state.zPos }}
-          onPressIn={() => {
-            this.setState({
-              zPos: this.props.pressDepth,
-              color: this.props.highlightColor
-            });
-            this.props.onPressIn && this.props.onPressIn();
-          }}
-          onPressOut={() => {
-            this.setState({ zPos: 0, color: this.props.color });
-            this.props.onPressOut && this.props.onPressOut();
-          }}
-          onPress={this.props.onPress}
-        >
-          <ARSign
-            height={this.props.height}
-            width={this.props.width}
-            color={this.state.color}
-            fontColor={this.props.fontColor}
-            text={this.props.title}
-            ppm={this.props.ppm}
-            fontSize={this.props.fontSize}
-          />
-        </ARNode>
-      </ARAnimatedProvider>
-    );
-  }
-}
-ARButton.defaultProps = {
-  width: 1,
-  height: 0.5,
-  color: "blue",
-  highlightColor: "purple",
-  fontColor: "white",
-  onPress: () => {},
-  pressDepth: -0.2
+export const ARButton = ({
+  color = "blue",
+  height = 0.5,
+  width = 1,
+  fontColor = "white",
+  title,
+  ppm,
+  fontSize,
+  pressDepth = -0.2,
+  highlightColor = "purple",
+  onPressIn = null,
+  onPressOut = null
+}) => {
+  const [zPos, setZpos] = useState(0);
+  const [stateColor, setColor] = useState(color);
+  return (
+    <ARAnimatedProvider milliseconds={250}>
+      <ARNode
+        position={{ z: zPos }}
+        onPressIn={() => {
+          setZpos(pressDepth);
+          setColor(highlightColor);
+          if (onPressIn) onPressIn();
+        }}
+        onPressOut={() => {
+          setZpos(0);
+          setColor(color);
+          if (onPressOut) onPressOut();
+        }}
+      >
+        <ARSign
+          height={height}
+          width={width}
+          color={stateColor}
+          fontColor={fontColor}
+          text={title}
+          ppm={ppm}
+          fontSize={fontSize}
+        />
+      </ARNode>
+    </ARAnimatedProvider>
+  );
 };

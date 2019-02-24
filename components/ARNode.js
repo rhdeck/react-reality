@@ -1,196 +1,83 @@
-import React, { Component, createContext } from "react";
-import PropTypes from "prop-types";
-import pickBy from "lodash/pickBy";
-import { adopt } from "react-adopt";
-import { ARSessionConsumer } from "../ARSessionProvider";
-import { ARAnimatedConsumer } from "../ARAnimatedProvider";
-import { ARTouchConsumer } from "../ARTouchProvider";
-import {
-  eulerAngles,
-  orientation,
-  position,
-  rotation,
-  scale,
-  opacity,
-  renderingOrder
-} from "./propTypes";
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { ARSessionContext } from "../ARSessionProvider";
+import { ARAnimatedContext } from "../ARAnimatedProvider";
+import { ARTouchContext } from "../ARTouchProvider";
 import UUID from "uuid/v4";
 import { addNode, removeNode, updateNode } from "../RNSwiftBridge";
-const { Provider, Consumer: ARNodeConsumer } = createContext({});
-//#region BaseNode
-class ARBaseNode extends Component {
-  state = {
-    updateState: "shouldmount", // Valid values: "shouldmount", "domount", "mounting", "donext", "do", "doing", "done"
-    identifier: null
-  };
-  constructor(props) {
-    super(props);
-    this.state.identifier = props.id ? props.id : UUID();
-    this.state.providerValue = { nodeID: this.state.identifier };
-  }
-  componentDidMount() {
-    this.nativeUpdate();
-    if (this.props.registerNode)
-      this.props.registerNode(this.state.identifier, this);
-  }
-  render() {
-    if (!this.props.children) return null;
-    if (
-      ["shouldmount", "domount", "mounting"].indexOf(this.state.updateState) >
-      -1
-    ) {
-      return null;
-    }
-    return (
-      <Provider value={this.state.providerValue}>
-        {this.props.children}
-      </Provider>
-    );
-  }
-  static getDerivedStateFromProps(nextProps, prevState) {
-    var ret = prevState;
-    if (propDiff(prevState.nodeProps, nextProps, filterObj)) {
-      //Change to node
-      if (prevState.updateState != "donext") {
-        ret.updateState =
-          prevState.updateState == "shouldmount"
-            ? "domount"
-            : ["mounting", "doing"].indexOf(prevState.updateState) > -1
-              ? "donext"
-              : "do";
-      }
-      ret.nodeProps = filterObj(nextProps);
-    }
-    return ret;
-  }
-  componentDidUpdate() {
-    this.nativeUpdate();
-  }
-  async nativeUpdate() {
-    if (this.state.updateState == "domount") {
-      this.setState({ updateState: "mounting" });
-      try {
-        const parentNode = this.props.parentNode ? this.props.parentNode : "";
-        const np = { ...this.state.nodeProps, id: this.state.identifier };
-        if (typeof this.props.willNativeUpdate == "function")
-          await this.props.willNativeUpdate();
-        await addNode(np, parentNode);
-        if (typeof this.props.didNativeUpdate == "function")
-          await this.props.didNativeUpdate();
-        this.setState(({ updateState }) => {
-          return { updateState: updateState == "donext" ? "do" : "done" };
-        });
-      } catch (e) {
-        this.setState({ updateState: "domount" });
-      }
-    } else if (this.state.updateState == "do") {
-      this.setState({ updateState: "doing" });
-      try {
-        if (typeof this.props.willNativeUpdate == "function")
-          await this.props.willNativeUpdate();
-        await updateNode(this.state.identifier, this.state.nodeProps);
-        if (typeof this.props.didNativeUpdate == "function")
-          await this.props.didNativeUpdate();
-        this.setState(({ updateState }) => {
-          return { updateState: updateState == "donext" ? "do" : "done" };
-        });
-      } catch (e) {
-        this.setState({ updateState: "do" });
-      }
-    }
-  }
-  componentWillUnmount() {
-    try {
-      removeNode(this.state.identifier);
-      if (this.props.removeNode) this.props.removeNode(this.state.identifier);
-    } catch (e) {}
-  }
-}
-corePropTypes = {
-  eulerAngles,
-  orientation,
-  position,
-  rotation,
-  scale,
-  renderingOrder,
-  opacity,
-  id: PropTypes.string,
-  parentNode: PropTypes.string
-};
-const nodeProps = Object.keys(corePropTypes);
-ARBaseNode.propTypes = {
-  ...corePropTypes,
-  onPress: PropTypes.func,
-  onPressIn: PropTypes.func,
-  onPressOut: PropTypes.func,
-  willNativeUpdate: PropTypes.func,
-  didNativeUpdate: PropTypes.func
-};
-//#endregion
+import { usePrevious, makePropDiff, useDoing, DO, DOING, DONE } from "../utils";
+const ARNodeContext = createContext({});
+const { Provider, Consumer: ARNodeConsumer } = ARNodeContext;
 //#region ARNode
-const Adoptee = adopt({
-  session: <ARSessionConsumer />,
-  touch: <ARTouchConsumer />,
-  node: <ARNodeConsumer />,
-  animated: <ARAnimatedConsumer />
-});
-const ARNode = props => {
-  return (
-    <Adoptee>
-      {({
-        session: { isStarted },
-        touch: { registerNode, removeNode },
-        node: { nodeID },
-        animated: { willNativeUpdate, didNativeUpdate }
-      }) => {
-        return isStarted ? (
-          <ARBaseNode
-            parentNode={nodeID ? nodeID : ""}
-            {...props}
-            registerNode={registerNode}
-            removeNode={removeNode}
-            willNativeUpdate={willNativeUpdate}
-            didNativeUpdate={didNativeUpdate}
-          />
-        ) : null;
-      }}
-    </Adoptee>
+const ARNode = ({
+  id,
+  children,
+  registerNode,
+  removeNode: onUnmount,
+  ...nodeProps
+}) => {
+  const { isStarted } = useContext(ARSessionContext);
+  const { registerNode, removeNode: touchOnUnmount } = useContext(
+    ARTouchContext
   );
-};
-ARNode.propTypes = {
-  ...ARBaseNode.propTypes
+  const { nodeID: parentNode = "" } = useContext(ARNodeContext);
+  const { willNativeUpdate, didNativeUpdate } = useContext(ARAnimatedContext);
+  const [updateState, setUpdateState] = useDoing("DONE");
+  const [isMounted, setIsMounted] = useState(false);
+  const nodeID = useRef(id);
+  if (!nodeID.current) nodeID.current = UUID();
+  useEffect(() => {
+    if (registerNode) registerNode(nodeID.current);
+    return () => {
+      removeNode(nodeID.current);
+      if (onUnmount) onUnmount(nodeID.current);
+      if (touchOnUnmount) touchOnUnmount(nodeID.current);
+    };
+  }, []);
+  const prevProps = usePrevious(nodeProps);
+  useEffect(() => {
+    if (propDiff(nodeProps, prevProps)) setUpdateState(DO);
+  });
+  useEffect(() => {
+    if (isStarted) {
+      switch (updateState) {
+        case DO:
+          (async () => {
+            try {
+              setUpdateState(DOING);
+              if (willNativeUpdate) await willNativeUpdate();
+              if (isMounted) {
+                await addNode({ ...nodeProps, id: nodeID.current }, parentNode);
+                setIsMounted(true);
+              } else await updateNode(nodeID.current, nodeProps);
+              if (didNativeUpdate) await didNativeUpdate();
+              setUpdateState(DONE);
+            } catch (e) {
+              setUpdateState(DO);
+            }
+          })();
+      }
+    }
+  }, [isStarted, updateState]);
+  const providerValue = useRef({ nodeID: nodeID.current });
+  return (
+    <Provider value={providerValue.current}>
+      {consumerif(children, ARNodeConsumer)}
+    </Provider>
+  );
 };
 //#endregion
 //#region Utility functions
-const filterObj = obj => {
-  return pickBy(obj, (v, k) => nodeProps.indexOf(k) > -1);
-};
-
-const propDiff = (a, b, func) => {
-  if (a === b) return false;
-  if (a & !b || !a & b) return true;
-  const af = func ? func(a) : a;
-  const bf = func ? func(b) : b;
-  const afk = Object.keys(af);
-  const bfk = Object.keys(bf);
-  if (afk.length != bfk.length) return true;
-  if (
-    afk.filter(k => {
-      return bfk.indexOf(k) === -1;
-    }).length
-  )
-    return true;
-  if (
-    afk.filter(k => {
-      if (bf[k] == af[k]) return false;
-      if (typeof af[k] == "object") {
-        return propDiff(af[k], bf[k]);
-      }
-      return true;
-    }).length
-  )
-    return true;
-};
+const nodeProps = [
+  "eulerAngles",
+  "orientation",
+  "position",
+  "rotation",
+  "scale",
+  "renderingOrder",
+  "opacity",
+  "parentNode"
+];
+const propDiff = makePropDiff(nodeProps);
 //#endregion
-export { ARNode, ARNodeConsumer };
+export { ARNode, ARNodeConsumer, ARNodeContext };
 export default ARNode;

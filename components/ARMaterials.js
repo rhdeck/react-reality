@@ -1,29 +1,21 @@
-import React, { Component, Children } from "react";
-import PropTypes from "prop-types";
-import pickBy from "lodash/pickBy";
+import React, { Children, useContext, cloneElement } from "react";
 import ARMaterial from "./ARMaterial";
-import { ARGeometryConsumer } from "./ARGeometry";
-const ARMaterials = props => {
-  if (props.children == null) return null;
+import { ARGeometryContext } from "./ARGeometry";
+const ARMaterials = ({ children, ...props }) => {
+  const { numSides } = useContext(ARGeometryContext);
   return (
-    <ARGeometryConsumer>
-      {({ numSides }) => {
-        var out = [];
-        if (!numSides) return null;
-        for (var s = 0; s < numSides; s++) {
-          var c = null;
-          c = Children.map(props.children, child => {
-            return React.cloneElement(child);
-          });
-          out.push(<ARMaterial {...props} index={s} children={c} key={s} />);
-        }
-        return out;
-      }}
-    </ARGeometryConsumer>
+    children &&
+    numSides &&
+    Array(numSides).map((_, i) => (
+      <ARMaterial
+        {...props}
+        index={i}
+        key={i}
+        children={Children.map(children, cloneElement)}
+      />
+    ))
   );
 };
-ARMaterials.propTypes = pickBy(
-  ARMaterial.propTypes,
-  (v, k) => ["index"].indexOf(k) === -1
-);
+const { index, ...propTypes } = ARMaterial.propTypes;
+ARMaterials.propTypes = propTypes;
 export default ARMaterials;

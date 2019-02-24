@@ -1,31 +1,18 @@
-import PropTypes from "prop-types";
-import React from "react";
-import { ARSessionConsumer } from "./ARSessionProvider";
-import { ARNodeConsumer } from "./components/ARNode";
-import { adopt } from "react-adopt";
+import React, { useContext } from "react";
+import { ARSessionContext } from "./ARSessionProvider";
+import { ARNodeContext } from "./components/ARNode";
 import { ARProjectedView as SwiftARProjectedView } from "./RNSwiftBridge";
-
-const ARBaseProjectedView = props => (
-  <SwiftARProjectedView
-    {...props}
-    style={[props.style, { position: "absolute" }]}
-  />
-);
-const Adoptee = adopt({
-  session: <ARSessionConsumer />,
-  node: <ARNodeConsumer />
-});
-const ARProjectedView = props => {
+const ARProjectedView = ({ style, ...props }) => {
+  const { isStarted } = useContext(ARSessionContext);
+  const { nodeID: parentNode } = useContext(ARNodeContext);
   return (
-    <Adoptee>
-      {({ session: { isStarted }, node: { nodeID } }) => {
-        if (!isStarted) return null;
-        return <ARBaseProjectedView parentNode={nodeID} {...props} />;
-      }}
-    </Adoptee>
+    isStarted && (
+      <SwiftARProjectedView
+        {...props}
+        parentNode={parentNode}
+        style={[style, { position: "absolute" }]}
+      />
+    )
   );
-};
-ARProjectedView.propTypes = {
-  parentNode: PropTypes.string
 };
 export default ARProjectedView;

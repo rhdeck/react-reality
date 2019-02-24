@@ -1,103 +1,47 @@
-import React, { Component, createContext } from "react";
-import { ARPositionConsumer } from "../ARPositionProvider";
-import { ARNodeConsumer } from "./ARNode";
-import { ARSessionConsumer } from "../ARSessionProvider";
-import { adopt } from "react-adopt";
+import React, { createContext, useState } from "react";
+import { ARPositionContext } from "../ARPositionProvider";
+import { ARNodeContext } from "./ARNode";
+import { ARSessionContext } from "../ARSessionProvider";
 import { projectNode } from "../RNSwiftBridge";
-
-const { Provider, Consumer } = createContext({ position: {}, orientation: {} });
-//#region ARBaseProjectedPointProvider
-class ARBaseProjectedPointProvider extends Component {
-  state = { providerValue: { position: {}, orientation: {} } };
-  render() {
-    return (
-      <Provider value={this.state.providerValue}>
-        {typeof this.props.children == "function"
-          ? this.props.children(this.state.providerValue)
-          : this.props.children}
-      </Provider>
-    );
-  }
-  static getDerivedStateFromProps(nextProps, prevState) {
-    const ret = prevState;
-    ret.todos = {};
-    if (nextProps.newPosition) {
-      if (
-        !prevState.position ||
-        JSON.stringify(prevState.position) !=
-          JSON.stringify(nextProps.newPosition)
-      ) {
-        ret.todos.updatePosition = true;
-        ret.position = nextProps.newPosition;
-      }
-    }
-    return ret;
-  }
-  componentDidMount() {
-    this.manageTodos();
-  }
-  componentDidUpdate() {
-    this.manageTodos();
-  }
-  manageTodos() {
-    if (!this.state.todos) return;
-    Object.keys(this.state.todos).forEach(k => {
-      const v = this.state.todos[k];
-      if (typeof this[k] == "function") {
-        this[k](v);
-      }
-      this.setState({ todos: null });
-    });
-  }
-  async updatePosition() {
-    try {
-      const pos = await projectNode(this.props.nodeID);
-      this.setState(({ providerValue }) => {
-        if (pos.z > 1) {
-          console.log("hiding because pos is behind me");
-          if (providerValue.position.x) {
-            return { providerValue: { position: {}, orientation: {} } };
-          } else return { providerValue };
-        }
-        const z = pos.z;
-        const x = parseInt(pos.x);
-        if (x == providerValue.position.x) return { providerValue };
-        const y = parseInt(pos.y);
-        if (y == providerValue.position.y) return { providerValue };
-        return { providerValue: { ...providerValue, position: { x, y, z } } };
-      });
-    } catch (e) {
-      console.log("Error in updatePosition", e);
-    }
-  }
-}
-//#endregion
-//#region ARProjectedPointProvider
-const Adoptee = adopt({
-  session: <ARSessionConsumer />,
-  position: <ARPositionConsumer />,
-  node: <ARNodeConsumer />
+import {} from "../utils";
+import consumerIf from "consumerif";
+const ARProjectedPointContext = createContext({
+  position: {},
+  orientation: {}
 });
-const ARProjectedPointProvider = props => (
-  <Adoptee>
-    {({
-      session: { isStarted },
-      position: { position, orientation },
-      node: { nodeID }
-    }) => {
-      if (!isStarted) return null;
-      if (!nodeID) return null;
-      return (
-        <ARBaseProjectedPointProvider
-          {...props}
-          nodeID={nodeID}
-          newPosition={position}
-          newOrientation={orientation}
-        />
-      );
-    }}
-  </Adoptee>
-);
-//#endregion
+const { Provider, Consumer } = ARProjectedPointContext;
+const ARProjectedPointProvider = ({ children, ...props }) => {
+  const { isStarted } = useContext(ARSessionContext);
+  const { position } = useContext(ARPositionContext);
+  const { nodeID } = useContext(ARNodeContext);
+  const [x, setX] = useState(0);
+  const [y, setY] = useState(0);
+  const [z, setZ] = useState(0);
+  const [providerValue, setProviderValue] = useState({ x, y, z });
+  useEffect(() => {
+    (async () => {
+      if (!isStarted) return;
+      const { x, y, z } = await projectNode(nodeID);
+      setX(parseInt(x));
+      setY(parseInt(y));
+      setZ(parseInt(z));
+    })();
+  }, [position]);
+  useEffect(() => {
+    if (z > 1) {
+      if (typeof providerValue.position.x !== "undefined")
+        setProviderValue({ position: {} });
+    } else {
+      setProviderValue({ position: { x, y, z } });
+    }
+  }, [x, y, z]);
+  return (
+    <Provider value={providerValue}>{consumerIf(children, Consumer)}</Provider>
+  );
+};
 export default ARProjectedPointProvider;
-export { ARProjectedPointProvider, Consumer as ARProjectedPointConsumer };
+export {
+  ARProjectedPointProvider,
+  Consumer as ARProjectedPointConsumer,
+  ARProjectedPointContext
+};
