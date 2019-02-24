@@ -4,7 +4,7 @@ import { ARAnimatedContext } from "../ARAnimatedProvider";
 import { ARTouchContext } from "../ARTouchProvider";
 import UUID from "uuid/v4";
 import { addNode, removeNode, updateNode } from "../RNSwiftBridge";
-import { useDoing, DO, DOING, DONE } from "../utils";
+import { useUpdateState } from "../utils";
 const ARNodeContext = createContext({});
 const { Provider, Consumer: ARNodeConsumer } = ARNodeContext;
 //#region ARNode
@@ -15,7 +15,6 @@ const ARNode = ({ id, children, removeNode: onUnmount, ...nodeProps }) => {
   );
   const { nodeID: parentNode = "" } = useContext(ARNodeContext);
   const { willNativeUpdate, didNativeUpdate } = useContext(ARAnimatedContext);
-  const [updateState, setUpdateState] = useDoing(DONE);
   const [isMounted, setIsMounted] = useState(false);
   const nodeID = useRef(id);
   if (!nodeID.current) nodeID.current = UUID();
@@ -27,28 +26,18 @@ const ARNode = ({ id, children, removeNode: onUnmount, ...nodeProps }) => {
       if (touchOnUnmount) touchOnUnmount(nodeID.current);
     };
   }, []);
-  useEffect(() => setUpdateState(DO), nodeProps);
+  const [triggerUpdate] = useUpdateState(async () => {
+    if (!isStarted) throw "not started";
+    if (willNativeUpdate) await willNativeUpdate();
+    if (isMounted) {
+      await addNode({ ...nodeProps, id: nodeID.current }, parentNode);
+      setIsMounted(true);
+    } else await updateNode(nodeID.current, nodeProps);
+    if (didNativeUpdate) await didNativeUpdate();
+  });
   useEffect(() => {
-    if (isStarted) {
-      switch (updateState) {
-        case DO:
-          (async () => {
-            try {
-              setUpdateState(DOING);
-              if (willNativeUpdate) await willNativeUpdate();
-              if (isMounted) {
-                await addNode({ ...nodeProps, id: nodeID.current }, parentNode);
-                setIsMounted(true);
-              } else await updateNode(nodeID.current, nodeProps);
-              if (didNativeUpdate) await didNativeUpdate();
-              setUpdateState(DONE);
-            } catch (e) {
-              setUpdateState(DO);
-            }
-          })();
-      }
-    }
-  }, [isStarted, updateState]);
+    triggerUpdate();
+  }, nodeProps);
   const providerValue = useRef({ nodeID: nodeID.current });
   return (
     <Provider value={providerValue.current}>

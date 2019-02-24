@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { ARMaterialContext } from "./ARMaterial";
 import { ARAnimatedContext } from "../ARAnimatedProvider";
 import consumerIf from "consumerif";
-import { useDoing, DO, DONE, DOING } from "../utils";
+import { useUpdateState } from "../utils";
 const ARMaterialPropertyContext = createContext({});
 const {
   Provider,
@@ -12,24 +12,15 @@ const {
 const ARMaterialProperty = ({ id = "diffuse", children, ...props }) => {
   const { updateMaterial, parentNode, index } = useContext(ARMaterialContext);
   const { willNativeUpdate, didNativeUpdate } = useContext(ARAnimatedContext);
-  const [updateState, setUpdateState] = useDoing(DONE);
   const providerValue = useRef({ parentNode, index, id });
-  useEffect(() => setUpdateState(DO), props);
+  const [triggerUpdate] = useUpdateState(async () => {
+    if (willNativeUpdate) await willNativeUpdate();
+    updateMaterial(id, props);
+    if (didNativeUpdate) await didNativeUpdate();
+  });
   useEffect(() => {
-    (async () => {
-      if (updateState == DO) {
-        try {
-          setUpdateState(DOING);
-          if (willNativeUpdate) await willNativeUpdate();
-          updateMaterial(id, props);
-          if (didNativeUpdate) await didNativeUpdate();
-          setUpdateState(DONE);
-        } catch (e) {
-          setUpdateState(DO);
-        }
-      }
-    })();
-  }, [updateState]);
+    triggerUpdate();
+  }, props);
   return (
     <Provider value={providerValue}>
       {consumerIf(children, ARMaterialPropertyConsumer)}

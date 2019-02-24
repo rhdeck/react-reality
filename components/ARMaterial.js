@@ -15,13 +15,17 @@ import {
 } from "./propTypes";
 import { ARNodeContext } from "./ARNode";
 import { ARAnimatedContext } from "../ARAnimatedProvider";
-import { useDoing, DO, DOING, DONE } from "../utils";
+import { useUpdateState } from "../utils";
 const context = createContext({});
 const { Provider, Consumer: ARMaterialConsumer } = context;
 const ARMaterial = ({ children, index = 0 }) => {
   const { willNativeUpdate, didNativeUpdate } = useContext(ARAnimatedContext);
   const { nodeID } = useContext(ARNodeContext);
-  const [updateState, setUpdateState] = useDoing(DO);
+  const [_] = useUpdateState(async () => {
+    if (willNativeUpdate) await willNativeUpdate();
+    await setMaterial(material, nodeID, index);
+    if (didNativeUpdate) await didNativeUpdate();
+  });
   const providerValue = useRef({
     updateMaterial: async (id, property) => {
       if (willNativeUpdate) await willNativeUpdate();
@@ -37,26 +41,12 @@ const ARMaterial = ({ children, index = 0 }) => {
         index,
         nodeID
       );
+      if (didNativeUpdate) await didNativeUpdate();
     },
     parentNode: nodeID,
     index
   });
-  useEffect(() => {
-    if (updateState === DO) {
-      (async () => {
-        try {
-          setUpdateState(DOING);
-          if (willNativeUpdate) await willNativeUpdate();
-          await setMaterial(material, nodeID, index);
-          if (didNativeUpdate) await didNativeUpdate();
-          setUpdateState(DONE);
-        } catch (e) {
-          setUpdateState(DO);
-        }
-      })();
-    }
-    return () => removeMaterial(nodeID, index);
-  }, [updateState]);
+  useEffect(() => () => removeMaterial(nodeID, index), []);
   return <Provider value={providerValue.current}>{children}</Provider>;
 };
 ARBaseMaterial.propTypes = {

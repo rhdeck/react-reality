@@ -4,56 +4,39 @@ import { removeGeometry } from "../RNSwiftBridge";
 import { ARNodeContext } from "./ARNode";
 import { ARAnimatedContext } from "../ARAnimatedProvider";
 import { ARSessionContext } from "../ARSessionProvider";
-import { useDoing, DO, DONE, DOING } from "../utils";
+import { useUpdateState } from "../utils";
 const context = createContext({});
 const { Provider, Consumer: ARGeometryConsumer } = context;
 const ARGeometry = (mountFunc, geomProps, numSides, defaults) => {
   const ARGeom = props => {
     const { willNativeUpdate, didNativeUpdate } = useContext(ARAnimatedContext);
     const { nodeID: parentNode } = useContext(ARNodeContext);
-    const [updateState, setUpdateState] = useDoing(DO);
     const { isStarted } = useContext(ARSessionContext);
     const [isMounted, setMounted] = useState(false);
     const providerValue = useRef({
       numSides: typeof numSides == "function" ? numSides(props) : numSides
     });
+    const [triggerUpdate] = useUpdateState(async () => {
+      if (!isStarted) throw "not started";
+      if (willNativeUpdate) await willNativeUpdate();
+      await mountFunc(
+        Object.entries(props)
+          .filter(([k, _]) => geomKeys.includes(k))
+          .reduce(o, ([k, v]) => ({ ...o, [k]: v }), {}),
+        parentNode
+      );
+      if (didNativeUpdate) await didNativeUpdate();
+      setMounted(true);
+    });
     useEffect(() => {
-      if (isStarted) {
-        if (updateState === DO) {
-          (async () => {
-            try {
-              setUpdateState(DOING);
-              if (willNativeUpdate) await willNativeUpdate();
-              await mountFunc(
-                Object.entries(props)
-                  .filter(([k, _]) => geomKeys.includes(k))
-                  .reduce(o, ([k, v]) => ({ ...o, [k]: v }), {}),
-                parentNode
-              );
-              if (didNativeUpdate) await didNativeUpdate();
-              setMounted(true);
-              setUpdateState(DONE);
-            } catch (e) {
-              setUpdateState(DO);
-            }
-          })();
-        }
-      }
+      triggerUpdate();
       return async () => {
         try {
           if (!parentNode) return;
           await removeGeometry(parentNode);
         } catch (e) {}
       };
-    }, [updateState, isStarted]);
-    useEffect(
-      () => {
-        setUpdateState(DO);
-      },
-      Object.entries(props)
-        .filter(([k, _]) => geomKeys.includes(k))
-        .map(([k, v]) => v)
-    );
+    });
     return (
       isMounted && (
         <Provider value={providerValue.current}>{props.children}</Provider>

@@ -13,7 +13,7 @@ import {
   ARSKNodeConsumer,
   ARSKNodeContext
 } from "./ARSKScene";
-import { useDoing, DO, DOING, DONE } from "../utils";
+import { useUpdateState } from "../utils";
 const ARSKLabel = ({
   allowScaling = true,
   position,
@@ -30,14 +30,36 @@ const ARSKLabel = ({
   children
 }) => {
   const SKNodeID = useRef(UUID());
-  const [updateState, setUpdateState] = useDoing(DO);
   const [isMounted, setIsMounted] = useState(false);
   const { SKNodeID: parentSKNode, height, width } = useContext(ARSKNodeContext);
   const [providerValue, setProviderValue] = useState({
     SKNodeID: SKNodeID.current
   });
+  const [triggerUpdate] = useUpdateState(async () => {
+    const label = propFilter({
+      position,
+      parentSKNode,
+      text,
+      id,
+      fontName,
+      fontSize,
+      fontColor,
+      height,
+      width,
+      horizontalAlignment,
+      verticalAlignment,
+      allowScaling,
+      lineBreak,
+      line,
+      name: SKNodeID.current
+    });
+    if (!isMounted) {
+      await setSKLabelNode(label, parentSKNode);
+      setIsMounted(true);
+    } else await updateSKLabelNode(label);
+  });
   useEffect(() => {
-    setUpdateState(DO);
+    triggerUpdate();
   }, [
     position,
     parentSKNode,
@@ -54,43 +76,14 @@ const ARSKLabel = ({
     lineBreak,
     lines
   ]);
-  useEffect(() => {
-    if (updateState === DO)
-      (async () => {
-        try {
-          setUpdateState(DOING);
-          const label = propFilter({
-            position,
-            parentSKNode,
-            text,
-            id,
-            fontName,
-            fontSize,
-            fontColor,
-            height,
-            width,
-            horizontalAlignment,
-            verticalAlignment,
-            allowScaling,
-            lineBreak,
-            line,
-            name: SKNodeID.current
-          });
-          if (!isMounted) {
-            await setSKLabelNode(label, parentSKNode);
-            setIsMounted(true);
-          } else await updateSKLabelNode(label);
-          setUpdateState(DONE);
-        } catch (e) {
-          setUpdateState(DO);
-        }
-      })();
-    return async () => {
+  useEffect(
+    () => async () => {
       try {
         await removeSKNode(SKNodeID.current);
       } catch (e) {}
-    };
-  }, [updateState]);
+    },
+    []
+  );
   useEffect(() => {
     setProviderValue({ SKNodeID: SKNodeID.current, height, width });
   }, [SKNodeID, height, width]);

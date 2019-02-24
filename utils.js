@@ -92,3 +92,25 @@ export const propDiff = (a, b, filter) => {
   )
     return true;
 };
+export const useUpdateState = (cb, startValue = true) => {
+  const [doing, setDoing] = useDoing(startValue ? DO : DONE);
+  useEffect(() => {
+    if (doing === DO) {
+      async () => {
+        try {
+          setDoing(DOING);
+          await cb();
+          setDoing(DONE);
+        } catch (e) {
+          setDoing(DO);
+        }
+      };
+    }
+  }, [doing]);
+  return [
+    (shouldUpdate = true) => {
+      setDoing(shouldUpdate ? DO : DONE);
+    },
+    [DO, DONEXT].includes(doing)
+  ];
+};
