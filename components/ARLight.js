@@ -1,11 +1,10 @@
 import React, { useContext, useEffect } from "react";
 import { processColor } from "react-native";
-import pickBy from "lodash/pickBy";
 import { ARNodeContext } from "./ARNode";
 import { ARAnimatedContext } from "../ARAnimatedProvider";
 import { setLight, removeLight } from "../RNSwiftBridge";
 import { ARGeometryProvider } from "./ARGeometry";
-import { useDoing, DO, DONE, DOING, makePropDiff } from "../utils";
+import { useDoing, DO, DONE, DOING } from "../utils";
 const ARLight = ({ children, updateMaterial, id, ...lightprops }) => {
   const { willNativeUpdate, didnativeUpdate } = useContext(ARAnimatedContext);
   const { nodeID: parentNode } = useContext(ARNodeContext);
@@ -16,7 +15,13 @@ const ARLight = ({ children, updateMaterial, id, ...lightprops }) => {
         try {
           setUpdateState(DOING);
           if (willNativeUpdate) await willNativeUpdate();
-          await setLight(lightprops);
+          await setLight({
+            ...lightprops,
+            color:
+              typeof lightprops.color === "string"
+                ? processColor(lightprops.color)
+                : lightprops.color
+          });
           if (didNativeUpdate) await didnativeUpdate();
           setUpdateState(DONE);
         } catch (e) {
@@ -31,27 +36,9 @@ const ARLight = ({ children, updateMaterial, id, ...lightprops }) => {
       } catch (e) {}
     };
   }, [updateState]);
-  useEffect(() => {
-    setUpdateState(DO);
-  });
+  useEffect(() => setUpdateState(DO));
   return (
-    ["done", "donext"].includes(updateState) && (
-      <ARGeometryProvider value={{ numSides: 0 }}>
-        {children}
-      </ARGeometryProvider>
-    )
+    <ARGeometryProvider value={{ numSides: 0 }}>{children}</ARGeometryProvider>
   );
 };
-const propDiff = makePropDiff(props => {
-  const temp = pickBy(
-    props,
-    (_, k) =>
-      materialPropertyPropTypeKeys.includes(k) &&
-      ["updateMaterial", "id", "willNativeUpdate", "didNativeUpdate"].includes(
-        k
-      )
-  );
-  if (typeof temp.color == "string") temp.color = processColor(temp.color);
-  return temp;
-});
 export default ARLight;

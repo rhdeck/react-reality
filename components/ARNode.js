@@ -4,7 +4,7 @@ import { ARAnimatedContext } from "../ARAnimatedProvider";
 import { ARTouchContext } from "../ARTouchProvider";
 import UUID from "uuid/v4";
 import { addNode, removeNode, updateNode } from "../RNSwiftBridge";
-import { usePrevious, makePropDiff, useDoing, DO, DOING, DONE } from "../utils";
+import { useDoing, DO, DOING, DONE } from "../utils";
 const ARNodeContext = createContext({});
 const { Provider, Consumer: ARNodeConsumer } = ARNodeContext;
 //#region ARNode
@@ -33,10 +33,7 @@ const ARNode = ({
       if (touchOnUnmount) touchOnUnmount(nodeID.current);
     };
   }, []);
-  const prevProps = usePrevious(nodeProps);
-  useEffect(() => {
-    if (propDiff(nodeProps, prevProps)) setUpdateState(DO);
-  });
+  useEffect(() => setUpdateState(DO), nodeProps);
   useEffect(() => {
     if (isStarted) {
       switch (updateState) {
@@ -65,19 +62,6 @@ const ARNode = ({
     </Provider>
   );
 };
-//#endregion
-//#region Utility functions
-const nodeProps = [
-  "eulerAngles",
-  "orientation",
-  "position",
-  "rotation",
-  "scale",
-  "renderingOrder",
-  "opacity",
-  "parentNode"
-];
-const propDiff = makePropDiff(nodeProps);
 //#endregion
 export { ARNode, ARNodeConsumer, ARNodeContext };
 export default ARNode;

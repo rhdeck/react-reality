@@ -4,7 +4,7 @@ import { removeGeometry } from "../RNSwiftBridge";
 import { ARNodeContext } from "./ARNode";
 import { ARAnimatedContext } from "../ARAnimatedProvider";
 import { ARSessionContext } from "../ARSessionProvider";
-import { usePrevious, useDoing, DO, DONE, DOING, makePropDiff } from "../utils";
+import { useDoing, DO, DONE, DOING } from "../utils";
 const context = createContext({});
 const { Provider, Consumer: ARGeometryConsumer } = context;
 const ARGeometry = (mountFunc, geomProps, numSides, defaults) => {
@@ -24,7 +24,12 @@ const ARGeometry = (mountFunc, geomProps, numSides, defaults) => {
             try {
               setUpdateState(DOING);
               if (willNativeUpdate) await willNativeUpdate();
-              await mountFunc(geomProps, parentNode);
+              await mountFunc(
+                Object.entries(props)
+                  .filter(([k, _]) => geomKeys.includes(k))
+                  .reduce(o, ([k, v]) => ({ ...o, [k]: v }), {}),
+                parentNode
+              );
               if (didNativeUpdate) await didNativeUpdate();
               setMounted(true);
               setUpdateState(DONE);
@@ -41,18 +46,21 @@ const ARGeometry = (mountFunc, geomProps, numSides, defaults) => {
         } catch (e) {}
       };
     }, [updateState, isStarted]);
-    const prevProps = usePrevious(props);
-    useEffect(() => {
-      if (propDiff(prevProps, props))
-        setUpdateState(updateDate == "done" ? "do" : "donext");
-    });
+    useEffect(
+      () => {
+        setUpdateState(DO);
+      },
+      Object.entries(props)
+        .filter(([k, _]) => geomKeys.includes(k))
+        .map(([k, v]) => v)
+    );
     return (
       isMounted && (
         <Provider value={providerValue.current}>{props.children}</Provider>
       )
     );
   };
-  const propDiff = makePropDiff(geomPropKeys);
+  const geomKeys = Object.keys(geomProps);
   ARGeom.propTypes = {
     ...geomProps,
     parentNode: PropTypes.string,
@@ -62,7 +70,6 @@ const ARGeometry = (mountFunc, geomProps, numSides, defaults) => {
   if (defaults) {
     ARGeom.defaultProps = defaults;
   }
-  const geomPropKeys = Object.keys(ARGeom.propTypes);
   return ARGeom;
 };
 export {

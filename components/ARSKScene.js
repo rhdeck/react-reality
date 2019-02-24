@@ -64,4 +64,5 @@ const ARSKScene = ({
     </ARSKNodeProvider>
   );
 };
-export { ARSKNodeConsumer, ARSKNodeProvider, context as ARSKNodeContext };
+export { ARSKScene, ARSKNodeConsumer, ARSKNodeProvider };
+export default ARSKScene;
