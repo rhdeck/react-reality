@@ -1,6 +1,5 @@
 import PropTypes from "prop-types";
 import ARGeometry from "./ARGeometry";
-
 import { setShape } from "../RNSwiftBridge";
 export default ARGeometry(
   setShape,
